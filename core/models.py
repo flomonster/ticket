@@ -2,6 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class EventStatus:
+    """
+    Defines an enum to tag an event with a status
+    """
+    WAITING     = 1
+    VALIDATED   = 2
+    PENDING     = 3
+    FINISHED    = 4
+
 # Create your models here.
 class Association(models.Model):
     name = models.CharField(max_length=150)
@@ -25,3 +34,4 @@ class Event(models.Model):
     int_price = models.IntegerField()
     ext_price = models.IntegerField()
     display = models.BooleanField()
+    status = models.PositiveSmallIntegerField()
