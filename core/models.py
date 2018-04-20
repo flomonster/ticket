@@ -15,6 +15,7 @@ class EventStatus:
 class MemberType:
     OFFICE = 1
     SIMPLE = 2
+    PRESIDENT = 3
 
 
 class Association(models.Model):
@@ -22,8 +23,6 @@ class Association(models.Model):
     website = models.CharField(max_length=200)
     email = models.EmailField()
     logo = models.ImageField()
-    president = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True,
-                                  null=True)
 
 
 class Event(models.Model):
