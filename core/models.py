@@ -52,3 +52,10 @@ class Membership(models.Model):
     asso = models.ForeignKey(Association, on_delete=models.DO_NOTHING)
     member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     type = models.SmallIntegerField()
+
+
+class Participant(models.Model):
+    paid = models.IntegerField()
+    event = models.ForeignKey(Event, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    mail = models.EmailField()
