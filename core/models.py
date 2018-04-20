@@ -1,8 +1,17 @@
+import inspect
+from enum import Enum
 from django.db import models
 from django.contrib.auth.models import User
 
+class ChoiceEnum(Enum):
+    @classmethod
+    def choices(cls):
+        items = inspect.getmembers(cls, lambda m : not(inspect.isroutine(m)))
+        props = [m for m in items if not(m[0][:2] == '__')]
+        choices = tuple([(str(p[1].value), p[0]) for p in props])
+        return choices
 
-class EventStatus:
+class EventStatus(ChoiceEnum):
     """
     Defines an enum to tag an event with a status
     """
@@ -11,8 +20,7 @@ class EventStatus:
     PENDING = 3
     FINISHED = 4
 
-
-class MemberType:
+class MemberRole(ChoiceEnum):
     """
     Defines an enum to tag a membership relation
     """
@@ -25,7 +33,10 @@ class Association(models.Model):
     name = models.CharField(max_length=150)
     website = models.CharField(max_length=200)
     email = models.EmailField()
-    logo = models.ImageField()
+    logo = models.ImageField(blank=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Event(models.Model):
@@ -42,8 +53,11 @@ class Event(models.Model):
     int_price = models.IntegerField()
     ext_price = models.IntegerField()
     display = models.BooleanField()
-    status = models.PositiveSmallIntegerField()
+    status = models.CharField(max_length=1, choices=EventStatus.choices())
     token = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.title
 
 
 class Staff(models.Model):
@@ -53,6 +67,9 @@ class Staff(models.Model):
     event = models.ForeignKey(Event, on_delete=models.DO_NOTHING)
     member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
 
+    def __str__(self):
+        return self.member.username
+
 
 class Membership(models.Model):
     """
@@ -60,7 +77,7 @@ class Membership(models.Model):
     """
     asso = models.ForeignKey(Association, on_delete=models.DO_NOTHING)
     member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    type = models.SmallIntegerField()
+    role = models.CharField(max_length=1, choices=MemberRole.choices())
 
 
 class Participant(models.Model):
