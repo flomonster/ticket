@@ -6,10 +6,15 @@ class EventStatus:
     """
     Defines an enum to tag an event with a status
     """
-    WAITING = 'Waiting'
-    VALIDATED = 'Validated'
-    PENDING = 'Pending'
-    FINISHED = 'Finished'
+    WAITING = 1
+    VALIDATED = 2
+    PENDING = 3
+    FINISHED = 4
+
+
+class MemberType:
+    OFFICE = 1
+    SIMPLE = 2
 
 
 class Association(models.Model):
@@ -47,3 +52,4 @@ class Staff(models.Model):
 class Membership(models.Model):
     asso = models.ForeignKey(Association, on_delete=models.DO_NOTHING)
     member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    type = models.SmallIntegerField()
