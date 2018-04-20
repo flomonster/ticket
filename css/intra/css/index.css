@@ -1,0 +1,18 @@
+.top {
+  display : inline-table;
+  width : 100%;
+}
+
+.container-fluid {
+  display : inline-table;
+  background : #0b92d4 repeat;
+	width : 100px;
+	float : left;
+	position : absolute;
+}
+
+.title {
+  color: #FFF;
+  padding : 1%;
+  margin : 0;
+}
