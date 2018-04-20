@@ -6,13 +6,12 @@ class EventStatus:
     """
     Defines an enum to tag an event with a status
     """
-    WAITING = 1
-    VALIDATED = 2
-    PENDING = 3
-    FINISHED = 4
+    WAITING = 'Waiting'
+    VALIDATED = 'Validated'
+    PENDING = 'Pending'
+    FINISHED = 'Finished'
 
 
-# Create your models here.
 class Association(models.Model):
     name = models.CharField(max_length=150)
     website = models.CharField(max_length=200)
@@ -37,6 +36,7 @@ class Event(models.Model):
     ext_price = models.IntegerField()
     display = models.BooleanField()
     status = models.PositiveSmallIntegerField()
+    token = models.CharField(max_length=20)
 
 
 class Staff(models.Model):
