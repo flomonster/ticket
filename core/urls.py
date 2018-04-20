@@ -1,10 +1,10 @@
 from django.urls import path
 
-from . import views
+from core.views import index, dashboard
 
 app_name = 'core'
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('association/<str:name>/', views.dashboard)
+    path('', index.view, name='index'),
+    path('association/<str:name>/', dashboard.view)
 ]
