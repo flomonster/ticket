@@ -32,7 +32,7 @@ class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     start = models.DateTimeField() # Start of the event
-    end = models.DecimalField() # End of the event
+    end = models.DateTimeField() # End of the event
     place = models.CharField(max_length=200)
     cover = models.ImageField(blank=True)
     orga = models.ForeignKey(Association, on_delete=models.DO_NOTHING)
