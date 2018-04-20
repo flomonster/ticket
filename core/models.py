@@ -42,3 +42,8 @@ class Event(models.Model):
 class Staff(models.Model):
     event = models.ForeignKey(Event, on_delete=models.DO_NOTHING)
     member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+
+
+class Membership(models.Model):
+    asso = models.ForeignKey(Association, on_delete=models.DO_NOTHING)
+    member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
