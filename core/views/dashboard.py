@@ -7,7 +7,7 @@ features.
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 
-from core.models import Association, Event
+from core.models import Association, Event, Membership, MemberRole
 
 
 def view(request, name):
@@ -22,9 +22,16 @@ def view(request, name):
     # Creating templates variables
     variables = {}
     variables['events'] = related_events(asso)
+    variables['office'] = get_office_members(asso)
     variables['asso'] = asso
 
     return render(request, 'dashboard.html', variables)
+
+
+def get_office_members(asso):
+    o = Membership.objects.select_related('asso')\
+                          .filter(asso__exact=asso) # FIXME: select with OFFICE
+    return o
 
 
 def related_events(asso):
