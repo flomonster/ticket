@@ -33,5 +33,7 @@ def related_events(asso):
     @param asso query object of the requested association.
     @return a query set of all the related events.
     """
-    e = Event.objects.select_related('orga').filter(orga__exact=asso)
+    e = Event.objects.select_related('orga')\
+                     .filter(orga__exact=asso)\
+                     .order_by('start')
     return e
