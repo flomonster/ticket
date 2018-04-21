@@ -1,0 +1,11 @@
+<span>
+    {% if event.status == '1' %}
+        Waiting
+    {% elif event.status == '2' %}
+        Validated
+    {% elif event.status == '3' %}
+        Pending
+    {% else %}
+        Finished
+    {% endif %}
+</span>
