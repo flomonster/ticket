@@ -29,8 +29,9 @@ def view(request, name):
 
 
 def get_office_members(asso):
-    o = Membership.objects.select_related('asso')\
-                          .filter(asso__exact=asso) # FIXME: select with OFFICE
+    o = Membership.objects.select_related('asso') \
+        .filter(asso__exact=asso)\
+        .filter(role__exact=str(MemberRole.OFFICE._value_))
     return o
 
 
@@ -40,7 +41,7 @@ def related_events(asso):
     @param asso query object of the requested association.
     @return a query set of all the related events.
     """
-    e = Event.objects.select_related('orga')\
-                     .filter(orga__exact=asso)\
-                     .order_by('start')
+    e = Event.objects.select_related('orga') \
+        .filter(orga__exact=asso) \
+        .order_by('start')
     return e
