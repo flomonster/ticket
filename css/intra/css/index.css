@@ -9,15 +9,25 @@
 }
 
 .title {
-  color: #FFF;
-  padding : 1%;
-  margin : 0;
+  color: #696969;
+  padding : 0%;
+  margin : 1%;
+}
+
+.navbar  {
+  margin: 0;
 }
 
 .navbar-brand {
   padding: 0;
+  margin-top: 7px;
 }
 
 .navbar-brand img {
-  max-height: 100%;
+  max-height: 110%;
+}
+
+.navbar-collapse {
+  margin-left: 80px;
+  padding: 0px 10px 0px 10px;
 }
