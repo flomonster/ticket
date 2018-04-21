@@ -5,6 +5,7 @@ It will allow the user to manage an association through various
 features.
 """
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 
 from core.models import Association, Event
 
@@ -25,14 +26,13 @@ def view(request, name):
     @param name name of the requested association.
     @return an HttpResponse serving the web page.
     """
-    asso = Association.objects.filter(name=name)
+    asso = get_object_or_404(Association, name=name)
 
-    if not asso:
-        return asso_not_found(name)
+    # Creating templates variables
+    variables = {}
+    variables['events'] = related_events(asso)
+    variables['asso'] = asso
 
-    asso = asso[0]
-
-    print(related_events(asso))
     return HttpResponse('Dashboard ' + name)
 
 
