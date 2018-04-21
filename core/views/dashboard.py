@@ -5,18 +5,9 @@ It will allow the user to manage an association through various
 features.
 """
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 
 from core.models import Association, Event
-
-
-def asso_not_found(name):
-    """
-    @brief serve a web page to indicate that the association does not exist.
-    @param name the name of the requested association.
-    @return an HttpResponse serving the web page.
-    """
-    return HttpResponse('No such association ' + name)
 
 
 def view(request, name):
@@ -33,7 +24,7 @@ def view(request, name):
     variables['events'] = related_events(asso)
     variables['asso'] = asso
 
-    return HttpResponse('Dashboard ' + name)
+    return render(request, 'dashboard.html', variables)
 
 
 def related_events(asso):
