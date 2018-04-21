@@ -5,7 +5,7 @@ It will allow the user to manage an association through various
 features.
 """
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 
 from core.models import Association, Event, Membership, MemberRole
 
@@ -50,3 +50,17 @@ def related_events(asso):
         .filter(orga__exact=asso) \
         .order_by('start')
     return e
+
+
+def delete_office_view(request, name, member):
+    asso = get_object_or_404(Association, name=name)
+
+    o = Membership.objects.select_related('asso') \
+        .filter(asso__exact=asso) \
+        .filter(role__exact=str(MemberRole.OFFICE._value_)) \
+        .select_related('member') \
+        .get(member__username=member)
+
+    o.role = str(MemberRole.SIMPLE._value_)
+    o.save()
+    return redirect('/billeterie/association/' + asso.name + '/')

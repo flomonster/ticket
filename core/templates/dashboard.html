@@ -2,13 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard - {{ asso.name }}</title></title>
+    <title>Dashboard - {{ asso.name }}</title>
 </head>
 <body>
+    <h1>{{ asso.name }}</h1>
     <ol>
         {% for event in events %}
             <li>
-                <a href="#">{{ event.title }}</a>
+                <a href="#">{{ event.title }}</a>:
+                {% include 'event_status.html' %}
             </li>
         {% endfor %}
     </ol>
@@ -17,8 +19,11 @@
         {% for member in office %}
             <li>
                 {{ member.member.username }}
+                <a href="/billeterie/association/{{ asso.name }}/remove/{{ member.member.username }}">Delete</a>
             </li>
         {% endfor %}
     </ol>
+
+    <img href="{{ asso.logo }}"/>
 </body>
 </html>

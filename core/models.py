@@ -79,6 +79,9 @@ class Membership(models.Model):
     member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     role = models.CharField(max_length=1, choices=MemberRole.choices())
 
+    def __str__(self):
+        return self.member.username + ' ' + self.asso.name
+
 
 class Participant(models.Model):
     """
