@@ -9,7 +9,7 @@
 }
 
 .navbar-text {
-  color: #696969;
+  color: #FFF;
   padding : 0%;
   margin : 1%;
 }
@@ -25,6 +25,7 @@
 
 .navbar-brand img {
   max-height: 110%;
+  padding-left: 7px;
 }
 
 .navbar-collapse {
@@ -32,6 +33,14 @@
   padding: 0px 5px 0px 5px;
 }
 
+#connect {
+  float: right;
+  margin-top: 15px;
+  margin-right: 20px;
+}
+
 #Search {
   float: right;
+  padding-top: 15px;
+  padding-right: 30px;
 }

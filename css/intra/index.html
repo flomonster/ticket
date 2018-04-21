@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -17,18 +18,18 @@
     <link rel="stylesheet" type="text/css" href="css/index.css"/>
   </head>
   <body>
-  <nav class="navbar navbar-expand-md bg-info navbar-dark fixed-top">
+  <header class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: #004663;">
     <a class="navbar-brand" href="#">
       <img class="img-fluid" src="img/epita.png">
     </a>
     <div id="navbarCollapse" class="collapse navbar-collapse">
       <h1 class="navbar-text">Billetterie</h1>
-      <div class="float-right">
-        <form class="form-inline mt-2 mt-md-0-pt7" id="Search">
-          <input class="form-control mr-sm2" placeholder="Recheche..." aria-label="Recherche" type="text">
-        </form>
-      </div>
+        <button type="button" class="btn btn-secondary my-2 my-sm-0" id="connect">Connexion</button>
+      <form class="form-inline mt-2 mt-md-0" id="Search">
+        <input class="form-control mr-sm2" placeholder="Recheche..." aria-label="Recherche" type="text">
+        <button class="btn btn-primary my-2 my-sm-0" type="submit">Recherche</button>
+      </form>
     </div>
-  </nav>
+  </header>
   </body>
 </html>
