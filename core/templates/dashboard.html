@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - {{ asso.name }}</title></title>
+</head>
+<body>
+    <ol>
+        {% for event in events %}
+            <li>{{ event.title }}</li>
+        {% endfor %}
+    </ol>
+</body>
+</html>
