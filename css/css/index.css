@@ -44,3 +44,9 @@
   padding-top: 15px;
   padding-right: 30px;
 }
+
+.btn-secondary {
+  margin: 7px 5px 0px 8px;
+  background-color: #808080;
+  color: #FFF;
+}
