@@ -29,6 +29,11 @@ def view(request, name):
 
 
 def get_office_members(asso):
+    """
+    @brief search for the members that are part of the office.
+    @param asso the association.
+    @return a query set of all the office members.
+    """
     o = Membership.objects.select_related('asso') \
         .filter(asso__exact=asso)\
         .filter(role__exact=str(MemberRole.OFFICE._value_))
