@@ -18,15 +18,22 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}"/>
   </head>
-  <body>
   <header class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: #004663;">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="{% url 'core:index' %}">
       <img class="img-fluid" src="{% static 'img/epita.png' %}">
     </a>
     <div id="navbarCollapse" class="collapse navbar-collapse">
-      <h1 class="navbar-text">Billetterie</h1>
-        <button type="button" class="btn btn-primary my-2 my-sm-0" id="connect">Connexion</button>
-      <form class="form-inline mt-2 mt-md-0" id="Search">
+      <h1 class="navbar-text">
+        <a class="navbar-text" href="{% url 'core:index' %}">Billeterie</a>
+      </h1>
+        {% if user.is_authenticated %}
+          <button type="button" class="btn btn-primary my-2 my-sm-0" id="connect"
+                  onclick="window.location.href='{% url 'core:logout' %}'">Déconnexion</button>
+        {% else %}
+          <button type="button" class="btn btn-primary my-2 my-sm-0" id="connect"
+                  onclick="window.location.href='{% url 'core:login' %}'">Connexion</button>
+        {% endif %}
+      <form class="form-inline mt-2 mt-md-0" id="search">
         <input class="form-control mr-sm2" placeholder="Recheche..." aria-label="Recherche" type="text">
         <button class="btn btn-primary my-2 my-sm-0" type="submit">Recherche</button>
       </form>
@@ -36,5 +43,7 @@
       <button type="button" class="btn btn-secondary">Mes associations</button>
       <button type="button" class="btn btn-secondary">Mes évènements</button>
   </nav>
+  <body>
+    {% block content %}{% endblock %}
   </body>
 </html>
