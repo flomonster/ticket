@@ -1,20 +1,11 @@
+{% extends "base.html" %}
+
 {% block content %}
-{% load static %}
-
-<div class="container">
- <div class="row">
-  <br><br>
-  <div class="col m6 card-panel white offset-m3" style="text-align:center">
-    <h1>Billeterie</h1>
-    <h4>Connexion</h4>
-    <br>
-    <a href="{% url 'social:begin' 'google-oauth2' %}?next=/">
-     <img id="signInButton" src="http://www.setyourowntests.com/_/rsrc/1468869481521/help/accounts/btn_google_signin_dark_normal_web%402x.png"
-     onclick="document.getElementById('signInButton').src='http://www.setyourowntests.com/_/rsrc/1468869481521/help/accounts/btn_google_signin_dark_normal_web%402x.png'">
-    </a>
-    <br>
-  </div>
- </div>
-</div>
-
+{% if not user.is_authenticated %}
+  <a href="{% url 'social:begin' 'google-oauth2' %}?next={% url 'core:index' %}">
+  <img id="signInButton" src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png">
+  </a>
+{% else %}
+<h1>Vous êtes déjà connecté</h1>
+{% endif %}
 {% endblock %}
