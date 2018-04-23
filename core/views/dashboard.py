@@ -64,4 +64,4 @@ def delete_office_view(request, name, member):
 
     o.role = str(MemberRole.SIMPLE._value_)
     o.save()
-    return redirect(reverse('core:association', args=(asso.name)))
+    return redirect(reverse('core:association', args=[asso.name]))
