@@ -1,7 +1,7 @@
 from django.urls import path
 
 from django.contrib.auth import views as auth_views
-from core.views import index, dashboard
+from core.views import index, dashboard, association_create
 
 app_name = 'core'
 
@@ -9,6 +9,9 @@ urlpatterns = [
     path('', index.view, name='index'),
 
     # Associations
+
+    path('association/create/', association_create.view, name='association_create'),
+
     path('association/<str:name>/', dashboard.view, name='association'),
     path('association/<str:name>/remove/<str:member>/',
         dashboard.delete_office_view, name='association_remove'),
