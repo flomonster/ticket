@@ -13,7 +13,7 @@ urlpatterns = [
     path('logout/', auth_views.logout, name='logout'),
 
     # Associations
-    path('association/<str:name>/', dashboard.view),
-    path('association/<str:name>/remove/<str:member>/', dashboard.delete_office_view)
-
+    path('association/<str:name>/', dashboard.view, name='association'),
+    path('association/<str:name>/remove/<str:member>/',
+        dashboard.delete_office_view, name='association_remove')
 ]

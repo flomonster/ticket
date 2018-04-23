@@ -5,6 +5,7 @@ It will allow the user to manage an association through various
 features.
 """
 from django.http import HttpResponse
+from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 
 from core.models import Association, Event, Membership, MemberRole
@@ -63,4 +64,4 @@ def delete_office_view(request, name, member):
 
     o.role = str(MemberRole.SIMPLE._value_)
     o.save()
-    return redirect('/billeterie/association/' + asso.name + '/')
+    return redirect(reverse('core:association', args=(asso.name)))

@@ -19,7 +19,7 @@
         {% for member in office %}
             <li>
                 {{ member.member.username }}
-                <a href="/billeterie/association/{{ asso.name }}/remove/{{ member.member.username }}">Delete</a>
+                <a href="{% url 'core:association_remove' asso.name  member.member.username%}">Delete</a>
             </li>
         {% endfor %}
     </ol>
