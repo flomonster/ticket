@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
-<form action="/billetterie/association/create/" method="post">
+{% block content %}
+<form enctype='multipart/form-data' action="/billetterie/association/create/" method="post">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Submit" />
 </form>
+{% endblock %}
