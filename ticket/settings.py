@@ -47,7 +47,9 @@ AUTHENTICATION_BACKENDS = (
  'social_core.backends.google.GoogleOpenId',
  'social_core.backends.google.GoogleOAuth2',
  'django.contrib.auth.backends.ModelBackend',
+ 'epita_connect.backend.EpitaOpenIdConnect',
 )
+
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 SOCIAL_AUTH_PIPELINE = (
@@ -164,11 +166,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1047564833419-1ujdqcif1j1kgddk9hs50d092t4b2l3l.
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'h_fY0QmrYuwBkrHlnwoewHaS'
 
 # Epita
-AUTHENTICATION_BACKENDS = (
-    'epita_connect.backend.EpitaOpenIdConnect',
-    'django.contrib.auth.backends.ModelBackend',
-)
-
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_EPITA_KEY = "031021"
 SOCIAL_AUTH_EPITA_SECRET = "97593354782061112fdeab765fd8faf9694903adfd8fa2d345a46be1"
