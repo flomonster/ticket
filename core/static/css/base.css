@@ -58,3 +58,27 @@
 #page_title:hover {
   color: white;
 }
+
+.tag {
+  color: #FFF;
+  border-radius: .25em;
+  text-align: center;
+  padding: 0.2em 0.6em;
+  font-size: 85%;
+}
+
+.waiting_tag {
+  background-color: #777;
+}
+
+.pending_tag {
+  background-color: #00a65a;
+}
+
+.validated_tag {
+  background-color: orange;
+}
+
+.finished_tag {
+  background-color: #dd4b39;
+}
