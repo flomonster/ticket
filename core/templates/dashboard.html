@@ -2,38 +2,44 @@
 
 {% block content %}
 <h1>{{ asso.name }}</h1>
-<div class="asso_events">
-    <table style="width: 100%">
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Statut</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            {% for event in events %}
-                <tr class="event_row">
-                    <td>
-                        <a href="#">{{ event.title }}</a>
-                    </td>
-
-                    <td>
-                        {% include 'event_status.html' %}
-                    </td>
-
-                    <td>
-                        {% if event.status == '1' %}
-                            <button type="button" class="btn">V</button>
-                            <button type="button" class="btn">D</button>
-                        {% endif %}
-                    </td>
+<div id="events_asso" class="panel panel-primary">
+    <div class="panel panel-heading">Evènements</div>
+    <div class="panel panel-body">
+        <table class="table table-condensed table-responsive">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Statut</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+            </thead>
 
+            <tbody>
+                {% for event in events %}
+                    <tr>
+                        <td>
+                            <a href="#">{{ event.title }}</a>
+                        </td>
+
+                        <td>
+                            {% include 'event_status.html' %}
+                        </td>
+
+                        <td>
+                            {% if event.status == '1' %}
+                                <button type="button" class="btn btn-success btn-xs">
+                                    <span class="glyphicon glyphicon-ok"></span>
+                                </button>
+                                <button type="button" class="btn btn-danger btn-xs">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 <table>
     {% for member in office %}
         <tr>

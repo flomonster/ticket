@@ -1,9 +1,9 @@
 {% if event.status == '1' %}
-    <span class="waiting_tag tag">Waiting</span>
+    <span class="label label-default">Waiting</span>
 {% elif event.status == '2' %}
-    <span class="validated_tag tag">Validated</span>
+    <span class="label label-warning">Validated</span>
 {% elif event.status == '3' %}
-    <span class="pending_tag tag">Pending</span>
+    <span class="label label-success">Pending</span>
 {% else %}
-    <span class="finished_tag tag">Finished</span>
+    <span class="label label-danger">Finished</span>
 {% endif %}
