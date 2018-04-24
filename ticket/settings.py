@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
     'social_django',
+    'epita_connect',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -62,27 +63,6 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.user_details',
     'social.pipeline.debug.debug',
 )
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_IGNORE_DEFAULT_SCOPE = True
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-'https://www.googleapis.com/auth/userinfo.email',
-'https://www.googleapis.com/auth/userinfo.profile'
-]
-
-# Google+ SignIn (google-plus)
-SOCIAL_AUTH_GOOGLE_PLUS_IGNORE_DEFAULT_SCOPE = True
-SOCIAL_AUTH_GOOGLE_PLUS_SCOPE = [
-'https://www.googleapis.com/auth/plus.login',
-'https://www.googleapis.com/auth/userinfo.email',
-'https://www.googleapis.com/auth/userinfo.profile'
-]
-
-LOGIN_URL = 'login'
-LOGOUT_URL = 'logout'
-LOGIN_REDIRECT_URL = 'index'
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1047564833419-1ujdqcif1j1kgddk9hs50d092t4b2l3l.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'h_fY0QmrYuwBkrHlnwoewHaS'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -165,3 +145,37 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Google+ SignIn (google-plus)
+SOCIAL_AUTH_GOOGLE_OAUTH2_IGNORE_DEFAULT_SCOPE = True
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+'https://www.googleapis.com/auth/userinfo.email',
+'https://www.googleapis.com/auth/userinfo.profile'
+]
+
+SOCIAL_AUTH_GOOGLE_PLUS_IGNORE_DEFAULT_SCOPE = True
+SOCIAL_AUTH_GOOGLE_PLUS_SCOPE = [
+'https://www.googleapis.com/auth/plus.login',
+'https://www.googleapis.com/auth/userinfo.email',
+'https://www.googleapis.com/auth/userinfo.profile'
+]
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1047564833419-1ujdqcif1j1kgddk9hs50d092t4b2l3l.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'h_fY0QmrYuwBkrHlnwoewHaS'
+
+# Epita
+AUTHENTICATION_BACKENDS = (
+    'epita_connect.backend.EpitaOpenIdConnect',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+SOCIAL_AUTH_EPITA_KEY = "031021"
+SOCIAL_AUTH_EPITA_SECRET = "97593354782061112fdeab765fd8faf9694903adfd8fa2d345a46be1"
+SOCIAL_AUTH_EPITA_SCOPE = ['epita']
+SOCIAL_AUTH_EPITA_EXTRA_DATA = ['promo']
+SOCIAL_AUTH_EPITA_BETA = False
+
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
+LOGIN_REDIRECT_URL = '/'

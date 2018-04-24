@@ -5,6 +5,7 @@
   <a href="{% url 'social:begin' 'google-oauth2' %}?next={% url 'core:index' %}">
   <img id="signInButton" src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png">
   </a>
+  <a href="{% url 'social:begin' backend='epita' %}">Epita connect</a>
 {% else %}
 <h1>Vous êtes déjà connecté</h1>
 {% endif %}
