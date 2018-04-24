@@ -8,16 +8,21 @@ from core.forms.association_create import association_form
 
 def view(request):
     if request.method == 'POST':
-        form = association_form(request.POST)
+        form = association_form(request.POST, request.FILES)
         if form.is_valid():
+            asso = Association.objects.all().filter(name=form.cleaned_data['name'])
+            if asso:
+                form = association_form()
+                return render(request, 'association_create.html', {'form': form})
+
             association = Association()
             association.name = form.cleaned_data['name']
             association.website = form.cleaned_data['website']
             association.email = form.cleaned_data['email']
-            #association.logo = form.cleaned_data['logo']
+            association.logo = form.cleaned_data['logo']
             association.save()
             return redirect(reverse('core:association', args=[association.name]))
     else:
         form = association_form()
 
-    return render(request, 'association.html', {'form': form})
+    return render(request, 'association_create.html', {'form': form})
