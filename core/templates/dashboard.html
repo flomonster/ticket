@@ -2,23 +2,48 @@
 
 {% block content %}
 <h1>{{ asso.name }}</h1>
-<ol>
-    {% for event in events %}
-        <li>
-            <a href="#">{{ event.title }}</a>
-            {% include 'event_status.html' %}
-        </li>
-    {% endfor %}
-</ol>
+<div class="asso_events">
+    <table style="width: 100%">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Status</th>
+            </tr>
+        </thead>
 
-<ol>
+        <tbody>
+            {% for event in events %}
+                <tr class="event_row">
+                    <td>
+                        <a href="#">{{ event.title }}</a>
+                    </td>
+
+                    <td>
+                        {% include 'event_status.html' %}
+                    </td>
+
+                    <td>
+                        {% if event.status == '1' %}
+                            <a href="#">V</a>
+                            <a href="#">D</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<table>
     {% for member in office %}
-        <li>
-            {{ member.member.username }}
-            <a href="{% url 'core:association_remove' asso.name  member.member.username%}">Delete</a>
-        </li>
+        <tr>
+            <td>
+                {{ member.member.username }}
+                <a href="{% url 'core:association_remove' asso.name  member.member.username%}">Delete</a>
+            </td>
+        </tr>
     {% endfor %}
-</ol>
+</table>
 
 <img href="{{ asso.logo }}"/>
 {% endblock %}
