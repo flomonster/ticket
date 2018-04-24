@@ -16,12 +16,14 @@
 
 .navbar  {
   margin: 0;
+  padding: 0;
   border-radius: 0px;
 }
 
 .navbar-brand {
   padding: 0;
   margin-top: 7px;
+  margin-right: 0px;
 }
 
 .navbar-brand img {
@@ -29,9 +31,9 @@
   padding-left: 7px;
 }
 
-.navbar-collapse {
-  margin-left: 80px;
-  padding: 0px 5px 0px 5px;
+
+.navbar-inverse {
+  margin-top: 74px;
 }
 
 #connect {
@@ -48,7 +50,7 @@
 }
 
 .btn-secondary {
-  margin: 7px 5px 0px 8px;
+  margin: 7px 5px 7px 8px;
   background-color: #808080;
   color: #FFF;
 }
