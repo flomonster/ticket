@@ -96,3 +96,16 @@
   margin: 0;
 }
 
+#office_asso {
+  width: 15%;
+}
+
+#office_asso .panel-body {
+  overflow-y: auto;
+  height: 300px;
+}
+
+.lb-lg {
+  font-size: 12px;
+}
+
