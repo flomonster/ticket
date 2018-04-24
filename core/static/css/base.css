@@ -82,3 +82,13 @@
 .finished_tag {
   background-color: #dd4b39;
 }
+
+.event_row {
+  vertical-align: top;
+  border-top: 1px solid #ddd;
+}
+
+.asso_events {
+  width: 30%;
+  background-color: #f0f0f0;
+}
