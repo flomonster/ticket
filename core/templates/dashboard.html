@@ -3,7 +3,10 @@
 {% block content %}
 <h1>{{ asso.name }}</h1>
 <div id="events_asso" class="panel panel-primary">
-    <div class="panel panel-heading">Evènements</div>
+    <div class="panel panel-heading">
+        <span class="glyphicon glyphicon-calendar"></span>
+        Evènements
+    </div>
     <div class="panel panel-body">
         <table class="table table-condensed table-responsive">
             <thead>
@@ -40,16 +43,23 @@
         </table>
     </div>
 </div>
-<table>
-    {% for member in office %}
-        <tr>
-            <td>
-                {{ member.member.username }}
-                <a href="{% url 'core:association_remove' asso.name  member.member.username%}">Delete</a>
-            </td>
-        </tr>
-    {% endfor %}
-</table>
+
+<div id="office_asso" class="panel panel-primary">
+    <div class="panel-heading">Bureau</div>
+
+    <div class="panel-body">
+        <table>
+            {% for member in office %}
+                <tr>
+                    <td>
+                        {{ member.member.username }}
+                        <a href="{% url 'core:association_remove' asso.name  member.member.username%}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
 
 <img href="{{ asso.logo }}"/>
 {% endblock %}
