@@ -1,29 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard - {{ asso.name }}</title>
-</head>
-<body>
-    <h1>{{ asso.name }}</h1>
-    <ol>
-        {% for event in events %}
-            <li>
-                <a href="#">{{ event.title }}</a>:
-                {% include 'event_status.html' %}
-            </li>
-        {% endfor %}
-    </ol>
+{% extends "base.html" %}
 
-    <ol>
-        {% for member in office %}
-            <li>
-                {{ member.member.username }}
-                <a href="{% url 'core:association_remove' asso.name  member.member.username%}">Delete</a>
-            </li>
-        {% endfor %}
-    </ol>
+{% block content %}
+<h1>{{ asso.name }}</h1>
+<ol>
+    {% for event in events %}
+        <li>
+            <a href="#">{{ event.title }}</a>
+            {% include 'event_status.html' %}
+        </li>
+    {% endfor %}
+</ol>
 
-    <img href="{{ asso.logo }}"/>
-</body>
-</html>
+<ol>
+    {% for member in office %}
+        <li>
+            {{ member.member.username }}
+            <a href="{% url 'core:association_remove' asso.name  member.member.username%}">Delete</a>
+        </li>
+    {% endfor %}
+</ol>
+
+<img href="{{ asso.logo }}"/>
+{% endblock %}
