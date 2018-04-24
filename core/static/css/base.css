@@ -86,9 +86,17 @@
 .event_row {
   vertical-align: top;
   border-top: 1px solid #ddd;
+  display: table-row;
+  line-height: 2.2;
 }
 
 .asso_events {
   width: 30%;
   background-color: #f0f0f0;
+  display: table;
+  border-spacing: 10px 5px;
+}
+
+.event_row td {
+  display: table-cell;
 }
