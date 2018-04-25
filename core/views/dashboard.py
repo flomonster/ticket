@@ -25,12 +25,32 @@ class Dashboard:
         """
         asso = get_object_or_404(Association, name=name)
 
+        # Select simple members
         o = Membership.objects.select_related('asso') \
             .filter(asso__exact=asso)\
             .filter(role__exact=str(MemberRole.SIMPLE._value_))
 
-        class Form(forms.Form):
-            user = forms.ModelChoiceField(queryset=o)
+        # Nested class Form for the association
+        class OfficeForm(forms.Form):
+            membre = forms.ModelChoiceField(queryset=o, required=True)
+
+            def __init__(self, *args, **kwargs):
+                super(OfficeForm, self).__init__(*args, **kwargs)
+                for field_name, field in self.fields.items():
+                    field.widget.attrs['class'] = 'form-control'
+
+        if request.method == 'POST':
+            form = OfficeForm(request.POST)
+            if form.is_valid():
+                # Add a member to office
+                form.cleaned_data['membre'].role = MemberRole.OFFICE._value_
+                form.cleaned_data['membre'].save()
+                user = form.cleaned_data['membre'].member
+
+                Dashboard.msg = user.username + ' a bien été ajouté au bureau.'
+                return redirect(reverse('core:association', args=[asso.name]))
+        else:
+            form = OfficeForm()
 
         # Creating templates variables
         variables = {}
@@ -38,7 +58,7 @@ class Dashboard:
         variables['office'] = Dashboard.get_office_members(asso)
         variables['asso'] = asso
         variables['info'] = Dashboard.msg
-        variables['form'] = Form()
+        variables['form'] = form
 
         Dashboard.msg = ''
 
@@ -54,7 +74,9 @@ class Dashboard:
         o = Membership.objects.select_related('asso') \
             .filter(asso__exact=asso)\
             .filter(role__exact=str(MemberRole.OFFICE._value_))
+
         return o
+
 
     @staticmethod
     def related_events(asso):
@@ -70,6 +92,13 @@ class Dashboard:
 
     @staticmethod
     def delete_office_view(request, name, member):
+        """
+        @brief delete a member from the office of an association.
+        @param request http request
+        @param name name of the association
+        @param member user object of the member to add
+        @return redirection to dashboard
+        """
         asso = get_object_or_404(Association, name=name)
 
         o = Membership.objects.select_related('asso') \
