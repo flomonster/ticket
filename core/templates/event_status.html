@@ -1,8 +1,8 @@
-{% if event.status == '1' %}
+{% if event.status == waiting %}
     <span class="label label-default lb-lg">Waiting</span>
-{% elif event.status == '2' %}
+{% elif event.status == validated %}
     <span class="label label-warning lb-lg">Validated</span>
-{% elif event.status == '3' %}
+{% elif event.status == pending %}
     <span class="label label-success lb-lg">Pending</span>
 {% else %}
     <span class="label label-danger lb-lg">Finished</span>

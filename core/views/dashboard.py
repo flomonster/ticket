@@ -8,7 +8,7 @@ from django import forms
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 
-from core.models import Association, Event, Membership, MemberRole
+from core.models import Association, Event, Membership, MemberRole, EventStatus
 
 
 
@@ -59,6 +59,10 @@ class Dashboard:
         variables['asso'] = asso
         variables['info'] = Dashboard.msg
         variables['form'] = form
+
+        variables['waiting'] = str(EventStatus.WAITING._value_)
+        variables['validated'] = str(EventStatus.VALIDATED._value_)
+        variables['pending'] = str(EventStatus.PENDING._value_)
 
         Dashboard.msg = ''
 
