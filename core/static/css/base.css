@@ -105,6 +105,12 @@
   height: 300px;
 }
 
+#officeModal {
+  width: 25%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .lb-lg {
   font-size: 12px;
 }

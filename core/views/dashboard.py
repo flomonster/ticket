@@ -4,16 +4,19 @@ This module is intended to display the dashboard of an association.
 It will allow the user to manage an association through various
 features.
 """
+from django import forms
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 
 from core.models import Association, Event, Membership, MemberRole
 
+
+
 class Dashboard:
     msg = ''
 
     @staticmethod
-    def view(request, name, info=None):
+    def view(request, name):
         """
         @brief display the dashboard of an association if it exists.
         @param request request for the current page.
@@ -22,14 +25,23 @@ class Dashboard:
         """
         asso = get_object_or_404(Association, name=name)
 
+        o = Membership.objects.select_related('asso') \
+            .filter(asso__exact=asso)\
+            .filter(role__exact=str(MemberRole.SIMPLE._value_))
+
+        class Form(forms.Form):
+            user = forms.ModelChoiceField(queryset=o)
+
         # Creating templates variables
         variables = {}
         variables['events'] = Dashboard.related_events(asso)
         variables['office'] = Dashboard.get_office_members(asso)
         variables['asso'] = asso
         variables['info'] = Dashboard.msg
+        variables['form'] = Form()
 
         Dashboard.msg = ''
+
         return render(request, 'dashboard.html', variables)
 
     @staticmethod
@@ -69,4 +81,5 @@ class Dashboard:
         o.role = str(MemberRole.SIMPLE._value_)
         o.save()
         Dashboard.msg = member + ' a bien été supprimé du bureau.'
+
         return redirect(reverse('core:association', args=[asso.name]))
