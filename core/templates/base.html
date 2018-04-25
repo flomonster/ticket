@@ -13,31 +13,31 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}"/>
-</head>
-  <header class="navbar navbar-expand-md fixed-top justify-content-between" style="background-color: #004663;">
-    <a class="navbar-brand" href="{% url 'core:index' %}">
+  </head>
+  <header class="navbar navbar-expand-md fixed-top" style="background-color: #004663;">
+      <a class="navbar-brand" href="{% url 'core:index' %}">
         <img class="img-fluid" src="{% static 'img/epita.png' %}">
-    </a>
-    <div id="navbarCollapse" class="collapse navbar-collapse">
-      <h3 class="navbar-text">
+      </a>
+      <h2 class="navbar-text">
         <a class="navbar-text" href="{% url 'core:index' %}">Billetterie</a>
-      </h3>
-      <form class="form-inline mt-2 mt-md-0" id="search">
-        <input class="form-control mr-sm2" placeholder="Recheche..." aria-label="Recherche" type="text">
-        <button class="btn btn-primary my-2 my-sm-0" type="submit">Recherche</button>
-      </form>
+      </h2>
+      <div class="collapse navbar-collapse justify-content-end">
+        <form class="form-inline mt-2 mt-md-0" id="search">
+          <input class="form-control mr-sm2" placeholder="Recheche..." aria-label="Recherche" type="text">
+          <button class="btn btn-primary my-2 my-sm-0" type="submit">Recherche</button>
+        </form>
         {% if user.is_authenticated %}
-            <button type="button" class="btn btn-primary my-2 my-sm-0" id="connect"
-                    onclick="window.location.href='{% url 'core:logout' %}'">Déconnexion
-            </button>
+        <!-- Might change to a span with glyphicon login/logout -->
+          <button type="button" class="btn btn-primary my-2 my-sm-0 navbar-btn navbar-btn-right" id="connect"
+                  onclick="window.location.href='{% url 'core:logout' %}'">Déconnexion</button>
         {% else %}
-            <button type="button" class="btn btn-primary my-2 my-sm-0" id="connect"
-                    onclick="window.location.href='{% url 'core:login' %}'">Connexion
-            </button>
+          <button type="button" class="btn btn-primary my-2 my-sm-0 navbar-btn navbar-btn-right" id="connect"
+                  onclick="window.location.href='{% url 'core:login' %}'">Connexion</button>
         {% endif %}
-    </div>
+      </div>
   </header>
-  <nav class="navbar navbar-inverse" style="background-color: #00a9e6;">
+  <nav class="navbar navbar-inverse navbar-expand-md" style="background-color: #00a9e6;">
+  <!-- This navbar might not be consistently on top -->
       <button type="button" class="btn btn-secondary">Mes associations</button>
       <button type="button" class="btn btn-secondary">Mes évènements</button>
   </nav>
