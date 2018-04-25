@@ -8,7 +8,7 @@
         <div class="panel-heading">Formulaire</div>
 
         <div class="panel-body">
-            <form enctype='multipart/form-data' action="/billetterie/association/create/" method="post">
+            <form enctype='multipart/form-data' action="{% url 'core:association_create' %}" method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
 
