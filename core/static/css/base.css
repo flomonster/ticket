@@ -54,3 +54,7 @@
   background-color: #808080;
   color: #FFF;
 }
+
+#page_title:hover {
+  color: white;
+}
