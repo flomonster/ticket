@@ -86,8 +86,11 @@
             <h4>Ajouter un membre au bureau</h4>
         </div>
         <div class="modal-body">
-            <form>
+            <form enctype="multipart/form-data" method="post" action="{% url 'core:association' asso.name %}">
+                {% csrf_token %}
                 {{ form.as_p }}
+
+                <button type="submit" class="btn btn-primary">Ajouter</button>
             </form>
         </div>
     </div>

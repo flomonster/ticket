@@ -80,7 +80,7 @@ class Membership(models.Model):
     role = models.CharField(max_length=1, choices=MemberRole.choices())
 
     def __str__(self):
-        return self.member.username + ' ' + self.asso.name
+        return self.member.username
 
 
 class Participant(models.Model):
