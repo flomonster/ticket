@@ -1,9 +1,19 @@
 {% extends "base.html" %}
 
+
 {% block content %}
-<form enctype='multipart/form-data' action="/billetterie/association/create/" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit" />
-</form>
+    <h2>Créer une association</h2>
+
+    <div id="form" class="panel panel-primary" style="max-width: 42rem;">
+        <div class="panel-heading">Formulaire</div>
+
+        <div class="panel-body">
+            <form enctype='multipart/form-data' action="/billetterie/association/create/" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+               <button type="submit" class="btn btn-primary">Valider</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
