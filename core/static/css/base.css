@@ -179,3 +179,7 @@ h2 {
   margin-top: 75px;
   max-width: 42rem;
 }
+
+.alert {
+  margin: 10px;
+}

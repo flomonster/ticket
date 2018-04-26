@@ -7,6 +7,10 @@
         <div class="panel-header">
             Evénements
         </div>
+
+        {% if not events %}
+            <div class="panel-body">Aucun évènement prévu</div>
+        {% else %}
         <table class="table table-condensed table-sm panel-body">
             <thead>
             <tr>
@@ -40,10 +44,11 @@
             {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </div>
 
     <!-- Office members -->
-    <div class="panel" id="panel-asso-office">
+    <div class="panel panel-fixed" id="panel-asso-office">
         <div class="panel-header">
             Bureau
             <button type="button" class="btn btn-info btn-xs"
@@ -52,22 +57,26 @@
             </button>
         </div>
 
-        <table class="table table-sm table-striped">
-            {% for member in office %}
-                <tr>
-                    <td>
-                        {{ member.member.username }}
-                    </td>
+        {% if not office %}
+            <div class="panel-body">Aucun membre de bureau</div>
+        {% else %}
+            <table class="table table-sm table-striped panel-body">
+                {% for member in office %}
+                    <tr>
+                        <td>
+                            {{ member.member.username }}
+                        </td>
 
-                    <td>
-                        <button type="button" class="btn btn-danger btn-xs"
-                                onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
-                            &#x2715;
-                        </button>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-xs"
+                                    onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
+                                &#x2715;
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
     </div>
 
 
