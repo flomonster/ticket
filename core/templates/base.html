@@ -97,7 +97,9 @@
         {{ info }}
     </div>
 {% endif %}
-
-{% block content %}{% endblock %}
+<h1>{% block title %}{% endblock %}</h1>
+<div id="content">
+  {% block content %}{% endblock %}
+</div>
 </body>
 </html>

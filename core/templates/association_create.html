@@ -1,12 +1,11 @@
 {% extends "base.html" %}
 
+{% block title %}
+Créer une association
+{% endblock %}
 
 {% block content %}
-    <h2>Créer une association</h2>
-
-    <div id="form" class="panel panel-primary" style="max-width: 42rem;">
-        <div class="panel-heading">Formulaire</div>
-
+    <div class="panel panel-primary">
         <div class="panel-body">
             <form enctype='multipart/form-data' action="{% url 'core:association_create' %}" method="post">
                 {% csrf_token %}
