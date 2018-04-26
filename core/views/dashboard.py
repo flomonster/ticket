@@ -13,7 +13,7 @@ from core.models import Association, Event, Membership, MemberRole, EventStatus
 
 
 class Dashboard:
-    msg = ''
+    msg = None
 
     @staticmethod
     def view(request, name):
@@ -64,7 +64,7 @@ class Dashboard:
         variables['validated'] = str(EventStatus.VALIDATED._value_)
         variables['pending'] = str(EventStatus.PENDING._value_)
 
-        Dashboard.msg = ''
+        Dashboard.msg = None
 
         return render(request, 'dashboard.html', variables)
 
