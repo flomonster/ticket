@@ -1,0 +1,19 @@
+.panel {
+    border: 1px solid #9dc8ec;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    margin-bottom: 1%;
+}
+
+.panel-header {
+    background-color: #9dc8ec;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 5px 7px;
+    font-size: 18px;
+}
+
+.panel-body {
+    padding: 4%;
+}
+
