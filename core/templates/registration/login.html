@@ -1,12 +1,26 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-{% if not user.is_authenticated %}
-  <a href="{% url 'social:begin' 'google-oauth2' %}?next={% url 'core:index' %}">
-  <img id="signInButton" src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png">
-  </a>
-  <a href="{% url 'social:begin' backend='epita' %}">Epita connect</a>
-{% else %}
-<h1>Vous êtes déjà connecté</h1>
-{% endif %}
+<div class="card-deck mb-3 text-center" style="width: 600px;">
+  <div class="card text-center mb-4 box-shadow">
+    <div class="card-header">Etudiant EPITA</div>
+    <div class="card-body">
+      <div style="margin-bottom: 15px;">
+        <img src="{% static 'img/epita.png' %}" alt="EPITA" height="67">
+      </div>
+      <a href="{% url 'social:begin' backend='epita' %}" class="btn btn-primary">Connexion</a>
+    </div>
+  </div>
+
+  <div class="card mb-4 box-shadow">
+    <div class="card-header">Externe EPITA</div>
+    <div class="card-body">
+      <div style="margin-bottom: 15px;">
+        <img src="{% static 'img/google.png' %}" alt="EPITA" height="67">
+      </div>
+      <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-primary">Connexion</a>
+    </div>
+  </div>
+</div>
 {% endblock %}
