@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}
+Mes associations
+<a class="btn btn-primary" href="{% url 'core:association_create' %}">+</a>
+{% endblock %}
+
+{% block content %}
+<ul>
+  {% for asso in associations %}
+    <li><a href="{% url 'core:association' asso.name %}">{{ asso.name }}</a></li>
+  {% endfor %}
+</ul>
+{% endblock %}

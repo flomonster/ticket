@@ -26,7 +26,6 @@
 
     <!-- Our CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}"/>
 
 </head>
 <!-- Top navbar with connection & search button -->
@@ -38,14 +37,14 @@
 
     <!-- Page title -->
     <h2 class="navbar-text">
-        <a class="navbar-text" id="page_title" href="{% url 'core:index' %}">Billetterie</a>
+        Billetterie
     </h2>
 
     <!-- Navbar to contain the search elements and connection elements on the right -->
     <div class="collapse navbar-collapse justify-content-end">
         <!-- Search elements -->
         <form class="form-inline mt-2 mt-md-0" id="search">
-            <input class="form-control mr-sm2" placeholder="Recherche..." aria-label="Recherche" type="text">
+            <input class="form-control mr-sm2" placeholder="Recherche" aria-label="Recherche" type="text">
             <button class="btn btn-primary my-2 my-sm-0" type="submit">Recherche</button>
         </form>
 
@@ -71,8 +70,8 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 
     <div class="navbar-nav">
-      <a class="nav-item nav-link active" id="home" href="#">Accueil<span class="sr-only">(current)</span></a>
-      <a class="nav-item nav-link" id="mes_asso" href="#">Mes associations</a>
+      <a class="nav-item nav-link active" id="home" href="{% url 'core:index' %}">Accueil<span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" id="mes_asso" href="{% url 'core:associations' %}">Mes associations</a>
       <a class="nav-item nav-link" id="mes_event" href="#">Mes évènements</a>
     </div>
 
