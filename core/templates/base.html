@@ -28,56 +28,62 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}"/>
 
 </head>
-<!-- Top navbar with connection & search button -->
-<header class="navbar navbar-expand-md fixed-top" style="background-color: #004663;">
+
+
+<header>
+<!-- Lighter colored navbar with links to "Mes associations" & "Mes évènements" -->
+<nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: #004663;">
+
     <!-- Epita logo -->
     <a class="navbar-brand" href="{% url 'core:index' %}">
         <img class="img-fluid" src="{% static 'img/epita.png' %}">
     </a>
 
     <!-- Page title -->
-    <h2 class="navbar-text">
+    <h2 class="my-navbar-text">
         Billetterie
     </h2>
 
-    <!-- Navbar to contain the search elements and connection elements on the right -->
-    <div class="collapse navbar-collapse justify-content-end">
-        <!-- Search elements -->
-        <form class="form-inline mt-2 mt-md-0" id="search">
-            <input class="form-control mr-sm2" placeholder="Recherche" aria-label="Recherche" type="text">
-            <button class="btn btn-primary my-2 my-sm-0" type="submit">Recherche</button>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" id="home" href="{% url 'core:index' %}">Accueil <span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="mes_asso" href="{% url 'core:associations' %}">Mes associations</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="mes_event" href="#">Mes évènements</a>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Recherche" aria-label="Search">
+            <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Recherche</button>
         </form>
 
         <!-- Connection button -->
         {% if user.is_authenticated %}
             <!-- Might change to a span with glyphicon login/logout -->
-            <button type="button" class="btn btn-primary my-2 my-sm-0 navbar-btn navbar-btn-right" id="connect"
+            <button type="button" class="btn btn-primary my-2 my-sm-0" id="connect"
                     onclick="window.location.href='{% url 'core:logout' %}'">Déconnexion
             </button>
         {% else %}
-            <button type="button" class="btn btn-primary my-2 my-sm-0 navbar-btn navbar-btn-right" id="connect"
+            <button type="button" class="btn btn-primary my-2 my-sm-0" id="connect"
                     onclick="window.location.href='{% url 'core:login' %}'">Connexion
             </button>
         {% endif %}
+
     </div>
-</header>
-
-<!-- body -->
-<body>
-
-<!-- Lighter colored navbar with links to "Mes associations" & "Mes évènements" -->
-    <nav class="navbar navbar-inverse navbar-expand-md" style="background-color: #00a9e6;">
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-
-    <div class="navbar-nav">
-      <a class="nav-item nav-link active" id="home" href="{% url 'core:index' %}">Accueil<span class="sr-only">(current)</span></a>
-      <a class="nav-item nav-link" id="mes_asso" href="{% url 'core:associations' %}">Mes associations</a>
-      <a class="nav-item nav-link" id="mes_event" href="#">Mes évènements</a>
-    </div>
-
-  </div>
 </nav>
 
+</header>
+
+<body>
 
 <!-- Alert with feedback messages for user actions -->
 
@@ -92,13 +98,17 @@
 <!-- A success alert check -->
 {% if info is not None %}
     <div class="alert alert-success alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
         {{ info }}
     </div>
 {% endif %}
+
+
 <h1>{% block title %}{% endblock %}</h1>
 <div id="content">
-  {% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 </div>
+
+
 </body>
 </html>
