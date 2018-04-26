@@ -3,84 +3,93 @@
 {% block content %}
     <h1>{{ asso.name }}</h1>
 
-    <div class="panel" id="panel-asso-events">
-        <div class="panel-header">
-            Evénements
-        </div>
-
-        {% if not events %}
-            <div class="panel-body">Aucun évènement prévu</div>
-        {% else %}
-        <table class="table table-condensed table-sm panel-body">
-            <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Statut</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            {% for event in events %}
-                <tr>
-                    <td>
-                        <a href="#">{{ event.title }}</a>
-                    </td>
-
-                    <td>
-                        {% include 'event_status.html' %}
-                    </td>
-
-                    <td>
-                        {% if event.status == '1' %}
-                            <button type="button" class="btn btn-success btn-xs">
-                                &#10004;
-                            </button>
-                            <button type="button" class="btn btn-danger btn-xs">
-                                &#x2715;
-                            </button>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {% endif %}
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary">Ajouter membre</button>
+        <button type="button" class="btn btn-primary">Supprimer membre</button>
     </div>
 
-    <!-- Office members -->
-    <div class="panel panel-fixed" id="panel-asso-office">
-        <div class="panel-header">
-            Bureau
-            <button type="button" class="btn btn-info btn-xs"
-                    data-toggle="modal" data-target="#officeModal">
-                &#x2795;
-            </button>
+
+
+    <div class="panels">
+        <!-- Office members -->
+        <div class="panel panel-fixed" id="panel-asso-office">
+            <div class="panel-header">
+                Bureau
+                <button type="button" class="btn btn-info btn-xs"
+                        data-toggle="modal" data-target="#officeModal">
+                    &#x2795;
+                </button>
+            </div>
+
+            {% if not office %}
+                <div class="panel-body">Aucun membre de bureau</div>
+            {% else %}
+                <table class="table table-sm table-striped panel-body">
+                    {% for member in office %}
+                        <tr>
+                            <td>
+                                {{ member.member.username }}
+                            </td>
+
+                            <td>
+                                <button type="button"
+                                        class="btn btn-danger btn-xs"
+                                        onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
+                                    &#x2715;
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
         </div>
 
-        {% if not office %}
-            <div class="panel-body">Aucun membre de bureau</div>
-        {% else %}
-            <table class="table table-sm table-striped panel-body">
-                {% for member in office %}
+        <div class="panel" id="panel-asso-events">
+            <div class="panel-header">
+                Evénements
+            </div>
+
+            {% if not events %}
+                <div class="panel-body">Aucun évènement prévu</div>
+            {% else %}
+                <table class="table table-condensed table-sm panel-body">
+                    <thead>
                     <tr>
-                        <td>
-                            {{ member.member.username }}
-                        </td>
-
-                        <td>
-                            <button type="button" class="btn btn-danger btn-xs"
-                                    onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
-                                &#x2715;
-                            </button>
-                        </td>
+                        <th>Nom</th>
+                        <th>Statut</th>
                     </tr>
-                {% endfor %}
-            </table>
-        {% endif %}
+                    </thead>
+
+                    <tbody>
+                    {% for event in events %}
+                        <tr>
+                            <td>
+                                <a href="#">{{ event.title }}</a>
+                            </td>
+
+                            <td>
+                                {% include 'event_status.html' %}
+                            </td>
+
+                            <td>
+                                {% if event.status == '1' %}
+                                    <button type="button"
+                                            class="btn btn-success btn-xs">
+                                        &#10004;
+                                    </button>
+                                    <button type="button"
+                                            class="btn btn-danger btn-xs">
+                                        &#x2715;
+                                    </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
     </div>
-
-
-
 
     <div id="officeModal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document"></div>
@@ -106,6 +115,5 @@
             </div>
         </div>
     </div>
-
     <img href="{{ asso.logo }}"/>
 {% endblock %}
