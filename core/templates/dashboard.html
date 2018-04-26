@@ -1,15 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% if info %}
-    <div class="alert alert-success" role="alert">
-        {{ info }}
-    </div>
-{% endif %}
 <h1>{{ asso.name }}</h1>
 <div id="events_asso" class="card">
     <div class="card-header">
-        <span class="glyphicon glyphicon-calendar"></span>
         Evènements
     </div>
     <div class="card-body">
@@ -34,11 +28,11 @@
 
                         <td>
                             {% if event.status == '1' %}
-                                <button type="button" class="btn btn-success btn-xs">
-                                    <span class="glyphicon glyphicon-ok"></span>
+                                <button type="button" class="btn btn-success btn-sm">
+                                    V
                                 </button>
-                                <button type="button" class="btn btn-danger btn-xs">
-                                    <span class="glyphicon glyphicon-remove"></span>
+                                <button type="button" class="btn btn-danger btn-sm">
+                                    D
                                 </button>
                             {% endif %}
                         </td>
@@ -51,10 +45,9 @@
 
 <div id="office_asso" class="card">
     <div class="card-header">
-        <span class="glyphicon glyphicon-user"></span>
         Bureau
-        <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#officeModal">
-            <span class="glyphicon glyphicon-plus"></span>
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#officeModal">
+            +
         </button>
     </div>
 
@@ -67,9 +60,9 @@
                     </td>
 
                     <td>
-                        <button type="button" class="btn btn-danger btn-xs"
+                        <button type="button" class="btn btn-danger btn-sm"
                             onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
-                            <span class="glyphicon glyphicon-remove"></span>
+                            D
                         </button>
                     </td>
                 </tr>
