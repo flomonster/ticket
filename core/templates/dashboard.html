@@ -29,10 +29,10 @@
                         <td>
                             {% if event.status == '1' %}
                                 <button type="button" class="btn btn-success btn-sm">
-                                    V
+                                    &#10004;
                                 </button>
                                 <button type="button" class="btn btn-danger btn-sm">
-                                    D
+                                    &#x2715;
                                 </button>
                             {% endif %}
                         </td>
@@ -47,7 +47,7 @@
     <div class="card-header">
         Bureau
         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#officeModal">
-            +
+            &#x2795;
         </button>
     </div>
 
@@ -62,7 +62,7 @@
                     <td>
                         <button type="button" class="btn btn-danger btn-sm"
                             onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
-                            D
+                            &#x2715;
                         </button>
                     </td>
                 </tr>
