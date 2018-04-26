@@ -22,9 +22,9 @@ def view(request):
             association.email = form.cleaned_data['email']
             association.logo = form.cleaned_data['logo']
             association.save()
-            return redirect(reverse('core:association', args=[association.name]))
+            return render(request, 'association_create.html', {'form': form,
+                                                               'info': 'Votre association a bien été créée'})
     else:
         form = association_form()
 
-    return render(request, 'association_create.html', {'form': form,
-                                                       'info': 'Votre association a bien été créée'})
+    return render(request, 'association_create.html', {'form': form})
