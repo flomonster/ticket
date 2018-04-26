@@ -107,7 +107,7 @@
   height: 300px;
 }
 
-#officeModal {
+#officeModal, #memberModal {
   width: 25%;
   margin-left: auto;
   margin-right: auto;
