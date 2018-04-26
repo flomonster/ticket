@@ -87,12 +87,12 @@
   width: 30%;
 }
 
-#events_asso .panel-heading {
+#events_asso .card-header {
   margin-bottom: 0;
   border-radius: 0;
 }
 
-#events_asso .panel-body {
+#events_asso .card-body {
   margin: 0;
 }
 
@@ -100,7 +100,7 @@
   width: 15%;
 }
 
-#office_asso .panel-body {
+#office_asso .card-body {
   overflow-y: auto;
   height: 300px;
 }
