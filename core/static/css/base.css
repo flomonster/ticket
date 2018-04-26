@@ -55,11 +55,6 @@
   color: #FFF;
 }
 
-#page_title:hover {
-  text-decoration: none;
-  color: white;
-}
-
 #home, #home:hover, #mes_asso, #mes_asso:hover, #mes_event, #mes_event:hover {
   font-weight: bold;
   text-decoration: none;
