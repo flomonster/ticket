@@ -1,96 +1,89 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ asso.name }}</h1>
-<div id="events_asso" class="card">
-    <div class="card-header">
-        Evènements
-    </div>
-    <div class="card-body">
-        <table class="table table-condensed table-responsive">
-            <thead>
-                <tr>
-                    <th>Nom</th>
-                    <th>Statut</th>
-                </tr>
-            </thead>
+    <h1>{{ asso.name }}</h1>
 
-            <tbody>
-                {% for event in events %}
-                    <tr>
-                        <td>
-                            <a href="#">{{ event.title }}</a>
-                        </td>
 
-                        <td>
-                            {% include 'event_status.html' %}
-                        </td>
+    <table class="table table-condensed table-responsive table-sm">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Statut</th>
+        </tr>
+        </thead>
 
-                        <td>
-                            {% if event.status == '1' %}
-                                <button type="button" class="btn btn-success btn-sm">
-                                    &#10004;
-                                </button>
-                                <button type="button" class="btn btn-danger btn-sm">
-                                    &#x2715;
-                                </button>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+        <tbody>
+        {% for event in events %}
+            <tr>
+                <td>
+                    <a href="#">{{ event.title }}</a>
+                </td>
 
-<div id="office_asso" class="card">
-    <div class="card-header">
-        Bureau
-        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#officeModal">
-            &#x2795;
-        </button>
-    </div>
+                <td>
+                    {% include 'event_status.html' %}
+                </td>
 
-    <div class="card-body">
-        <table>
-            {% for member in office %}
-                <tr>
-                    <td>
-                        {{ member.member.username }}
-                    </td>
-
-                    <td>
-                        <button type="button" class="btn btn-danger btn-sm"
-                            onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
+                <td>
+                    {% if event.status == '1' %}
+                        <button type="button" class="btn btn-success btn-xs">
+                            &#10004;
+                        </button>
+                        <button type="button" class="btn btn-danger btn-xs">
                             &#x2715;
                         </button>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
-</div>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-<div id="officeModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document"></div>
+    <button type="button" class="btn btn-info btn-xs"
+            data-toggle="modal" data-target="#officeModal">
+        &#x2795;
+    </button>
 
-    <div class="modal-content">
-        <div class="modal-header">
-            <h4>Ajouter un membre au bureau</h4>
+    <table class="table table-sm table-striped">
+        {% for member in office %}
+            <tr>
+                <td>
+                    {{ member.member.username }}
+                </td>
+
+                <td>
+                    <button type="button" class="btn btn-danger btn-xs"
+                            onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
+                        &#x2715;
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <div id="officeModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document"></div>
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Ajouter un membre au bureau</h4>
+            </div>
+            <div class="modal-body">
+                <form enctype="multipart/form-data" method="post"
+                      action="{% url 'core:association' asso.name %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">Fermer
+                        </button>
+                        <button type="submit" class="btn btn-primary">Ajouter
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-            <form enctype="multipart/form-data" method="post" action="{% url 'core:association' asso.name %}">
-                {% csrf_token %}
-                {{ form.as_p }}
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-                    <button type="submit" class="btn btn-primary">Ajouter</button>
-                </div>
-            </form>
-        </div>
     </div>
-</div>
 
-<img href="{{ asso.logo }}"/>
+    <img href="{{ asso.logo }}"/>
 {% endblock %}
