@@ -13,7 +13,8 @@ def view(request):
             asso = Association.objects.all().filter(name=form.cleaned_data['name'])
             if asso:
                 form = association_form()
-                return render(request, 'association_create.html', {'form': form})
+                return render(request, 'association_create.html', {'form': form,
+                                                                   'fail': 'Cette association a déjà été créée'})
 
             association = Association()
             association.name = form.cleaned_data['name']
@@ -25,4 +26,5 @@ def view(request):
     else:
         form = association_form()
 
-    return render(request, 'association_create.html', {'form': form})
+    return render(request, 'association_create.html', {'form': form,
+                                                       'info': 'Votre association a bien été créée'})
