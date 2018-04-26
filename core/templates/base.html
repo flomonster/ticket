@@ -67,13 +67,16 @@
 <body>
 
 <!-- Lighter colored navbar with links to "Mes associations" & "Mes évènements" -->
-<nav class="navbar navbar-inverse navbar-expand-md" style="background-color: #00a9e6;">
-    <!-- This navbar might not be consistently on top -->
-    <!-- "Mes associations" button, not linked with anything yet -->
-    <button type="button" class="btn btn-secondary">Mes associations</button>
+    <nav class="navbar navbar-inverse navbar-expand-md" style="background-color: #00a9e6;">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 
-    <!-- "Mes évènements" button, not linked with anything yet -->
-    <button type="button" class="btn btn-secondary">Mes évènements</button>
+    <div class="navbar-nav">
+      <a class="nav-item nav-link active" id="home" href="#">Accueil<span class="sr-only">(current)</span></a>
+      <a class="nav-item nav-link" id="mes_asso" href="#">Mes associations</a>
+      <a class="nav-item nav-link" id="mes_event" href="#">Mes évènements</a>
+    </div>
+
+  </div>
 </nav>
 
 
