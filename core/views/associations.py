@@ -7,3 +7,8 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def view(request):
     return render(request, 'associations.html', {'associations': Association.objects.all()})
+
+@login_required
+def remove(request, name):
+    Association.objects.get(name=name).delete()
+    return redirect("core:associations")

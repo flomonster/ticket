@@ -8,7 +8,10 @@ Mes associations
 {% block content %}
 <ul>
   {% for asso in associations %}
-    <li><a href="{% url 'core:association' asso.name %}">{{ asso.name }}</a></li>
+    <li><a href="{% url 'core:association' asso.name %}">{{ asso.name }}</a>
+      <button type="button" class="btn btn-danger btn-xs"
+                            onclick="window.location.href='{% url 'core:association_rm' asso.name %}'">&#x2715;</button>
+    </li>
   {% endfor %}
 </ul>
 {% endblock %}
