@@ -33,55 +33,55 @@
 
 
 <header>
-<!-- Lighter colored navbar with links to "Mes associations" & "Mes évènements" -->
-<nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: #004663;">
+    <!-- Lighter colored navbar with links to "Mes associations" & "Mes évènements" -->
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: #004663;">
 
-    <!-- Epita logo -->
-    <a class="navbar-brand" href="{% url 'core:index' %}">
-        <img class="img-fluid" src="{% static 'img/epita.png' %}">
-    </a>
+        <!-- Epita logo -->
+        <a class="navbar-brand" href="{% url 'core:index' %}">
+            <img class="img-fluid" src="{% static 'img/epita.png' %}">
+        </a>
 
-    <!-- Page title -->
-    <h2 class="my-navbar-text">
-        Billetterie
-    </h2>
+        <!-- Page title -->
+        <h2 class="my-navbar-text">
+            Billetterie
+        </h2>
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+                aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" id="home" href="{% url 'core:index' %}">Accueil <span
-                        class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="mes_asso" href="{% url 'core:associations' %}">Mes associations</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="mes_event" href="#">Mes évènements</a>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Recherche" aria-label="Search">
-            <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Recherche</button>
-        </form>
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav bd-navbar-nav flex-row mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" id="home" href={% url 'core:index' %}>Accueil <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="mes_asso" href="{% url 'core:association_create' %}">Mes associations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="mes_event" href="#">Mes évènements</a>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Recherche" aria-label="Search">
+                <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Recherche</button>
+            </form>
 
-        <!-- Connection button -->
-        {% if user.is_authenticated %}
-            <!-- Might change to a span with glyphicon login/logout -->
-            <button type="button" class="btn btn-primary my-2 my-sm-0" id="connect"
-                    onclick="window.location.href='{% url 'core:logout' %}'">Déconnexion
-            </button>
-        {% else %}
-            <button type="button" class="btn btn-primary my-2 my-sm-0" id="connect"
-                    onclick="window.location.href='{% url 'core:login' %}'">Connexion
-            </button>
-        {% endif %}
+            <!-- Connection button -->
+            {% if user.is_authenticated %}
+                <!-- Might change to a span with glyphicon login/logout -->
+                <button type="button" class="btn btn-primary my-2 my-sm-0" id="connect"
+                        onclick="window.location.href='{% url 'core:logout' %}'">Déconnexion
+                </button>
+            {% else %}
+                <button type="button" class="btn btn-primary my-2 my-sm-0" id="connect"
+                        onclick="window.location.href='{% url 'core:login' %}'">Connexion
+                </button>
+            {% endif %}
 
-    </div>
-</nav>
+        </div>
+    </nav>
 
 </header>
 
@@ -110,6 +110,17 @@
 <div id="content">
     {% block content %}{% endblock %}
 </div>
+
+<!-- Function to change a link to an active link -->
+<script>
+
+    $(function () {
+        if ((location.pathname.split("/")[1]) !== "") {
+            $('nav a[href^="/' + location.pathname.split("/")[1] + '"]').addClass('active');
+        }
+    });
+
+</script>
 
 
 </body>
