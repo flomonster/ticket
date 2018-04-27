@@ -1,4 +1,4 @@
-<div id="{{ id }}" class="modal fade" tabindex="-1" role="dialog">
+<div id="{{ id }}" class="modal fade modal-form" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document"></div>
 
     <div class="modal-content">
@@ -15,7 +15,7 @@
                     <button type="button" class="btn btn-secondary"
                             data-dismiss="modal">Fermer
                     </button>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" name="{{ id }}">
                         {{ action }}
                     </button>
                 </div>
