@@ -91,29 +91,6 @@
         </div>
     </div>
 
-    <div id="officeModal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document"></div>
-
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>Ajouter un membre au bureau</h4>
-            </div>
-            <div class="modal-body">
-                <form enctype="multipart/form-data" method="post"
-                      action="{% url 'core:association' asso.name %}">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
-                                data-dismiss="modal">Fermer
-                        </button>
-                        <button type="submit" class="btn btn-primary">Ajouter
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    {% include "modal_form.html" with form=form action="Ajouter" desc="LOUL" id="officeModal" %}
     <img href="{{ asso.logo }}"/>
 {% endblock %}
