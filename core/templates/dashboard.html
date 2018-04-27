@@ -70,7 +70,7 @@
 
                     <tbody>
                     {% for event in events %}
-                        {% if event.status != '5' %}
+                        {% if event.status != 5 %}
                         <tr>
                             <td>
                                 <a class="event-link" href="#">{{ event.title }}</a>
@@ -81,7 +81,7 @@
                             </td>
 
                             <td>
-                                {% if event.status == '1' %}
+                                {% if event.status == 1 %}
                                     <button type="button"
                                             class="btn btn-success btn-xs"
                                             onclick="window.location.href='{% url 'core:confirm_event' asso.name event.id %}'">
