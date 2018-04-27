@@ -45,6 +45,7 @@ class Dashboard:
 
         class AddForm(AssoForm):
             membre = forms.ModelChoiceField(queryset=others, required=True)
+            role = forms.ChoiceField(choices=MemberRole.choices())
 
         class RemoveForm(AssoForm):
             membre = forms.ModelChoiceField(queryset=all,
@@ -130,7 +131,8 @@ class Dashboard:
             return
 
         member = form.cleaned_data['membre']
-        membership = Membership(asso=asso, member=member, role=MemberRole.SIMPLE._value_)
+        role = form.cleaned_data['role']
+        membership = Membership(asso=asso, member=member, role=role)
         membership.save()
 
         Dashboard.msg = member.username + " a bien été ajouté à l'association."
