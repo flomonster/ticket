@@ -4,4 +4,50 @@
 {% endblock %}
 
 {% block content %}
+    {% for event in events %}
+        <div class="card event">
+            <div class="card-header">
+                <a href="#" class="event-title">{{ event.title }}</a>
+                {% include 'event_status.html' %}
+
+                <div class="event-dates">
+                    {{ event.start }} - {{ event.end }}
+                </div>
+
+                <br/>
+
+                <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#body{{ event.id }}">
+                    Show
+                </button>
+
+                <a class="event-orga" href="{% url 'core:association' event.orga %}">{{ event.orga }}</a>
+            </div>
+
+            <div id="body{{ event.id }}" class="collapse">
+                <div class="card-body">
+                    <table class="table table-striped table-condensed table-sm">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Internes</th>
+                                <th>Externes</th>
+                                <th>Staffs</th>
+                                <th>Totaux</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>Inscrits</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}
