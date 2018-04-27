@@ -107,14 +107,15 @@ h2 {
   border-color: #fab810;
 }
 
+
 #home:hover, #mes_asso:hover,  #mes_event:hover {
   font-weight: bold;
   text-decoration: none;
   color: white;
 }
 
-#home, #mes_asso, #mes_event {
-
+#home:active, #mes_asso:active, #mes_event:active {
+  color: #fab810;
 }
 
 .tag {
