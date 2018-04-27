@@ -19,6 +19,7 @@ class EventStatus(ChoiceEnum):
     VALIDATED = 2
     PENDING = 3
     FINISHED = 4
+    REJECTED = 5
 
 class MemberRole(ChoiceEnum):
     """
