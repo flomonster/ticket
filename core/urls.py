@@ -1,7 +1,8 @@
 from django.urls import path
 
 from django.contrib.auth import views as auth_views
-from core.views import index, dashboard, association_create, associations
+from core.views import index, dashboard, association_create, associations, \
+    myevents
 
 app_name = 'core'
 
@@ -10,8 +11,10 @@ urlpatterns = [
 
     # Associations
     path('association/', associations.view, name='associations'),
-    path('association/create/', association_create.view, name='association_create'),
-    path('association/<str:name>/', dashboard.Dashboard.view, name='association'),
+    path('association/create/', association_create.view,
+         name='association_create'),
+    path('association/<str:name>/', dashboard.Dashboard.view,
+         name='association'),
     path('association/<str:name>/remove/office/<str:member>/',
         dashboard.Dashboard.delete_office_view, name='association_remove'),
     path('association/remove/<str:name>/', associations.remove, name="association_rm"),
@@ -23,4 +26,7 @@ urlpatterns = [
     # Login
     path('login/', auth_views.login, name='login'),
     path('logout/', index.logout, name='logout'),
+
+    # Events
+    path('events/', myevents.MyEvents.view, name='my_events')
 ]
