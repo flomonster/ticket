@@ -1,11 +1,19 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <h1>{{ asso.name }}</h1>
+{% block title %}
+<h1>{{ asso.name }}</h1>
+{% endblock %}
 
+{% block content %}
     <div class="btn-group" role="group">
-        <button type="button" class="btn btn-primary">Ajouter membre</button>
-        <button type="button" class="btn btn-primary">Supprimer membre</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal"
+                data-target="#addModal">
+            Ajouter membre
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="modal"
+                data-target="#removeModal">
+            Supprimer membre
+        </button>
     </div>
 
 
@@ -91,6 +99,8 @@
         </div>
     </div>
 
-    {% include "modal_form.html" with form=form action="Ajouter" desc="LOUL" id="officeModal" %}
+    {% include "modal_form.html" with form=office_form action="Ajouter" desc="Ajouter un membre au bureau" id="officeModal" %}
+    {% include "modal_form.html" with form=add_form action="Ajouter" desc="Ajouter un membre" id="addModal" %}
+    {% include "modal_form.html" with form=remove_form action="Supprimer" desc="Supprimer un membre" id="removeModal" %}
     <img href="{{ asso.logo }}"/>
 {% endblock %}
