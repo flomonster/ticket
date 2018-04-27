@@ -118,19 +118,12 @@ a, a:hover {
 }
 
 h1 {
-<<<<<<< HEAD
   font-family: Helvetica, Arial, sans-serif;
   font-weight: bold;
   color: #00435f;
   margin-left: 1.5rem;
   margin-top: 2rem;
   padding-top: 1rem;
-=======
-    font-family: Helvetica, Arial, sans-serif;
-    font-weight: bold;
-    color: #fab810;
-    margin-left: 1.5rem;
->>>>>>> css: update for the login drowpdown in navbar
 }
 
 h2 {
@@ -296,6 +289,8 @@ h2 {
 
 .alert {
     margin: 10px;
+    width: -moz-fit-content;
+    float: right;
 }
 
 .container {
