@@ -87,7 +87,7 @@
             <ul class="divider"></ul>
 
             <!-- Login dropdown-->
-
+            {% if not user.is_authenticated %}
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown open">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Connexion</b> <span
@@ -96,10 +96,9 @@
                         <li>
                             <div class="row">
                                 <div class="col-md-12">
-                                    Se connecter avec
+                                    Se connecter avec :
 
                                     <!-- Connection button  -->
-
                                     <div class="social-buttons">
                                         <a href="{% url 'social:begin' backend='epita' %}"
                                            class="btn btn-primary">Epita</a>
@@ -113,6 +112,11 @@
                     </ul>
                 </li>
             </ul>
+
+            <!-- Logout -->
+            {% else %}
+            <a class="btn btn-warning my-2 my-sm-0" href="{% url 'core:logout' %}">Déconnexion</a>
+            {% endif %}
         </div>
     </nav>
 
