@@ -70,7 +70,7 @@
 
                     <tbody>
                     {% for event in events %}
-                        {% if event.status != rejected %}
+                        {% if event.status != '5' %}
                         <tr>
                             <td>
                                 <a class="event-link" href="#">{{ event.title }}</a>
