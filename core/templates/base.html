@@ -113,15 +113,21 @@
 
 <!-- Function to change a link to an active link -->
 <script>
+  $(function(){
+    var current = location.pathname;
 
-    $(function () {
-        if ((location.pathname.split("/")[1]) !== "") {
-            $('nav a[href^="/' + location.pathname.split("/")[1] + '"]').addClass('active');
-        }
-    });
+    var home = document.getElementById("home");
+    if (home.attributes.href.value.localeCompare(current) == 0)
+      home.classList.add("active");
 
+    var assos = document.getElementById("mes_asso");
+    if (current.startsWith(assos.attributes.href.value))
+      assos.classList.add("active");
+
+    var events = document.getElementById("mes_event");
+    if (current.startsWith(events.attributes.href.value))
+      events.classList.add("active");
+  })
 </script>
-
-
 </body>
 </html>
