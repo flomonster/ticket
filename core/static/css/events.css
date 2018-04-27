@@ -1,0 +1,24 @@
+.event {
+    margin-bottom: 2%;
+}
+
+.event:last-child {
+    margin-bottom: 0;
+}
+
+.event-short {
+    background-color: #9dc8ec;
+    padding: 2%;
+}
+
+.event-title {
+    font-size: 1.4em;
+}
+
+.event-orga {
+    float: right;
+}
+
+.event-dates {
+    float: right;
+}
