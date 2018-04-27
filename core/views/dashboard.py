@@ -8,6 +8,7 @@ from django import forms
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from core.models import Association, Event, Membership, MemberRole, EventStatus
 
@@ -16,6 +17,7 @@ class Dashboard:
     msg = None
 
     @staticmethod
+    @login_required
     def view(request, name):
         """
         @brief display the dashboard of an association if it exists.

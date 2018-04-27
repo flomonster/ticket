@@ -2,10 +2,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from core.models import Association
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 from core.forms.association_create import association_form
 
 
+@login_required
 def view(request):
     if request.method == 'POST':
         form = association_form(request.POST, request.FILES)
