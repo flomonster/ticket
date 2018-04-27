@@ -25,7 +25,7 @@ class Dashboard:
         """
         asso = get_object_or_404(Association, name=name)
 
-        # Select simple members
+        # Prepare useful queryset
         simples = Dashboard.get_members(asso, MemberRole.SIMPLE)
         office = Dashboard.get_members(asso, MemberRole.OFFICE)
         president = Dashboard.get_members(asso, MemberRole.PRESIDENT)
@@ -33,7 +33,7 @@ class Dashboard:
         all = simples | office | president
         others = User.objects.all().exclude(pk__in=all.values('member'))
 
-        # Nested class Form for the association
+        # Nested classes in order to create forms with different behaviours
         class AssoForm(forms.Form):
             def __init__(self, *args, **kwargs):
                 super(AssoForm, self).__init__(*args, **kwargs)
@@ -103,6 +103,11 @@ class Dashboard:
 
     @staticmethod
     def add_office_member(asso, form):
+        """
+        @brief update membership to OFFICE role
+        @param asso association to update
+        @param form form with the requested update
+        """
         if not form.is_valid():
             return None
 
@@ -116,6 +121,11 @@ class Dashboard:
 
     @staticmethod
     def remove_member(asso, form):
+        """
+        @brief completely remove a membership row
+        @param asso association to update
+        @param form form with the update
+        """
         if not form.is_valid():
             return
 
@@ -127,6 +137,11 @@ class Dashboard:
 
     @staticmethod
     def add_member(asso, form):
+        """
+        @brief add a new membership row
+        @param asso association of the new membership
+        @param form form with the member
+        """
         if not form.is_valid():
             return
 
