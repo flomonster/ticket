@@ -15,6 +15,10 @@ urlpatterns = [
     path('association/<str:name>/remove/office/<str:member>/',
         dashboard.Dashboard.delete_office_view, name='association_remove'),
     path('association/remove/<str:name>/', associations.remove, name="association_rm"),
+    path('association/<str:name>/confirm/event/<int:id>/',
+         dashboard.Dashboard.confirm_event, name='confirm_event'),
+    path('association/<str:name>/reject/event/<int:id>/',
+         dashboard.Dashboard.reject_event, name='reject_event'),
 
     # Login
     path('login/', auth_views.login, name='login'),

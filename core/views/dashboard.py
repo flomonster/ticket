@@ -87,6 +87,7 @@ class Dashboard:
         variables['waiting'] = str(EventStatus.WAITING._value_)
         variables['validated'] = str(EventStatus.VALIDATED._value_)
         variables['pending'] = str(EventStatus.PENDING._value_)
+        variables['rejected'] = str(EventStatus.REJECTED._value_)
 
         Dashboard.msg = None
 
@@ -183,4 +184,24 @@ class Dashboard:
         tmp.save()
         Dashboard.msg = member + ' a bien été supprimé du bureau.'
 
+        return redirect(reverse('core:association', args=[asso.name]))
+
+    @staticmethod
+    def confirm_event(request, name, id):
+        asso = get_object_or_404(Association, name=name)
+        event = Event.objects.all().get(pk=id)
+        event.status = EventStatus.VALIDATED._value_
+        event.save()
+
+        Dashboard.msg = "L'évènement " + event.title + ' a été confirmé.'
+        return redirect(reverse('core:association', args=[asso.name]))
+
+    @staticmethod
+    def reject_event(request, name, id):
+        asso = get_object_or_404(Association, name=name)
+        event = Event.objects.all().get(pk=id)
+        event.status = EventStatus.REJECTED._value_
+        event.save()
+
+        Dashboard.msg = "L'évènement " + event.title + ' a été rejeté.'
         return redirect(reverse('core:association', args=[asso.name]))

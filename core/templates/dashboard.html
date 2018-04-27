@@ -70,6 +70,7 @@
 
                     <tbody>
                     {% for event in events %}
+                        {% if event.status != rejected %}
                         <tr>
                             <td>
                                 <a class="event-link" href="#">{{ event.title }}</a>
@@ -82,16 +83,19 @@
                             <td>
                                 {% if event.status == '1' %}
                                     <button type="button"
-                                            class="btn btn-success btn-xs">
+                                            class="btn btn-success btn-xs"
+                                            onclick="window.location.href='{% url 'core:confirm_event' asso.name event.id %}'">
                                         &#10004;
                                     </button>
                                     <button type="button"
-                                            class="btn btn-danger btn-xs">
+                                            class="btn btn-danger btn-xs"
+                                            onclick="window.location.href='{%  url 'core:reject_event' asso.name event.id %}'">
                                         &#x2715;
                                     </button>
                                 {% endif %}
                             </td>
                         </tr>
+                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
