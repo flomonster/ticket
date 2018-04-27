@@ -7,9 +7,9 @@ features.
 from django import forms
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.models import User
 
 from core.models import Association, Event, Membership, MemberRole, EventStatus
-
 
 
 class Dashboard:
@@ -26,39 +26,59 @@ class Dashboard:
         asso = get_object_or_404(Association, name=name)
 
         # Select simple members
-        o = Membership.objects.select_related('asso') \
-            .filter(asso__exact=asso)\
-            .filter(role__exact=str(MemberRole.SIMPLE._value_))
+        simples = Dashboard.get_members(asso, MemberRole.SIMPLE)
+        office = Dashboard.get_members(asso, MemberRole.OFFICE)
+        president = Dashboard.get_members(asso, MemberRole.PRESIDENT)
+
+        all = simples | office | president
+        others = User.objects.all().exclude(pk__in=all.values('member'))
 
         # Nested class Form for the association
-        class OfficeForm(forms.Form):
-            membre = forms.ModelChoiceField(queryset=o, required=True)
-
+        class AssoForm(forms.Form):
             def __init__(self, *args, **kwargs):
-                super(OfficeForm, self).__init__(*args, **kwargs)
+                super(AssoForm, self).__init__(*args, **kwargs)
                 for field_name, field in self.fields.items():
                     field.widget.attrs['class'] = 'form-control'
 
-        if request.method == 'POST':
-            form = OfficeForm(request.POST)
-            if form.is_valid():
-                # Add a member to office
-                form.cleaned_data['membre'].role = MemberRole.OFFICE._value_
-                form.cleaned_data['membre'].save()
-                user = form.cleaned_data['membre'].member
+        class OfficeForm(AssoForm):
+            membre = forms.ModelChoiceField(queryset=simples, required=True)
 
-                Dashboard.msg = user.username + ' a bien été ajouté au bureau.'
+        class AddForm(AssoForm):
+            membre = forms.ModelChoiceField(queryset=others, required=True)
+
+        class RemoveForm(AssoForm):
+            membre = forms.ModelChoiceField(queryset=all,
+                                            required=True)
+
+        if request.method == 'POST':
+            if 'officeModal' in request.POST:
+                form = OfficeForm(request.POST)
+                Dashboard.add_office_member(asso, form)
+            elif 'addModal' in request.POST:
+                form = AddForm(request.POST)
+                Dashboard.add_member(asso, form)
+            else:
+                form = RemoveForm(request.POST)
+                Dashboard.remove_member(asso, form)
+
+            if Dashboard.msg:
                 return redirect(reverse('core:association', args=[asso.name]))
+
         else:
-            form = OfficeForm()
+            office_form = OfficeForm()
+            add_form = AddForm()
+            remove_form = RemoveForm()
 
         # Creating templates variables
         variables = {}
         variables['events'] = Dashboard.related_events(asso)
-        variables['office'] = Dashboard.get_office_members(asso)
+        variables['office'] = office
         variables['asso'] = asso
         variables['info'] = Dashboard.msg
-        variables['form'] = form
+
+        variables['office_form'] = office_form
+        variables['add_form'] = add_form
+        variables['remove_form'] = remove_form
 
         variables['waiting'] = str(EventStatus.WAITING._value_)
         variables['validated'] = str(EventStatus.VALIDATED._value_)
@@ -67,20 +87,6 @@ class Dashboard:
         Dashboard.msg = None
 
         return render(request, 'dashboard.html', variables)
-
-    @staticmethod
-    def get_office_members(asso):
-        """
-        @brief search for the members that are part of the office.
-        @param asso the association.
-        @return a query set of all the office members.
-        """
-        o = Membership.objects.select_related('asso') \
-            .filter(asso__exact=asso)\
-            .filter(role__exact=str(MemberRole.OFFICE._value_))
-
-        return o
-
 
     @staticmethod
     def related_events(asso):
@@ -95,6 +101,49 @@ class Dashboard:
         return e
 
     @staticmethod
+    def add_office_member(asso, form):
+        if not form.is_valid():
+            return None
+
+        member = form.cleaned_data['membre']
+        member.role = MemberRole.OFFICE._value_
+        member.save()
+
+        user = member.member.username
+
+        Dashboard.msg = user + ' a bien été ajouté au bureau.'
+
+    @staticmethod
+    def remove_member(asso, form):
+        if not form.is_valid():
+            return
+
+        member = form.cleaned_data['membre']
+        user = member.member.username
+        member.delete()
+
+        Dashboard.msg = user + " a bien été supprimé de l'association"
+
+    @staticmethod
+    def add_member(asso, form):
+        if not form.is_valid():
+            return
+
+        member = form.cleaned_data['membre']
+        membership = Membership(asso=asso, member=member, role=MemberRole.SIMPLE._value_)
+        membership.save()
+
+        Dashboard.msg = member.username + " a bien été ajouté à l'association."
+
+    @staticmethod
+    def get_members(asso, role):
+        o = Membership.objects.select_related('asso') \
+            .filter(asso__exact=asso) \
+            .filter(role__exact=str(role._value_))
+
+        return o
+
+    @staticmethod
     def delete_office_view(request, name, member):
         """
         @brief delete a member from the office of an association.
@@ -104,15 +153,12 @@ class Dashboard:
         @return redirection to dashboard
         """
         asso = get_object_or_404(Association, name=name)
-
-        o = Membership.objects.select_related('asso') \
-            .filter(asso__exact=asso) \
-            .filter(role__exact=str(MemberRole.OFFICE._value_)) \
+        office = Dashboard.get_members(asso, MemberRole.OFFICE) \
             .select_related('member') \
             .get(member__username=member)
 
-        o.role = str(MemberRole.SIMPLE._value_)
-        o.save()
+        office.role = str(MemberRole.SIMPLE._value_)
+        office.save()
         Dashboard.msg = member + ' a bien été supprimé du bureau.'
 
         return redirect(reverse('core:association', args=[asso.name]))
