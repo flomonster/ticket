@@ -34,6 +34,7 @@ class Dashboard:
 
         all = simples | office | president
         others = User.objects.all().exclude(pk__in=all.values('member'))
+        office = office | president
 
         # Nested classes in order to create forms with different behaviours
         class AssoForm(forms.Form):
@@ -172,12 +173,14 @@ class Dashboard:
         @return redirection to dashboard
         """
         asso = get_object_or_404(Association, name=name)
-        office = Dashboard.get_members(asso, MemberRole.OFFICE) \
-            .select_related('member') \
-            .get(member__username=member)
+        office = Dashboard.get_members(asso, MemberRole.OFFICE)
+        pres = Dashboard.get_members(asso, MemberRole.PRESIDENT)
 
-        office.role = str(MemberRole.SIMPLE._value_)
-        office.save()
+        tmp = (office | pres).select_related('member') \
+                             .get(member__username=member)
+
+        tmp.role = str(MemberRole.SIMPLE._value_)
+        tmp.save()
         Dashboard.msg = member + ' a bien été supprimé du bureau.'
 
         return redirect(reverse('core:association', args=[asso.name]))
