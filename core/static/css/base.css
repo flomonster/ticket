@@ -291,6 +291,7 @@ h2 {
     margin: 10px;
     width: -moz-fit-content;
     float: right;
+    z-index: 900;
 }
 
 .container {
