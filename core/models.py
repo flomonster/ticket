@@ -8,7 +8,7 @@ class ChoiceEnum(Enum):
     def choices(cls):
         items = inspect.getmembers(cls, lambda m : not(inspect.isroutine(m)))
         props = [m for m in items if not(m[0][:2] == '__')]
-        choices = tuple([(str(p[1].value), p[0]) for p in props])
+        choices = tuple([(p[1].value, p[0]) for p in props])
         return choices
 
 class EventStatus(ChoiceEnum):
@@ -54,7 +54,7 @@ class Event(models.Model):
     int_price = models.IntegerField()
     ext_price = models.IntegerField()
     display = models.BooleanField()
-    status = models.CharField(max_length=1, choices=EventStatus.choices())
+    status = models.IntegerField(choices=EventStatus.choices())
     token = models.CharField(max_length=20)
 
     def __str__(self):
@@ -78,7 +78,7 @@ class Membership(models.Model):
     """
     asso = models.ForeignKey(Association, on_delete=models.DO_NOTHING)
     member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    role = models.CharField(max_length=1, choices=MemberRole.choices())
+    role = models.IntegerField(choices=MemberRole.choices())
 
     def __str__(self):
         return self.member.username
