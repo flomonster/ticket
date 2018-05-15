@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Inscription
+{% endblock %}
+
+{% block content %}
+    <div class="panel">
+        <div class="panel-body">
+            <form enctype='multipart/form-data' action="{% url 'core:register' id %}" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <label for=prix">Prix:</label>
+                <input type="text" id="prix" disabled class="textInput form-control" name="prix" value="{{ event_price }} €">
+                <button type="submit" class="btn btn-primary">Valider</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
