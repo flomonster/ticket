@@ -131,6 +131,10 @@ h2 {
     font-weight: bold;
 }
 
+#prix {
+    margin-bottom: 1.5rem;
+}
+
 .container-fluid {
     background: #0b92d4 repeat;
     float: left;
