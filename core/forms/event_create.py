@@ -1,5 +1,6 @@
 from django import forms
 
+from core.models import Association, EventStatus
 
 class event_form(forms.Form):
     title = forms.CharField(label="Nom de l'évènement", max_length=200)
@@ -8,15 +9,15 @@ class event_form(forms.Form):
     end = forms.DateTimeField(label="Date de fin")
     place = forms.CharField(label="Lieu de l'évènement", max_length=200)
     cover = forms.ImageField()
-    orga =
+    orga = forms.ModelChoiceField(queryset=Association.objects.all())
     closing = forms.DateTimeField(label="Date butoire d'inscription")
     int_capacity = forms.IntegerField(label="Capacité maximale d'internes")
     ext_capacity = forms.IntegerField(label="Capacité maximale d'externes")
     int_price = forms.IntegerField(label="Prix internes")
     ext_price = forms.IntegerField(label="Prix externes")
-    display = forms.BooleanField(label="")
-    status =
-    token =
+    display = forms.BooleanField(label="Montrer les effectifs")
+    status = EventStatus.WAITING
+    token = 42 #FIXME: change value later
 
     website = forms.CharField(label="Site web", max_length=200, required=False)
     email = forms.EmailField()
