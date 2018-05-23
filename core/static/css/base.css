@@ -294,10 +294,12 @@ h2 {
     z-index: 900;
 }
 
-.container {
-  height: 40rem;
+.content-container {
+  padding-bottom: 2%;
   position: relative;
   background-color: #ddebff;
   border-radius: .25rem;
   box-shadow: 0 10px 10px rgba(0,0,0,.25);
+  margin-left: 5%;
+  margin-right: 5%;
 }
