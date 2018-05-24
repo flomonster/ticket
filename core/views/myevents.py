@@ -5,16 +5,22 @@ from core.models import Event, EventStatus, Participant, Staff
 class MyEvents:
     class Stat:
         registered = {}
+        used = {}
 
         def __init__(self, event):
-            p = Participant.objects.filter(event__exact=event)
+            p_reg = Participant.objects.filter(event__exact=event)
+            p_use = Participant.objects.filter(event__exact=event).filter(used__exact=True)
             s = Staff.objects.filter(event__exact=event)
-            externs = [e for e in p if e.is_external()]
+            self.build_row(p_reg, self.registered)
+            self.build_row(p_use, self.used)
 
-            self.registered['externs'] = len(externs)
-            self.registered['interns'] = p.count() - self.registered['externs']
-            self.registered['staff'] = s.count()
-            self.registered['total'] = p.count() + s.count()
+
+        def build_row(self, set, dict):
+            externs = [e for e in set if e.is_external()]
+
+            dict['externs'] = len(externs)
+            dict['interns'] = set.count() - dict['externs']
+            dict['total'] = set.count()
 
     @staticmethod
     def view(request):
