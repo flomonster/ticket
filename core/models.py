@@ -92,3 +92,6 @@ class Participant(models.Model):
     event = models.ForeignKey(Event, on_delete=models.DO_NOTHING)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     mail = models.EmailField()
+
+    def __str__(self):
+        return self.user.username + ' ' + self.event.title

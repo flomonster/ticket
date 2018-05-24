@@ -1,11 +1,12 @@
 from django.shortcuts import render
 
-from core.models import Event, EventStatus
+from core.models import Event, EventStatus, Participant
 
 class MyEvents:
     @staticmethod
     def view(request):
-        events = MyEvents.get_events()
+        events = MyEvents.get_events(request.user)
+        print(events)
 
         # Template variables
         variables = {}
@@ -17,10 +18,12 @@ class MyEvents:
         return render(request, 'my_events.html', variables)
 
     @staticmethod
-    def get_events():
+    def get_events(user):
         """
         @brief get the set of events to be displayed
         @return query set of Event
         """
-        # TODO: refined events query
-        return Event.objects.all()
+        participations = Participant.objects.filter(user__exact=user)\
+                                            .select_related('event')
+        participations = [p['event'] for p in list(participations.values('event').all())]
+        return Event.objects.filter(id__in=participations)
