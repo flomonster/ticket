@@ -80,21 +80,23 @@
                         </div>
 
                         <div class="row">
-                            {% if event.status == 1 and respo %}
-                                <div class="col-sm-2">
-                                    <button type="button"
-                                            class="btn btn-success btn-md"
-                                            onclick="window.location.href='{% url 'core:confirm_event' event.orga.name event.id %}'">
-                                        &#10004;
-                                    </button>
-                                </div>
-                                <div class="col-sm-2">
-                                    <button type="button"
-                                            class="btn btn-danger btn-md"
-                                            onclick="window.location.href='{%  url 'core:reject_event' event.orga.name event.id %}'">
-                                        &#x2715;
-                                    </button>
-                                </div>
+                            {% if event.status == 1 %}
+                                {% if event.valid or respo %}
+                                    <div class="col-sm-2">
+                                        <button type="button"
+                                                class="btn btn-success btn-md"
+                                                onclick="window.location.href='{% url 'core:confirm_event' event.orga.name event.id %}'">
+                                            &#10004;
+                                        </button>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button type="button"
+                                                class="btn btn-danger btn-md"
+                                                onclick="window.location.href='{%  url 'core:reject_event' event.orga.name event.id %}'">
+                                            &#x2715;
+                                        </button>
+                                    </div>
+                                {% endif %}
                             {% endif %}
                         </div>
 

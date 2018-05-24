@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from core.models import Event, EventStatus, Participant, Staff, Validation
+from core.models import Event, EventStatus, Participant, Staff, Validation, Membership, MemberRole
 
 class MyEvents:
     class Stat:
@@ -28,14 +28,24 @@ class MyEvents:
 
     @staticmethod
     def view(request):
+        memberships = Membership.objects.filter(member=request.user)
+
         if request.user.has_perm('core.respo'):
             events = Event.objects.all()
         else:
             events = MyEvents.get_events(request.user)
 
+        for member in memberships:
+            if member.role == MemberRole.PRESIDENT._value_:
+                events |= Event.objects.filter(orga=member.asso)
+
+
         for event in events:
             event.stat = MyEvents.Stat(event)
             event.disp = MyEvents.is_staff(event, request.user)
+            event.valid = Membership.objects.filter(asso=event.orga)\
+                                            .get(member=request.user)\
+                                            .role == MemberRole.PRESIDENT._value_
 
         # Template variables
         variables = {}

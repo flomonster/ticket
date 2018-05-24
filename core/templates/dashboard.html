@@ -36,6 +36,11 @@
                     {% for member in office %}
                         <tr>
                             <td>
+                                {% if member.role == 3 %}
+                                    &#9819;
+                                {% endif %}
+                            </td>
+                            <td>
                                 {{ member.member.username }}
                             </td>
 
