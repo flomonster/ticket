@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{event.title}}
+<!-- FIXME: What about putting status there with the organizing association? The photo there too?-->
+{% endblock %}
+
+{% block content %}
+    <div class="panels">
+        <!-- Staffs -->
+        <div class="panel panel-fixed" id="staff-panel">
+            <div class="panel-header">
+                Staff
+                <!-- FIXME: Button to add staff : reuse modal form.html? -->
+                <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#add_staff">
+                    Ajouter
+                </button>
+            </div>
+
+            <!-- FIXME: add a staff field in event? get the staff from -->
+            {% if not staff %}
+                <div class="panel-body">Pas de staff</div>
+            {% else %}
+                <table class="table table-sm table-striped panel-body">
+                    {% for staff in staff %}
+                        <tr>
+                            <td>
+                                <!-- FIXME: Not too sure about this one... -->
+                                {{staff.member.username}}
+                            </td>
+
+                            <td>
+                                <!-- FIXME: Button to delete staff: reuse modal_form? -->
+                                <button type="button" class="btn btn-danger btn-xs"
+                                        onclick="window.location.href='{% url 'core:rm_staff' event.id staff.member %}'">
+                                    &#x2715;
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+        </div>
+
+    {% include "add_staff.html" with form=delete_form action="Supprimer" desc="Supprimer un staff" id="del_staff" %}
+    {% include "add_staff.html" with form=add_form action="Ajouter" desc="Ajouter un staff" id="add_staff" %}
+
+    </div>
+{% endblock %}
