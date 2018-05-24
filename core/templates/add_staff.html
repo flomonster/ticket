@@ -1,0 +1,25 @@
+<div id="{{ id }}" class="modal fade modal-form" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document"></div>
+
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>{{ desc }}</h4>
+        </div>
+        <div class="modal-body">
+            <form enctype="multipart/form-data" method="post"
+                  action="{% url 'core:event' event.id %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">Fermer
+                    </button>
+                    <button type="submit" class="btn btn-primary" name="{{ id }}">
+                        {{ action }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
