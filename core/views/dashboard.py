@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
-from core.models import Association, Event, Membership, MemberRole, EventStatus
+from core.models import Association, Event, Membership, MemberRole, EventStatus, Validation
 
 
 class Dashboard:
@@ -26,6 +26,7 @@ class Dashboard:
         @return an HttpResponse serving the web page.
         """
         asso = get_object_or_404(Association, name=name)
+        member = get_object_or_404(Membership, member=request.user, asso=asso)
 
         # Prepare useful queryset
         simples = Dashboard.get_members(asso, MemberRole.SIMPLE)
@@ -80,6 +81,7 @@ class Dashboard:
         variables['asso'] = asso
         variables['info'] = Dashboard.msg
         variables['respo'] = request.user.has_perm('core.respo')
+        variables['pres'] = member.role == MemberRole.PRESIDENT._value_
 
         variables['office_form'] = office_form
         variables['add_form'] = add_form
@@ -190,8 +192,17 @@ class Dashboard:
     @staticmethod
     def confirm_event(request, name, id):
         asso = get_object_or_404(Association, name=name)
+        valid = Validation.objects.get(event_id=id)
         event = Event.objects.all().get(pk=id)
-        event.status = EventStatus.VALIDATED._value_
+
+        if request.user.has_perm('core.respo'):
+            valid.respo = True
+        else:
+            valid.pres = True
+        valid.save()
+
+        if valid.pres and valid.respo:
+            event.status = EventStatus.VALIDATED._value_
         event.save()
 
         Dashboard.msg = "L'évènement " + event.title + ' a été confirmé.'

@@ -6,14 +6,16 @@ Mes associations
 {% endblock %}
 
 {% block content %}
-<ul>
   {% for asso in associations %}
-    <li><a href="{% url 'core:association' asso.name %}">{{ asso.name }}</a>
+    <div class="card event">
+        <div class="card-header">
+            <a href="{% url 'core:association' asso.name %}">{{ asso.name }}</a>
+
         {% if respo %}
-            <button type="button" class="btn btn-danger btn-xs"
+            <button type="button" class="btn btn-danger btn-xs" style="float: right;"
                             onclick="window.location.href='{% url 'core:association_rm' asso.name %}'">&#x2715;</button>
         {% endif %}
-    </li>
+        </div>
+    </div>
   {% endfor %}
-</ul>
 {% endblock %}
