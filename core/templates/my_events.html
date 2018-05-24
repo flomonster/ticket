@@ -39,7 +39,7 @@
             <div id="body{{ event.id }}" class="collapse">
                 <div class="row">
                     <div class="col-md-8 card-body container">
-                        <table class="table table-condensed table-sm">
+                        <table class="table table-condensed table-sm table-striped">
                             <thead>
                                 <tr>
                                     <th></th>
@@ -72,9 +72,30 @@
 
                     <div class="event-tools container col-md-4">
                         <div class="row">
-                            <button type="button" class="btn btn-info btn-sm">
-                                Valider entrée
-                            </button>
+                            {% if event.disp and event.status == 3 %}
+                                <button type="button" class="btn btn-info btn-sm">
+                                    Valider entrée
+                                </button>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            {% if event.status == 1 and respo %}
+                                <div class="col-sm-2">
+                                    <button type="button"
+                                            class="btn btn-success btn-md"
+                                            onclick="window.location.href='{% url 'core:confirm_event' event.orga.name event.id %}'">
+                                        &#10004;
+                                    </button>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button"
+                                            class="btn btn-danger btn-md"
+                                            onclick="window.location.href='{%  url 'core:reject_event' event.orga.name event.id %}'">
+                                        &#x2715;
+                                    </button>
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

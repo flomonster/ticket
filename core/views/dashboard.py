@@ -79,6 +79,7 @@ class Dashboard:
         variables['office'] = office
         variables['asso'] = asso
         variables['info'] = Dashboard.msg
+        variables['respo'] = request.user.has_perm('core.respo')
 
         variables['office_form'] = office_form
         variables['add_form'] = add_form
