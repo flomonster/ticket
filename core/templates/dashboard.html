@@ -79,13 +79,12 @@
                                 <th>Statut</th>
                             </tr>
                             </thead>
-
                             <tbody>
                             {% for event in events %}
                                 {% if event.status != 5 %}
                                     <tr>
                                         <td>
-                                            <a class="event-link" href="#">{{ event.title }}</a>
+                                            <a class="event-link" href="{% url 'core:event' event.id %}">{{ event.title }}</a>
                                         </td>
 
                                         <td>
