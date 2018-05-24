@@ -1,7 +1,8 @@
 from django.shortcuts import render
 
-from core.models import Event, EventStatus, Participant, Staff, Validation, Membership, MemberRole, User
+from core.models import Event, EventStatus, Participant, Staff, Membership, MemberRole, User
 from django import forms
+from django.core.exceptions import ObjectDoesNotExist
 
 class MyEvents:
     class Stat:
@@ -13,8 +14,8 @@ class MyEvents:
         def __init__(self, event):
             p_reg = Participant.objects.filter(event__exact=event)
             p_use = Participant.objects.filter(event__exact=event).filter(used__exact=True)
-            self.pres = Validation.objects.get(event__exact=event).pres
-            self.respo = Validation.objects.get(event__exact=event).respo
+            self.pres = event.pres
+            self.respo = event.respo
             s = Staff.objects.filter(event__exact=event)
             self.build_row(p_reg, self.registered)
             self.build_row(p_use, self.used)
@@ -56,9 +57,12 @@ class MyEvents:
 
             event.stat = MyEvents.Stat(event)
             event.disp = MyEvents.is_staff(event, request.user)
-            event.valid = Membership.objects.filter(asso=event.orga)\
-                                            .get(member=request.user)\
-                                            .role == MemberRole.PRESIDENT._value_
+            try:
+                event.valid = Membership.objects.filter(asso=event.orga)\
+                                                .get(member=request.user)\
+                                                .role == MemberRole.PRESIDENT._value_
+            except ObjectDoesNotExist:
+                event.valid = False
             event.form = ValidateForm()
 
         # Template variables

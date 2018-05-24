@@ -72,11 +72,13 @@
 
                     <div class="event-tools container col-md-4">
                         <div class="row">
-                            {% if event.disp and event.status == 3 %}
-                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                                        data-target="#{{ event.id }}">
-                                    Valider entrée
-                                </button>
+                            {% if event.status == 3 %}
+                                {% if disp or respo %}
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                            data-target="#{{ event.id }}">
+                                        Valider entrée
+                                    </button>
+                                {% endif %}
 
                             {% endif %}
                         </div>
