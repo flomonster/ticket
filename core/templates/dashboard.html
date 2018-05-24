@@ -5,109 +5,119 @@
 {% endblock %}
 
 {% block content %}
-    <div class="btn-group" role="group" style="margin-bottom: 1%">
-        <button type="button" class="btn btn-primary" data-toggle="modal"
-                data-target="#addModal">
-            Ajouter membre
-        </button>
-        <button type="button" class="btn btn-primary" data-toggle="modal"
-                data-target="#removeModal">
-            Supprimer membre
-        </button>
+    <div class="row">
+        <div class="btn-group" role="group" style="margin-bottom: 1%">
+            <button type="button" class="btn btn-primary" data-toggle="modal"
+                    data-target="#addModal">
+                Ajouter membre
+            </button>
+            <button type="button" class="btn btn-primary" data-toggle="modal"
+                    data-target="#removeModal">
+                Supprimer membre
+            </button>
+        </div>
     </div>
 
 
 
-    <div class="panels">
+    <div class="panels container">
         <!-- Office members -->
-        <div class="panel panel-fixed" id="panel-asso-office">
-            <div class="panel-header">
-                Bureau
-                <button type="button" class="btn btn-info btn-xs"
-                        data-toggle="modal" data-target="#officeModal">
-                    &#x2795;
-                </button>
-            </div>
+        <div class="row">
 
-            {% if not office %}
-                <div class="panel-body">Aucun membre de bureau</div>
-            {% else %}
-                <table class="table table-sm table-striped panel-body">
-                    {% for member in office %}
-                        <tr>
-                            <td>
-                                {% if member.role == 3 %}
-                                    &#9819;
-                                {% endif %}
-                            </td>
-                            <td>
-                                {{ member.member.username }}
-                            </td>
+            <div class="col-md-4">
+                <div class="card panel" id="panel-asso-office">
+                <div class="card-header">
+                    Bureau
+                    <button type="button" class="btn btn-info btn-xs"
+                            data-toggle="modal" data-target="#officeModal">
+                        &#x2795;
+                    </button>
+                </div>
 
-                            <td>
-                                <button type="button"
-                                        class="btn btn-danger btn-xs"
-                                        onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
-                                    &#x2715;
-                                </button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% endif %}
-        </div>
+                {% if not office %}
+                    <div class="card-body">Aucun membre de bureau</div>
+                {% else %}
+                    <table class="table table-sm table-striped panel-body">
+                        {% for member in office %}
+                            <tr>
+                                <td>
+                                    {% if member.role == 3 %}
+                                        &#9819;
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ member.member.username }}
+                                </td>
 
-        <div class="panel" id="panel-asso-events">
-            <div class="panel-header">
-                Evénements
-            </div>
-
-            {% if not events %}
-                <div class="panel-body">Aucun évènement prévu</div>
-            {% else %}
-                <table class="table table-condensed table-sm panel-body">
-                    <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Statut</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    {% for event in events %}
-                        {% if event.status != 5 %}
-                        <tr>
-                            <td>
-                                <a class="event-link" href="#">{{ event.title }}</a>
-                            </td>
-
-                            <td>
-                                {% include 'event_status.html' %}
-                            </td>
-
-                            <td>
-                                {% if event.status == 1 %}
-                                    {% if respo or pres %}
-                                    <button type="button"
-                                            class="btn btn-success btn-xs"
-                                            onclick="window.location.href='{% url 'core:confirm_event' asso.name event.id %}'">
-                                        &#10004;
-                                    </button>
+                                <td>
                                     <button type="button"
                                             class="btn btn-danger btn-xs"
-                                            onclick="window.location.href='{%  url 'core:reject_event' asso.name event.id %}'">
+                                            onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
                                         &#x2715;
                                     </button>
-                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+            </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card panel card-info" id="panel-asso-events">
+                    <div class="card-header">
+                        Evénements
+                    </div>
+
+                    {% if not events %}
+                        <div class="card-body">Aucun évènement prévu</div>
+                    {% else %}
+                        <table class="table table-condensed table-sm card-body">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Statut</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for event in events %}
+                                {% if event.status != 5 %}
+                                    <tr>
+                                        <td>
+                                            <a class="event-link" href="#">{{ event.title }}</a>
+                                        </td>
+
+                                        <td>
+                                            {% include 'event_status.html' %}
+                                        </td>
+
+                                        <td>
+                                            {% if event.status == 1 %}
+                                                {% if respo or pres %}
+                                                    <button type="button"
+                                                            class="btn btn-success btn-xs"
+                                                            onclick="window.location.href='{% url 'core:confirm_event' asso.name event.id %}'">
+                                                        &#10004;
+                                                    </button>
+                                                    <button type="button"
+                                                            class="btn btn-danger btn-xs"
+                                                            onclick="window.location.href='{%  url 'core:reject_event' asso.name event.id %}'">
+                                                        &#x2715;
+                                                    </button>
+                                                {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
                                 {% endif %}
-                            </td>
-                        </tr>
-                        {% endif %}
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
         </div>
+
     </div>
 
     {% include "modal_form.html" with form=office_form action="Ajouter" desc="Ajouter un membre au bureau" id="officeModal" %}
