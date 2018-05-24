@@ -24,9 +24,14 @@ class MyEvents:
 
     @staticmethod
     def view(request):
-        events = MyEvents.get_events(request.user)
+        if request.user.has_perm('core.respo'):
+            events = Event.objects.all()
+        else:
+            events = MyEvents.get_events(request.user)
+
         for event in events:
             event.stat = MyEvents.Stat(event)
+            event.disp = MyEvents.is_staff(event, request.user)
 
         # Template variables
         variables = {}
@@ -34,8 +39,15 @@ class MyEvents:
         variables['waiting'] = str(EventStatus.WAITING._value_)
         variables['validated'] = str(EventStatus.VALIDATED._value_)
         variables['pending'] = str(EventStatus.PENDING._value_)
+        variables['respo'] = request.user.has_perm('core.respo')
 
         return render(request, 'my_events.html', variables)
+
+    @staticmethod
+    def is_staff(event, user):
+        return Staff.objects.filter(event__exact=event)\
+                            .filter(member__exact=user)\
+                            .count() == 1
 
 
     @staticmethod
