@@ -1,15 +1,19 @@
 from django.shortcuts import render
 
-from core.models import Event, EventStatus, Participant, Staff
+from core.models import Event, EventStatus, Participant, Staff, Validation
 
 class MyEvents:
     class Stat:
         registered = {}
         used = {}
+        pres = False
+        respo = False
 
         def __init__(self, event):
             p_reg = Participant.objects.filter(event__exact=event)
             p_use = Participant.objects.filter(event__exact=event).filter(used__exact=True)
+            self.pres = Validation.objects.get(event__exact=event).pres
+            self.respo = Validation.objects.get(event__exact=event).respo
             s = Staff.objects.filter(event__exact=event)
             self.build_row(p_reg, self.registered)
             self.build_row(p_use, self.used)

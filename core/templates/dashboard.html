@@ -81,7 +81,8 @@
                             </td>
 
                             <td>
-                                {% if event.status == 1  and respo %}
+                                {% if event.status == 1 %}
+                                    {% if respo or pres %}
                                     <button type="button"
                                             class="btn btn-success btn-xs"
                                             onclick="window.location.href='{% url 'core:confirm_event' asso.name event.id %}'">
@@ -92,6 +93,7 @@
                                             onclick="window.location.href='{%  url 'core:reject_event' asso.name event.id %}'">
                                         &#x2715;
                                     </button>
+                                    {% endif %}
                                 {% endif %}
                             </td>
                         </tr>

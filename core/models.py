@@ -47,7 +47,7 @@ class Event(models.Model):
     end = models.DateTimeField() # End of the event
     place = models.CharField(max_length=200)
     cover = models.ImageField(blank=True)
-    orga = models.ForeignKey(Association, on_delete=models.DO_NOTHING)
+    orga = models.ForeignKey(Association, on_delete=models.CASCADE)
     closing = models.DateTimeField() # Date of subscription closing
     int_capacity = models.IntegerField() # Available tickets for members
     ext_capacity = models.IntegerField()
@@ -65,8 +65,8 @@ class Staff(models.Model):
     """
     An user is a staff member of an event
     """
-    event = models.ForeignKey(Event, on_delete=models.DO_NOTHING)
-    member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    member = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.member.username
@@ -76,8 +76,8 @@ class Membership(models.Model):
     """
     An user is a member of an association
     """
-    asso = models.ForeignKey(Association, on_delete=models.DO_NOTHING)
-    member = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    asso = models.ForeignKey(Association, on_delete=models.CASCADE)
+    member = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.IntegerField(choices=MemberRole.choices())
 
     def __str__(self):
@@ -89,8 +89,8 @@ class Participant(models.Model):
     An user has subscribed for an event
     """
     paid = models.IntegerField()
-    event = models.ForeignKey(Event, on_delete=models.DO_NOTHING)
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     mail = models.EmailField()
     used = models.BooleanField(default=False)
 
@@ -100,3 +100,8 @@ class Participant(models.Model):
     def is_external(self):
         user_mail = self.user.email
         return not user_mail.endswith('epita.fr')
+
+class Validation(models.Model):
+    respo = models.BooleanField(default=False)
+    pres = models.BooleanField(default=False)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)

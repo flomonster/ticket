@@ -26,7 +26,7 @@
                 <div class="row">
                     <div class="col-md-2">
                         <button type="button" class="btn btn-xs" data-toggle="collapse" data-target="#body{{ event.id }}">
-                            Show
+                            Plus
                         </button>
                     </div>
 
@@ -95,6 +95,20 @@
                                         &#x2715;
                                     </button>
                                 </div>
+                            {% endif %}
+                        </div>
+
+                        <div class"row">
+                            {% if event.stat.pres %}
+                                <span class="badge badge-success">Accord président</span>
+                            {% else %}
+                                <span class="badge badge-danger">Accord président</span>
+                            {% endif %}
+                            <br />
+                            {% if event.stat.respo %}
+                                <span class="badge badge-success">Accord responsable</span>
+                            {% else %}
+                                <span class="badge badge-danger">Accord responsable</span>
                             {% endif %}
                         </div>
                     </div>
