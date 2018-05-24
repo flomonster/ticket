@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
-from core.models import Event, EventStatus, Participant, Staff, Validation, Membership, MemberRole
+from core.models import Event, EventStatus, Participant, Staff, Validation, Membership, MemberRole, User
+from django import forms
 
 class MyEvents:
     class Stat:
@@ -39,13 +40,26 @@ class MyEvents:
             if member.role == MemberRole.PRESIDENT._value_:
                 events |= Event.objects.filter(orga=member.asso)
 
+        class BaseForm(forms.Form):
+            def __init__(self, *args, **kwargs):
+                super(BaseForm, self).__init__(*args, **kwargs)
+                for field_name, field in self.fields.items():
+                    field.widget.attrs['class'] = 'form-control'
 
         for event in events:
+            set = Participant.objects.filter(event=event)\
+                                     .select_related('user')
+            set = [p['user'] for p in list(set.values('user').all())]
+
+            class ValidateForm(BaseForm):
+                member = forms.ModelChoiceField(queryset=User.objects.filter(id__in=set))
+
             event.stat = MyEvents.Stat(event)
             event.disp = MyEvents.is_staff(event, request.user)
             event.valid = Membership.objects.filter(asso=event.orga)\
                                             .get(member=request.user)\
                                             .role == MemberRole.PRESIDENT._value_
+            event.form = ValidateForm()
 
         # Template variables
         variables = {}
