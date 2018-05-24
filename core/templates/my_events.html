@@ -73,9 +73,11 @@
                     <div class="event-tools container col-md-4">
                         <div class="row">
                             {% if event.disp and event.status == 3 %}
-                                <button type="button" class="btn btn-info btn-sm">
+                                <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                        data-target="#{{ event.id }}">
                                     Valider entrée
                                 </button>
+
                             {% endif %}
                         </div>
 
@@ -118,4 +120,8 @@
             </div>
         </div>
     {% endfor %}
+
+   {% for event in events %}
+       {% include "validate_ticket.html" with form=office_form action="Valider" desc="Valider un billet" id=event.id event=event %}
+   {% endfor %}
 {% endblock %}
