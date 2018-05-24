@@ -1,12 +1,26 @@
 from django.shortcuts import render
 
-from core.models import Event, EventStatus, Participant
+from core.models import Event, EventStatus, Participant, Staff
 
 class MyEvents:
+    class Stat:
+        registered = {}
+
+        def __init__(self, event):
+            p = Participant.objects.filter(event__exact=event)
+            s = Staff.objects.filter(event__exact=event)
+            externs = [e for e in p if e.is_external()]
+
+            self.registered['externs'] = len(externs)
+            self.registered['interns'] = p.count() - self.registered['externs']
+            self.registered['staff'] = s.count()
+            self.registered['total'] = p.count() + s.count()
+
     @staticmethod
     def view(request):
         events = MyEvents.get_events(request.user)
-        print(events)
+        for event in events:
+            event.stat = MyEvents.Stat(event)
 
         # Template variables
         variables = {}
@@ -17,6 +31,7 @@ class MyEvents:
 
         return render(request, 'my_events.html', variables)
 
+
     @staticmethod
     def get_events(user):
         """
@@ -26,4 +41,6 @@ class MyEvents:
         participations = Participant.objects.filter(user__exact=user)\
                                             .select_related('event')
         participations = [p['event'] for p in list(participations.values('event').all())]
-        return Event.objects.filter(id__in=participations)
+        return Event.objects.filter(id__in=participations)\
+                            .exclude(status=EventStatus.REJECTED._value_)\
+                            .exclude(status=EventStatus.FINISHED._value_)

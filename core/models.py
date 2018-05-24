@@ -95,3 +95,7 @@ class Participant(models.Model):
 
     def __str__(self):
         return self.user.username + ' ' + self.event.title
+
+    def is_external(self):
+        user_mail = self.user.email
+        return not user_mail.endswith('epita.fr')
