@@ -56,6 +56,8 @@ class Event(models.Model):
     display = models.BooleanField()
     status = models.IntegerField(choices=EventStatus.choices())
     token = models.CharField(max_length=20)
+    respo = models.BooleanField(default=False)
+    pres = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -100,8 +102,3 @@ class Participant(models.Model):
     def is_external(self):
         user_mail = self.user.email
         return not user_mail.endswith('epita.fr')
-
-class Validation(models.Model):
-    respo = models.BooleanField(default=False)
-    pres = models.BooleanField(default=False)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)

@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
-from core.models import Association, Event, Membership, MemberRole, EventStatus, Validation
+from core.models import Association, Event, Membership, MemberRole, EventStatus
 
 
 class Dashboard:
@@ -192,16 +192,14 @@ class Dashboard:
     @staticmethod
     def confirm_event(request, name, id):
         asso = get_object_or_404(Association, name=name)
-        valid = Validation.objects.get(event_id=id)
         event = Event.objects.all().get(pk=id)
 
         if request.user.has_perm('core.respo'):
-            valid.respo = True
+            event.respo = True
         else:
-            valid.pres = True
-        valid.save()
+            event.pres = True
 
-        if valid.pres and valid.respo:
+        if event.pres and event.respo:
             event.status = EventStatus.VALIDATED._value_
         event.save()
 

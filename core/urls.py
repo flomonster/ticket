@@ -28,5 +28,5 @@ urlpatterns = [
     path('logout/', index.logout, name='logout'),
 
     # Events
-    path('events/', myevents.MyEvents.view, name='my_events')
+    path('events/', myevents.MyEvents.view, name='my_events'),
 ]
