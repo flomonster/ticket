@@ -1,0 +1,83 @@
+from django import forms
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
+from core.models import Event
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+
+from core.models import Association, Event, Staff, EventStatus, Membership
+
+@login_required
+def view(request, id):
+    event = get_object_or_404(Event, id=id)
+    staffs = get_staff(event)
+    members = get_members(event.orga)
+
+    class StaffForm(forms.Form):
+        def __init__(self, *args, **kwargs):
+            super(StaffForm, self).__init__(*args, **kwargs)
+            for field_name, field in self.fields.items():
+                field.widget.attrs['class'] = 'form-control'
+
+    class AddStaff(StaffForm):
+        staff = forms.ModelChoiceField(queryset=members, required=True)
+
+    #class RemoveStaff(StaffForm):
+     #   staff = forms.ModelChoiceField(queryset=staffs, required = True)
+
+    if request.method == 'POST':
+        #if 'add_staff' in request.POST:
+        form = AddStaff(request.POST)
+        #FIXME: Function to add staff
+        add_staff(event, form)
+        #else:
+         #   form = RemoveStaff(request.POST)
+            #FIXME: Function to remove staff
+          #  rm_staff(event, form)
+
+        return redirect(reverse('core:event', args=[event.id]))
+    else:
+        add_form = AddStaff()
+        #rm_form = RemoveStaff()
+
+    variables = {}
+    variables['event'] = event
+    variables['staff'] = staffs
+    #variables['delete_form'] = rm_form
+    variables['add_form'] = add_form
+
+    return render(request, 'event.html', variables)
+
+@login_required
+def remove(request, name):
+    Event.objects.get(name=name).delete()
+    return redirect("core:event")
+
+def get_staff(event):
+    o = Staff.objects.select_related('event') \
+        .filter(event__exact=event)
+
+    return o
+
+def get_members(asso):
+    o = Membership.objects.select_related('asso') \
+        .filter(asso__exact=asso)
+
+    return o
+
+def add_staff(event, form):
+    if not form.is_valid():
+        return
+    member = form.cleaned_data['staff']
+    staff = Staff(event=event, member=member.member)
+    staff.save()
+
+def rm_staff(request, id, member):
+    event = get_object_or_404(Event, id=id)
+    #staffs = get_staff(event)
+    tmp = Staff.objects.select_related('member') \
+          .filter(member__exact=member) \
+          .filter(event__exact=event)
+    tmp.delete()
+
+    return redirect(reverse('core:event', args=[event.id]))
