@@ -2,7 +2,7 @@ from django.urls import path
 
 from django.contrib.auth import views as auth_views
 from core.views import index, dashboard, association_create, associations, \
-    myevents, register, payment
+    myevents, register, payment, ticket
 
 app_name = 'core'
 
@@ -26,6 +26,9 @@ urlpatterns = [
     # Login
     path('login/', auth_views.login, name='login'),
     path('logout/', index.logout, name='logout'),
+
+    # Ticket
+    path('ticket/<int:participant_id>', ticket.view, name='ticket'),
 
     # Events
     path('events/', myevents.MyEvents.view, name='my_events'),
