@@ -2,7 +2,7 @@ from django.urls import path
 
 from django.contrib.auth import views as auth_views
 from core.views import index, dashboard, association_create, associations, \
-    myevents, register
+    myevents, register, payment
 
 app_name = 'core'
 
@@ -32,4 +32,7 @@ urlpatterns = [
 
     # Register to an evenement
     path('registration/<int:id>/', register.view, name='register'),
+
+    # Redirection to paypal button
+    path('payment/<int:id>/', payment.view, name='payment')
 ]
