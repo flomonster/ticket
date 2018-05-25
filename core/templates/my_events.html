@@ -85,32 +85,31 @@
 
                         <div class="row">
                             {% if event.status == 1 %}
-                                {% if event.valid or respo %}
-                                    <div class="col-sm-2">
-                                        <button type="button"
-                                                class="btn btn-success btn-md"
-                                                onclick="window.location.href='{% url 'core:confirm_event' event.orga.name event.id %}'">
-                                            &#10004;
-                                        </button>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <button type="button"
-                                                class="btn btn-danger btn-md"
-                                                onclick="window.location.href='{%  url 'core:reject_event' event.orga.name event.id %}'">
-                                            &#x2715;
-                                        </button>
-                                    </div>
+                                {% if event.valid %}
+                                    {% if not event.pres %}
+                                        {% include 'validation.html' %}
+                                    {% endif %}
+                                {% elif respo %}
+                                    {% if not event.resp %}
+                                        {% include 'validation.html' %}
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         </div>
 
-                        <div class"row">
+                        <br />
+
+                        <div class="row">
                             {% if event.stat.pres %}
                                 <span class="badge badge-success">Accord président</span>
                             {% else %}
                                 <span class="badge badge-danger">Accord président</span>
                             {% endif %}
-                            <br />
+                        </div>
+
+                        <br />
+
+                        <div class="row">
                             {% if event.stat.respo %}
                                 <span class="badge badge-success">Accord responsable</span>
                             {% else %}

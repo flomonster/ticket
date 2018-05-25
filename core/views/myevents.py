@@ -17,15 +17,16 @@ class MyEvents:
             self.pres = event.pres
             self.respo = event.respo
             s = Staff.objects.filter(event__exact=event)
-            self.build_row(p_reg, self.registered)
-            self.build_row(p_use, self.used)
+            self.build_row(p_reg, self.registered, s)
+            self.build_row(p_use, self.used, s)
 
 
-        def build_row(self, set, dict):
+        def build_row(self, set, dict, staff):
             externs = [e for e in set if e.is_external()]
 
             dict['externs'] = len(externs)
             dict['interns'] = set.count() - dict['externs']
+            dict['staff'] = staff.count()
             dict['total'] = set.count()
 
     @staticmethod
