@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Payment
+{% endblock %}
+
+{% block content %}
+    <div id="paypal-button"></div>
+
+    <script>
+        paypal.Button.render({
+            env: 'sandbox', // Or 'sandbox',
+
+            commit: true, // Show a 'Pay Now' button
+
+            style: {
+                layout: 'vertical',  // horizontal | vertical
+                size: 'medium',    // medium | large | responsive
+                shape: 'rect',      // pill | rect
+                color: 'gold'       // gold | blue | silver | black
+            },
+
+            // Specify allowed and disallowed funding sources
+            //
+            // Options:
+            // - paypal.FUNDING.CARD
+            // - paypal.FUNDING.CREDIT
+            // - paypal.FUNDING.ELV
+
+            funding: {
+                allowed: [paypal.FUNDING.CARD, paypal.FUNDING.CREDIT],
+                disallowed: []
+            },
+
+            // PayPal Client IDs
+            client: {
+                sandbox: 'AWHZkl6OtQjGQV40Nook8VMpsvVNMkECpnooObtnCtEc7Aq5OX2pKxyvLlhF_4dowoSt4IoS59-rOTwr',
+                production: '<insert production client id>'
+            },
+
+            payment: function (data, actions) {
+                /*
+                 * Set up the payment here
+                 */
+                return actions.payment.create({
+                    payment: {
+                        transactions: [
+                            {
+                                amount: {total: {{ price }}, currency: 'EUR'}
+                            }
+                        ]
+                    }
+                });
+            },
+
+            onAuthorize: function (data, actions) {
+                /*
+                 * Execute the payment here
+                 */
+                return actions.payment.execute().then(function () {
+                    window.alert('Payment Complete!');
+                });
+            },
+
+            onCancel: function (data, actions) {
+                /*
+                 * Buyer cancelled the payment
+                 */
+            },
+
+            onError: function (err) {
+                /*
+                 * An error occurred during the transaction
+                 */
+            }
+        }, '#paypal-button');
+    </script>
+
+{% endblock %}
