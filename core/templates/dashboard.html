@@ -105,6 +105,12 @@
                                                 {% endif %}
                                             {% endif %}
                                         </td>
+
+                                        <td>
+                                          <form action="{% url 'core:register' event.id %}">
+                                            <input type="submit" value="S'inscrire">
+                                          </form>
+                                        </td>
                                     </tr>
                                 {% endif %}
                             {% endfor %}
