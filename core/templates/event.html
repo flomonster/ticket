@@ -1,23 +1,59 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{event.title}}
+<table>
+    <thead>
+        <tr>
+            <th>
+                {{event.title}}
+            </th>
+            <h3>
+            <td>
+                {% if event.stat.pres %}
+                <h3><span class="badge badge-success">Président</span></h3>
+                {% else %}
+                <h3><span class="badge badge-danger">Président</span></h3>
+                {% endif %}
+            </td>
+            <td>
+                {% if event.stat.respo %}
+                <h3><span class="badge badge-success">Responsable</span></h3>
+                {% else %}
+                <h3><span class="badge badge-danger">Responsable</span></h3>
+                {% endif %}
+            </td>
+            <td>
+                {% if event.status == 1 %}
+                    {% if event.valid %}
+                        {% if not event.pres %}
+                            {% include 'validation.html' %}
+                        {% endif %}
+                    {% elif respo %}
+                        {% if not event.resp %}
+                            {% include 'validation.html' %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </td>
+            </h3>
+        </tr>
+    </thead>
 <!-- FIXME: What about putting status there with the organizing association? The photo there too?-->
+</table>
 {% endblock %}
 
 {% block content %}
+
     <div class="panels">
         <!-- Staffs -->
         <div class="panel panel-fixed" id="staff-panel">
             <div class="panel-header">
                 Staff
-                <!-- FIXME: Button to add staff : reuse modal form.html? -->
                 <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#add_staff">
                     Ajouter
                 </button>
             </div>
 
-            <!-- FIXME: add a staff field in event? get the staff from -->
             {% if not staff %}
                 <div class="panel-body">Pas de staff</div>
             {% else %}
@@ -25,12 +61,10 @@
                     {% for staff in staff %}
                         <tr>
                             <td>
-                                <!-- FIXME: Not too sure about this one... -->
                                 {{staff.member.username}}
                             </td>
 
                             <td>
-                                <!-- FIXME: Button to delete staff: reuse modal_form? -->
                                 <button type="button" class="btn btn-danger btn-xs"
                                         onclick="window.location.href='{% url 'core:rm_staff' event.id staff.member %}'">
                                     &#x2715;
