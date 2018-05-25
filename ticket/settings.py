@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'social_django',
     'epita_connect',
+    'paypal.standard.ipn',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -176,3 +177,7 @@ SOCIAL_AUTH_EPITA_BETA = False
 LOGIN_URL = '/login/'
 LOGOUT_URL = '/logout/'
 LOGIN_REDIRECT_URL = '/'
+
+# Paypal sandbox
+
+PAYPAL_TEST = True
