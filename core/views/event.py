@@ -11,7 +11,7 @@ from core.models import Association, Event, Staff, EventStatus, Membership
 def view(request, id):
     event = get_object_or_404(Event, id=id)
     staffs = get_staff(event)
-    members = get_members(event.orga)
+    members = get_members(event, event.orga)
 
     class StaffForm(forms.Form):
         def __init__(self, *args, **kwargs):
@@ -22,23 +22,14 @@ def view(request, id):
     class AddStaff(StaffForm):
         staff = forms.ModelChoiceField(queryset=members, required=True)
 
-    #class RemoveStaff(StaffForm):
-     #   staff = forms.ModelChoiceField(queryset=staffs, required = True)
 
     if request.method == 'POST':
-        #if 'add_staff' in request.POST:
         form = AddStaff(request.POST)
-        #FIXME: Function to add staff
         add_staff(event, form)
-        #else:
-         #   form = RemoveStaff(request.POST)
-            #FIXME: Function to remove staff
-          #  rm_staff(event, form)
 
         return redirect(reverse('core:event', args=[event.id]))
     else:
         add_form = AddStaff()
-        #rm_form = RemoveStaff()
 
     variables = {}
     variables['event'] = event
@@ -59,9 +50,12 @@ def get_staff(event):
 
     return o
 
-def get_members(asso):
+def get_members(event, asso):
     o = Membership.objects.select_related('asso') \
-        .filter(asso__exact=asso)
+        .filter(asso__exact=asso) \
+        .exclude(member__in=(Staff.objects.select_related('member') \
+                                .filter(event__exact=event) \
+                                .values('member')))
 
     return o
 
