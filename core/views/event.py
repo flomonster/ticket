@@ -4,14 +4,22 @@ from django.shortcuts import render, redirect, get_object_or_404
 from core.models import Event
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 
-from core.models import Association, Event, Staff, EventStatus, Membership
+from core.models import Association, Event, Staff, EventStatus, Membership, MemberRole
 
 @login_required
 def view(request, id):
     event = get_object_or_404(Event, id=id)
     staffs = get_staff(event)
     members = get_members(event, event.orga)
+
+    try:
+        event.valid = Membership.objects.filter(asso=event.orga) \
+                          .get(member=request.user) \
+                          .role == MemberRole.PRESIDENT._value_
+    except ObjectDoesNotExist:
+        event.valid = False
 
     class StaffForm(forms.Form):
         def __init__(self, *args, **kwargs):
