@@ -94,17 +94,14 @@
 
                                         <td>
                                             {% if event.status == 1 %}
-                                                {% if respo or pres %}
-                                                    <button type="button"
-                                                            class="btn btn-success btn-xs"
-                                                            onclick="window.location.href='{% url 'core:confirm_event' asso.name event.id %}'">
-                                                        &#10004;
-                                                    </button>
-                                                    <button type="button"
-                                                            class="btn btn-danger btn-xs"
-                                                            onclick="window.location.href='{%  url 'core:reject_event' asso.name event.id %}'">
-                                                        &#x2715;
-                                                    </button>
+                                                {% if respo %}
+                                                    {% if not event.respo %}
+                                                        {% include 'validation.html' %}
+                                                    {% endif %}
+                                                {% elif pres %}
+                                                    {% if not event.pres %}
+                                                        {% include 'validation.html' %}
+                                                    {% endif %}
                                                 {% endif %}
                                             {% endif %}
                                         </td>

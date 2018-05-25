@@ -1,0 +1,11 @@
+<button type="button"
+        class="btn btn-success btn-xs"
+        onclick="window.location.href='{% url 'core:confirm_event' event.orga.name event.id %}'">
+    &#10004;
+</button>
+&nbsp;
+<button type="button"
+        class="btn btn-danger btn-xs"
+        onclick="window.location.href='{%  url 'core:reject_event' event.orga.name event.id %}'">
+    &#x2715;
+</button>
