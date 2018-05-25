@@ -1,10 +1,19 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Payment
+    Paiement
 {% endblock %}
 
 {% block content %}
+
+    <label for=prix">Prix:</label>
+    <input type="text" id="prix" disabled class="textInput form-control"
+           name="prix" value="{{ event.int_price }} €">
+
+    <label for="event_name">Evènement</label>
+    <input type="text" id="event_name" disabled class="textInput form-control"
+           name="event_name" value="{{ event.title }}">
+
     <div id="paypal-button"></div>
 
     <script>
@@ -46,7 +55,7 @@
                     payment: {
                         transactions: [
                             {
-                                amount: {total: {{ price }}, currency: 'EUR'}
+                                amount: {total: {{ event.int_price }}, currency: 'EUR'}
                             }
                         ]
                     }

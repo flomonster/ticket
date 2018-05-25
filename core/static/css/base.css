@@ -131,7 +131,7 @@ h2 {
     font-weight: bold;
 }
 
-#prix {
+#prix, #event_name {
     margin-bottom: 1.5rem;
 }
 
