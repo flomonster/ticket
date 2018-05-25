@@ -76,7 +76,7 @@ def rm_staff(request, id, member):
     event = get_object_or_404(Event, id=id)
     #staffs = get_staff(event)
     tmp = Staff.objects.select_related('member') \
-          .filter(member__exact=member) \
+          .filter(member__username=member) \
           .filter(event__exact=event)
     tmp.delete()
 
