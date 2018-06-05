@@ -7,12 +7,11 @@ from django.core.exceptions import ObjectDoesNotExist
 
 class MyEvents:
     class Stat:
-        registered = {}
-        used = {}
-        pres = False
-        respo = False
-
         def __init__(self, event):
+            self.registered = {}
+            self.used = {}
+            self.pres = False
+            self.respo = False
             p_reg = Participant.objects.filter(event__exact=event)
             p_use = Participant.objects.filter(event__exact=event).filter(used__exact=True)
             self.pres = event.pres

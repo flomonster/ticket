@@ -42,7 +42,7 @@
             <div id="body{{ event.id }}" class="collapse">
                 <div class="row">
 
-                    <div class="event-tools container col-md-4">
+                  <div class="event-tools container {% if event.status == 3 %} col-md-4 {% else %} col-md-12 {% endif %}">
                       <ul class="list-group list-group-flush">
                             {% if event.status == 3 %}
                                 {% if disp or respo %}
@@ -71,7 +71,7 @@
                             {% endif %}
 
 
-                        {% if respo %}
+                        {% if respo and event.status == 2 %}
                           <div class="list-group-item">
                             {% if event.premium %}
                             <button type="button" class="btn btn-danger btn-sm"
