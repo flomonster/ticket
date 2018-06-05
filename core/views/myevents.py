@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, reverse
+from django.contrib.auth.decorators import login_required
 
 from core.models import Event, EventStatus, Participant, Staff, Membership, MemberRole, User
 from django import forms
@@ -40,6 +41,7 @@ class MyEvents:
                 field.widget.attrs['class'] = 'form-control'
 
     @staticmethod
+    @login_required
     def view(request):
         memberships = Membership.objects.filter(member=request.user)
 
@@ -92,6 +94,14 @@ class MyEvents:
         return Staff.objects.filter(event__exact=event)\
                             .filter(member__exact=user)\
                             .count() == 1
+
+    @staticmethod
+    def premium(request, id):
+        ev = Event.objects.get(id=id)
+        ev.premium = not ev.premium
+        ev.save()
+
+        return redirect(reverse('core:my_events'))
 
     @staticmethod
     def validate_ticket(member, event):

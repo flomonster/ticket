@@ -58,6 +58,7 @@ class Event(models.Model):
     token = models.CharField(max_length=20)
     respo = models.BooleanField(default=False)
     pres = models.BooleanField(default=False)
+    premium = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
