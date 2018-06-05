@@ -2,7 +2,7 @@ from django.urls import path
 
 from django.contrib.auth import views as auth_views
 from core.views import index, dashboard, association_create, associations, \
-    myevents, register, payment, ticket
+    myevents, register, payment, sendMail
 
 app_name = 'core'
 
@@ -27,9 +27,6 @@ urlpatterns = [
     path('login/', auth_views.login, name='login'),
     path('logout/', index.logout, name='logout'),
 
-    # Ticket
-    path('ticket/<int:participant_id>', ticket.view, name='ticket'),
-
     # Events
     path('events/', myevents.MyEvents.view, name='my_events'),
 
@@ -37,5 +34,8 @@ urlpatterns = [
     path('registration/<int:id>/', register.view, name='register'),
 
     # Redirection to paypal button
-    path('payment/<int:id>/', payment.view, name='payment')
+    path('payment/<int:id>/', payment.view, name='payment'),
+
+    # Path
+    path('mail/<int:participant_id>/', sendMail.send_mail, name='mail')
 ]
