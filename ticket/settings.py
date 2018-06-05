@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'social_django',
     'epita_connect',
     'paypal.standard.ipn',
+    'algoliasearch_django',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -189,3 +190,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'ticket.choisir.epita@gmail.com'
 EMAIL_HOST_PASSWORD = 'azeRTY123!'
 EMAIL_PORT = 587
+# Algolia
+
+ALGOLIA = {
+  'APPLICATION_ID': 'N6SDHHN99O',
+  'API_KEY': '648892de55c19c611e727082f2ccb79b'
+}
