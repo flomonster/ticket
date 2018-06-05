@@ -29,6 +29,7 @@ urlpatterns = [
 
     # Events
     path('events/', myevents.MyEvents.view, name='my_events'),
+    path('events/premium/<int:id>/', myevents.MyEvents.premium, name='premium'),
 
     # Register to an evenement
     path('registration/<int:id>/', register.view, name='register'),
