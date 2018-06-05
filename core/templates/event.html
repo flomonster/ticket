@@ -34,64 +34,68 @@
             {% endif %}
         </div>
         <div class="col-sm-auto event-col">
-            <div class=".align-self-end">
-                {% if event.status == 1 %}
-                    {% if event.valid %}
-                        {% if not event.pres %}
-                            {% include 'validation.html' %}
-                        {% endif %}
-                    {% elif respo %}
-                        {% if not event.resp %}
-                            {% include 'validation.html' %}
-                        {% endif %}
+            {% if event.status == 1 %}
+                {% if event.valid %}
+                    {% if not event.pres %}
+                        {% include 'validation.html' %}
+                    {% endif %}
+                {% elif respo %}
+                    {% if not event.resp %}
+                        {% include 'validation.html' %}
                     {% endif %}
                 {% endif %}
-            </div>
+            {% endif %}
         </div>
         <div class="col-sm text-right event-col asso-title">
             {{ event.orga.name }}
         </div>
     </div>
-<!-- FIXME: What about putting status there with the organizing association? The photo there too?-->
+<!-- FIXME: The photo there too?-->
 </div>
 {% endblock %}
 
 {% block content %}
+<div class="container">
+    <div class="row-sm-auto">
+        <img src="{{ event.cover }">
+    </div>
+    <div class="row-sm-auto">
+        <div class="panels container">
+            <!-- Staffs -->
+            <div class="panel panel-fixed" id="staff-panel">
+                <div class="panel-header">
+                    Staff
+                    <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#add_staff">
+                        Ajouter
+                    </button>
+                </div>
 
-    <div class="panels">
-        <!-- Staffs -->
-        <div class="panel panel-fixed" id="staff-panel">
-            <div class="panel-header">
-                Staff
-                <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#add_staff">
-                    Ajouter
-                </button>
+                {% if not staff %}
+                    <div class="panel-body">Pas de staff</div>
+                {% else %}
+                    <table class="table table-sm table-striped panel-body">
+                        {% for staff in staff %}
+                            <tr>
+                                <td>
+                                    {{staff.member.username}}
+                                </td>
+
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-xs"
+                                            onclick="window.location.href='{% url 'core:rm_staff' event.id staff.member %}'">
+                                        &#x2715;
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
             </div>
 
-            {% if not staff %}
-                <div class="panel-body">Pas de staff</div>
-            {% else %}
-                <table class="table table-sm table-striped panel-body">
-                    {% for staff in staff %}
-                        <tr>
-                            <td>
-                                {{staff.member.username}}
-                            </td>
+        {% include "add_staff.html" with form=delete_form action="Supprimer" desc="Supprimer un staff" id="del_staff" %}
+        {% include "add_staff.html" with form=add_form action="Ajouter" desc="Ajouter un staff" id="add_staff" %}
 
-                            <td>
-                                <button type="button" class="btn btn-danger btn-xs"
-                                        onclick="window.location.href='{% url 'core:rm_staff' event.id staff.member %}'">
-                                    &#x2715;
-                                </button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% endif %}
         </div>
-
-    {% include "add_staff.html" with form=delete_form action="Supprimer" desc="Supprimer un staff" id="del_staff" %}
-    {% include "add_staff.html" with form=add_form action="Ajouter" desc="Ajouter un staff" id="add_staff" %}
-
     </div>
+</div>
 {% endblock %}
