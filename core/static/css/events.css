@@ -11,6 +11,15 @@
     padding: 2%;
 }
 
+.event-col {
+    padding: 5px;
+}
+
+.asso-title {
+    margin-right: 7px;
+    color: darkgray;
+}
+
 .event-title {
     font-size: 1.4em;
 }

@@ -1,28 +1,40 @@
 {% extends "base.html" %}
 
 {% block title %}
-<table>
-    <thead>
-        <tr>
-            <th>
-                {{event.title}}
-            </th>
-            <h3>
-            <td>
-                {% if event.stat.pres %}
-                <h3><span class="badge badge-success">Président</span></h3>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-auto event-col">
+            {{event.title}}
+        </div>
+        <div class="col-sm-auto event-col">
+            <h5>
+                {% if event.status == 1 %}
+                    <span class="badge badge-secondary badge-event">Waiting</span>
+                {% elif event.status == 2 %}
+                    <span class="badge badge-warning badge-event">Validated</span>
+                {% elif event.status == 3 %}
+                    <span class="badge badge-success badge-event">Pending</span>
                 {% else %}
-                <h3><span class="badge badge-danger">Président</span></h3>
+                    <span class="badge badge-danger badge-event">Finished</span>
                 {% endif %}
-            </td>
-            <td>
-                {% if event.stat.respo %}
-                <h3><span class="badge badge-success">Responsable</span></h3>
-                {% else %}
-                <h3><span class="badge badge-danger">Responsable</span></h3>
-                {% endif %}
-            </td>
-            <td>
+            </h5>
+        </div>
+        <div class="col-sm-auto event-col">
+            {% if event.stat.pres %}
+            <h5><span class="badge badge-success badge-event">Président</span></h5>
+            {% else %}
+            <h5><span class="badge badge-danger badge-event">Président</span></h5>
+            {% endif %}
+        </div>
+        <div class="col-sm-auto event-col">
+            {% if event.stat.respo %}
+            <h5><span class="badge badge-success badge-event">Responsable</span></h5>
+            {% else %}
+            <h5><span class="badge badge-danger badge-event">Responsable</span></h5>
+            {% endif %}
+        </div>
+        <div class="col-sm-auto event-col">
+            <div class=".align-self-end">
                 {% if event.status == 1 %}
                     {% if event.valid %}
                         {% if not event.pres %}
@@ -34,12 +46,14 @@
                         {% endif %}
                     {% endif %}
                 {% endif %}
-            </td>
-            </h3>
-        </tr>
-    </thead>
+            </div>
+        </div>
+        <div class="col-sm text-right event-col asso-title">
+            {{ event.orga.name }}
+        </div>
+    </div>
 <!-- FIXME: What about putting status there with the organizing association? The photo there too?-->
-</table>
+</div>
 {% endblock %}
 
 {% block content %}
