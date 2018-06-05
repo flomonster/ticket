@@ -12,7 +12,7 @@
             <div class="card-header container">
                 <div class="row">
                     <div class="col-md-5">
-                        <a href="#" class="event-title">{{ event.title }}</a>
+                        <a href="{% url 'core:event' event.id %}" class="event-title">{{ event.title }}</a>
                         {% if event.premium %}
                           <i data-feather="star"></i>
                         {% endif %}
