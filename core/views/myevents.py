@@ -27,7 +27,7 @@ class MyEvents:
             dict['externs'] = len(externs)
             dict['interns'] = set.count() - dict['externs']
             dict['staff'] = staff.count()
-            dict['total'] = set.count()
+            dict['total'] = set.count() + staff.count()
 
 
     class BaseForm(forms.Form):
