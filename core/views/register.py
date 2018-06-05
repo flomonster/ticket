@@ -23,13 +23,14 @@ def view(request, id):
         if form.is_valid():
             participant = Participant()
             participant.mail = form.cleaned_data['mail']
-
-            participant.save()
+            participant.user = request.user
 
             participant.paid = event_price
-            participant.save()
+            participant.event = event
 
-            return render(request, 'register.html', {'form': form, 'id': id, 'event_price': event_price,
+            participant.save()
+            return render(request, 'payment.html', {'form': form, 'id': id, 'event_price': event_price,
+                                                     'event': event, 'participant': participant,
                                                      'info': 'Vous êtes bien inscrit à cet évènement'})
     else:
         form = registration_form()
