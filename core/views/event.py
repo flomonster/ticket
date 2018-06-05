@@ -13,6 +13,7 @@ def view(request, id):
     event = get_object_or_404(Event, id=id)
     staffs = get_staff(event)
     members = get_members(event, event.orga)
+    user = request.user
 
     try:
         event.valid = Membership.objects.filter(asso=event.orga) \
@@ -39,10 +40,18 @@ def view(request, id):
     else:
         add_form = AddStaff()
 
+    print(type(user))
+    print(members)
+    for s in staffs:
+        print(type(s))
+
     variables = {}
     variables['event'] = event
     variables['staff'] = staffs
+    variables['members'] = members
+    variables['request'] = request
     #variables['delete_form'] = rm_form
+    #variables['user'] = user
     variables['add_form'] = add_form
 
     return render(request, 'event.html', variables)

@@ -33,15 +33,33 @@
             <h5><span class="badge badge-danger badge-event">Responsable</span></h5>
             {% endif %}
         </div>
-        <div class="col-sm-auto event-col">
+        <div class="col-sm-1 event-col">
             {% if event.status == 1 %}
                 {% if event.valid %}
                     {% if not event.pres %}
-                        {% include 'validation.html' %}
+                        <button type="button"
+                                class="btn btn-success btn-xs"
+                                onclick="window.location.href='{% url 'core:confirm_event' event.orga.name event.id %}'">
+                            &#10004;
+                        </button>
+                        <button type="button"
+                                class="btn btn-danger btn-xs"
+                                onclick="window.location.href='{%  url 'core:reject_event' event.orga.name event.id %}'">
+                            &#x2715;
+                        </button>
                     {% endif %}
                 {% elif respo %}
                     {% if not event.resp %}
-                        {% include 'validation.html' %}
+                        <button type="button"
+                                class="btn btn-success btn-xs"
+                                onclick="window.location.href='{% url 'core:confirm_event' event.orga.name event.id %}'">
+                            &#10004;
+                        </button>
+                        <button type="button"
+                                class="btn btn-danger btn-xs"
+                                onclick="window.location.href='{%  url 'core:reject_event' event.orga.name event.id %}'">
+                            &#x2715;
+                        </button>
                     {% endif %}
                 {% endif %}
             {% endif %}
@@ -59,42 +77,49 @@
     <div class="row-sm-auto">
         <img src="{{ event.cover }">
     </div>
+
     <div class="row-sm-auto">
         <div class="panels container">
-            <!-- Staffs -->
-            <div class="panel panel-fixed" id="staff-panel">
-                <div class="panel-header">
-                    Staff
-                    <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#add_staff">
-                        Ajouter
-                    </button>
+            {% if request.user in members.member or request.user in staff.member %}
+            <div class="col-sm-auto">
+                <!-- Staffs: FIXME: different behaviour if user is registered as staff/part of organizing asso -->
+                <div class="panel panel-fixed" id="staff-panel">
+                    <div class="panel-header">
+                        Staff
+                        <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#add_staff">
+                            Ajouter
+                        </button>
+                    </div>
+
+                    {% if not staff %}
+                        <div class="panel-body">Pas de staff</div>
+                    {% else %}
+                        <table class="table table-sm table-striped panel-body">
+                            {% for staff in staff %}
+                                <tr>
+                                    <td>
+                                        {{staff.member.username}}
+                                    </td>
+
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-xs"
+                                                onclick="window.location.href='{% url 'core:rm_staff' event.id staff.member %}'">
+                                            &#x2715;
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% endif %}
                 </div>
 
-                {% if not staff %}
-                    <div class="panel-body">Pas de staff</div>
-                {% else %}
-                    <table class="table table-sm table-striped panel-body">
-                        {% for staff in staff %}
-                            <tr>
-                                <td>
-                                    {{staff.member.username}}
-                                </td>
+            {% if request.user == creator %}
+                {% include "add_staff.html" with form=delete_form action="Supprimer" desc="Supprimer un staff" id="del_staff" %}
+                {% include "add_staff.html" with form=add_form action="Ajouter" desc="Ajouter un staff" id="add_staff" %}
+            {% endif %}
 
-                                <td>
-                                    <button type="button" class="btn btn-danger btn-xs"
-                                            onclick="window.location.href='{% url 'core:rm_staff' event.id staff.member %}'">
-                                        &#x2715;
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                {% endif %}
             </div>
-
-        {% include "add_staff.html" with form=delete_form action="Supprimer" desc="Supprimer un staff" id="del_staff" %}
-        {% include "add_staff.html" with form=add_form action="Ajouter" desc="Ajouter un staff" id="add_staff" %}
-
+            {% endif %}
         </div>
     </div>
 </div>
