@@ -67,7 +67,8 @@
                  * Execute the payment here
                  */
                 return actions.payment.execute().then(function () {
-                    window.alert('Payment Complete!');
+                    window.alert("Paiement effectué, vous allez être redirigé vers la page d'accueil");
+                    window.location.replace("{% url 'core:mail' participant.id %}");
                 });
             },
 
@@ -75,14 +76,21 @@
                 /*
                  * Buyer cancelled the payment
                  */
+
+
+                /*FIXME*/
+                /*Suppr the participant*/
             },
 
             onError: function (err) {
                 /*
                  * An error occurred during the transaction
                  */
+                /*FIXME*/
+                /*Suppr the participant*/
             }
         }, '#paypal-button');
+
     </script>
 
 {% endblock %}
