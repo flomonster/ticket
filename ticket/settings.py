@@ -181,3 +181,11 @@ LOGIN_REDIRECT_URL = '/'
 # Paypal sandbox
 
 PAYPAL_TEST = True
+
+# Email sending
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ticket.choisir.epita@gmail.com'
+EMAIL_HOST_PASSWORD = 'azeRTY123!'
+EMAIL_PORT = 587
