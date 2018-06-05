@@ -123,6 +123,6 @@
     {% endfor %}
 
    {% for event in events %}
-       {% include "validate_ticket.html" with form=office_form action="Valider" desc="Valider un billet" id=event.id event=event %}
+       {% include "validate_ticket.html" with form=event.form action="Valider" desc="Valider un billet" id=event.id event=event %}
    {% endfor %}
 {% endblock %}

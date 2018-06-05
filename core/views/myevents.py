@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 
 from core.models import Event, EventStatus, Participant, Staff, Membership, MemberRole, User
 from django import forms
@@ -29,6 +29,16 @@ class MyEvents:
             dict['staff'] = staff.count()
             dict['total'] = set.count()
 
+
+    class BaseForm(forms.Form):
+        member = forms.ModelChoiceField(None)
+        event = forms.ModelChoiceField(None, initial=0)
+
+        def __init__(self, *args, **kwargs):
+            super(MyEvents.BaseForm, self).__init__(*args, **kwargs)
+            for field_name, field in self.fields.items():
+                field.widget.attrs['class'] = 'form-control'
+
     @staticmethod
     def view(request):
         memberships = Membership.objects.filter(member=request.user)
@@ -42,19 +52,21 @@ class MyEvents:
             if member.role == MemberRole.PRESIDENT._value_:
                 events |= Event.objects.filter(orga=member.asso)
 
-        class BaseForm(forms.Form):
-            def __init__(self, *args, **kwargs):
-                super(BaseForm, self).__init__(*args, **kwargs)
-                for field_name, field in self.fields.items():
-                    field.widget.attrs['class'] = 'form-control'
+        if request.method == 'POST':
+            form = MyEvents.BaseForm(request.POST)
+            MyEvents.validate_ticket(request.POST['member'], request.POST['event'])
+            return redirect(reverse('core:my_events'))
 
         for event in events:
-            set = Participant.objects.filter(event=event)\
+            set = Participant.objects.filter(event=event, used=False)\
                                      .select_related('user')
             set = [p['user'] for p in list(set.values('user').all())]
 
-            class ValidateForm(BaseForm):
-                member = forms.ModelChoiceField(queryset=User.objects.filter(id__in=set))
+            event.form = MyEvents.BaseForm()
+            event.form.event = event
+            event.form.fields['member'].queryset = User.objects.filter(id__in=set)
+            event.form.fields['event'].queryset = Event.objects.filter(id=event.id)
+            event.form.fields['event'].widget.attrs['readonly'] = True
 
             event.stat = MyEvents.Stat(event)
             event.disp = MyEvents.is_staff(event, request.user)
@@ -64,7 +76,6 @@ class MyEvents:
                                                 .role == MemberRole.PRESIDENT._value_
             except ObjectDoesNotExist:
                 event.valid = False
-            event.form = ValidateForm()
 
         # Template variables
         variables = {}
@@ -81,6 +92,12 @@ class MyEvents:
         return Staff.objects.filter(event__exact=event)\
                             .filter(member__exact=user)\
                             .count() == 1
+
+    @staticmethod
+    def validate_ticket(member, event):
+        participant = Participant.objects.get(user=member, event=event)
+        participant.used = True
+        participant.save()
 
 
     @staticmethod
