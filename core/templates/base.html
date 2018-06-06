@@ -82,8 +82,9 @@
             <!--Search bar -->
 
             <form class="form-inline my-2 my-lg-0 navbar-form" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control mr-sm-2" placeholder="Search">
+                <div class="">
+                  <input id="q" name="q" type="text" class="form-control mr-sm-2" placeholder="Recherche" autocomplete="off" autocarrect="false" spellcheck="false" onfocus="startSearch()" onfocusout="stopSearch()">
+                  <div id="hits" class="list-group mr-sm-2"></div>
                 </div>
                 <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Recherche</button>
             </form>
@@ -155,23 +156,60 @@
     </div>
 </div>
 
-<!-- Function to change a link to an active link -->
+<!-- Search result template -->
+{% verbatim %}
+<script type="text/template" id="hit-template">
+  <a href="{{objectID}}" class="list-group-item list-group-item-action active" style="padding: .5rem;">{{{ _highlightResult.title.value }}}</a>
+</script>
+{% endverbatim %}
+
+<!-- Scripts -->
+<script src="//cdn.jsdelivr.net/g/algoliasearch,algoliasearch.helper"></script>
+<script src="//cdn.jsdelivr.net/hogan.js/3.0.2/hogan.min.js"></script>
 <script>
-    $(function () {
-        var current = location.pathname;
 
-        var home = document.getElementById("home");
-        if (home.attributes.href.value.localeCompare(current) == 0)
-            home.classList.add("active");
+  function stopSearch() { $('#hits').hide(); }
+  function startSearch() { $('#hits').show(); }
 
-        var assos = document.getElementById("mes_asso");
-        if (current.startsWith(assos.attributes.href.value))
-            assos.classList.add("active");
+  $(document).ready(function() {
+    var $inputField = $('#q');
+    var $hits = $('#hits');
 
-        var events = document.getElementById("mes_event");
-        if (current.startsWith(events.attributes.href.value))
-            events.classList.add("active");
-    })
+    var hitTemplate = Hogan.compile($('#hit-template').text());
+
+    var client = algoliasearch('N6SDHHN99O', 'f7c60c059b5d9c6c3493fcb203738835');
+    var helper = algoliasearchHelper(client, 'Event');
+
+    $inputField.on('keyup', function() {
+      var query = $inputField.val();
+      helper.setQuery(query).search();
+    });
+
+    helper.on('result', function(content) {
+      if (content.hits.length === 0)
+        $hits.html('<a href="#" class="list-group-item disabled">No results</a>');
+      else
+        $hits.html(hitTemplate.render(content.hits[0]));
+    });
+
+  });
+
+  <!-- Manage active link -->
+  $(function () {
+      var current = location.pathname;
+
+      var home = document.getElementById("home");
+      if (home.attributes.href.value.localeCompare(current) == 0)
+          home.classList.add("active");
+
+      var assos = document.getElementById("mes_asso");
+      if (current.startsWith(assos.attributes.href.value))
+          assos.classList.add("active");
+
+      var events = document.getElementById("mes_event");
+      if (current.startsWith(events.attributes.href.value))
+          events.classList.add("active");
+  })
 </script>
 </body>
 </html>
