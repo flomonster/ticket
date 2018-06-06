@@ -1,5 +1,7 @@
 from django.core.mail import EmailMessage
 from django.shortcuts import get_object_or_404, redirect, reverse
+from reportlab.lib.pagesizes import A4
+
 from core.models import Participant, Event
 from django.contrib.auth.decorators import login_required
 from reportlab.pdfgen import canvas
@@ -9,12 +11,13 @@ import qrcode
 def gen_pdf(request, participant_id):
     participant = get_object_or_404(Participant, pk=participant_id)
 
-    p = canvas.Canvas("ticket.pdf")
+    p = canvas.Canvas("ticket.pdf", pagesize=A4)
+
     p.setFont('Helvetica', 24)
-    p.drawString(100, 750, "Event: " + participant.event.title)
+    p.drawString(170, 750, "ÉVÈNEMENT " + participant.event.title)
     p.setFont('Helvetica', 14)
-    p.drawString(150, 700, "Login: " + request.user.username)
-    p.drawString(150, 650, "Date: " + str(participant.event.start))
+    p.drawString(250, 700, "Login: " + request.user.username)
+    p.drawString(250, 650, "Date: " + str(participant.event.start.strftime("%b %d %Y %H:%M:%S")))
 
     qr = qrcode.QRCode(
         version=1,
@@ -22,12 +25,12 @@ def gen_pdf(request, participant_id):
         box_size=5,
         border=4,
     )
-    qr.add_data("lol")
+    qr.add_data(str(participant.event.id) + " " + str(participant.user.id))
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
     img.save("qrcode.jpg", "JPEG")
 
-    p.drawImage("qrcode.jpg", x=150, y=500)
+    p.drawImage("qrcode.jpg", x=50, y=600)
 
     p.showPage()
     p.save()
