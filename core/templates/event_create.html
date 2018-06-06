@@ -5,8 +5,8 @@ Créer un évènement
 {% endblock %}
 
 {% block content %}
-    <div class="panel">
-        <div class="panel-body">
+    <div class="card">
+        <div class="card-body">
             <form enctype='multipart/form-data' action="{% url 'core:event_create' %}" method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
