@@ -1,19 +1,22 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from core.models import Event
+from core.models import Event, EventStatus
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 from core.forms.event_create import event_form
 
+def generate_token(id):
+    return str(id * 54321 % 1000000)
 
 @login_required
 def view(request):
     if request.method == 'POST':
         form = event_form(request.POST, request.FILES)
+        print(request.POST)
         if form.is_valid():
             event = Event.objects.all().filter(title=form.cleaned_data['title'])
-            if event:
+            if event.count() != 0:
                 form = event_form()
                 return render(request, 'event_create.html', {'form':form, 'fail': 'Evènement déjà créé'})
             evt = Event()
@@ -30,10 +33,13 @@ def view(request):
             evt.int_price = form.cleaned_data['int_price']
             evt.ext_price = form.cleaned_data['ext_price']
             evt.display = form.cleaned_data['display']
-            evt.status = form.cleaned_data['status']
-            evt.token = form.cleaned_data['token']
+            evt.status = EventStatus.WAITING._value_
+            evt.token = ''
+            evt.premium = False
             evt.save()
-            return render(request, 'event_create.html', {'form':form, 'info': 'Evènement créé'})
+            evt.token = generate_token(evt.id)
+            evt.save()
+            return redirect(reverse('core:event', args=[evt.id]))
     else:
         form = event_form()
     return render(request, 'event_create.html', {'form': form})
