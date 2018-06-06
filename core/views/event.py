@@ -8,12 +8,22 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from core.models import Association, Event, Staff, EventStatus, Membership, MemberRole
 
+#FIXME: add a boolean to compute rights
+
 @login_required
 def view(request, id):
     event = get_object_or_404(Event, id=id)
     staffs = get_staff(event)
     members = get_members(event, event.orga)
     user = request.user
+    modify = False
+
+    for s in staffs:
+        if s.event == event and s.member == user:
+            modify = True
+            break
+
+    print(modify)
 
     try:
         event.valid = Membership.objects.filter(asso=event.orga) \
@@ -40,16 +50,17 @@ def view(request, id):
     else:
         add_form = AddStaff()
 
-    print(type(user))
-    print(members)
-    for s in staffs:
-        print(type(s))
+    #print(type(user))
+    #print(members)
+    #for s in staffs:
+     #   print(type(s))
 
     variables = {}
     variables['event'] = event
     variables['staff'] = staffs
     variables['members'] = members
-    variables['request'] = request
+    #variables['request'] = request
+    variables['modify'] = modify
     #variables['delete_form'] = rm_form
     #variables['user'] = user
     variables['add_form'] = add_form
