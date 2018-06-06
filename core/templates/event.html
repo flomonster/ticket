@@ -77,11 +77,11 @@
     <div class="row-sm-auto">
         <img src="{{ event.cover }}">
     </div>
-
     <!-- FIXME: Hide token and modify button if not authorized -->
+    {% if modify %}
     <div class="row justify-content-between">
         <div class="col-sm-8">
-            token: {{ event.token }}
+            Token: {{ event.token }}
         </div>
         <div class="float-right">
             <!-- FIXME: Script to modify event -->
@@ -90,22 +90,23 @@
             </button>
         </div>
     </div>
+    {% endif %}
 
     <div class="row justify-content-between">
-        {% if request.user in members.member or request.user in staff.member %}
-        <div class="col-sm-auto">
+        {% if modify %}
+        <div class="col-sm-2">
             <!-- Staffs: FIXME: different behaviour if user is registered as staff/part of organizing asso -->
-            <div class="panel panel-fixed" id="staff-panel">
-                <div class="panel-header">
+            <div class="card panel panel-fixed" id="staff-panel">
+                <div class="card-header">
                     Staff
-                    <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#add_staff">
+                    <button type="button" class="btn btn-info btn-xs float-right" data-toggle="modal" data-target="#add_staff">
                         Ajouter
                     </button>
                 </div>
                 {% if not staff %}
-                    <div class="panel-body">Pas de staff</div>
+                    <div class="card-body">Pas de staff</div>
                 {% else %}
-                <table class="table table-sm table-striped panel-body">
+                <table class="table table-sm table-striped card-body">
                     {% for staff in staff %}
                     <tr>
                         <td>
@@ -124,14 +125,12 @@
                 {% endif %}
             </div>
 
-            {% if request.user == creator %}
                 {% include "add_staff.html" with form=delete_form action="Supprimer" desc="Supprimer un staff" id="del_staff" %}
                 {% include "add_staff.html" with form=add_form action="Ajouter" desc="Ajouter un staff" id="add_staff" %}
-            {% endif %}
-
         </div>
         {% endif %}
-        <div class="col col-sm-7">
+
+        <div class="col col-sm-6">
             <div class="panels container">
                 <div class="card panel card-info">
                     <div>
@@ -142,7 +141,7 @@
                 </div>
             </div>
         </div>
-        <div class="col col-sm-5">
+        <div class="col col-sm-4">
             <div class="row">
                 <div class="col text-right">
                     Début: {{ event.start }}
@@ -155,12 +154,12 @@
             </div>
             <div class="row">
                 <div class="col text-right">
-                    Fermeture des inscriptions: {{ event.closing }}
+                    Deadline: {{ event.closing }}
                 </div>
             </div>
             <div class="row">
                 <div class="col text-right">
-                    Places restantes:
+                    Places restantes: <!--FIXME: Compute remaining capacity -->
                 </div>
             </div>
             <div class="row">
@@ -170,24 +169,26 @@
             </div>
             <div class="row">
                 <div class="col text-right">
-                    Prix (internes): {{ event.int_price }}
+                    Prix (internes): {{ event.int_price }} €
                 </div>
             </div>
             <div class="row">
                 <div class="col text-right">
-                    Prix (externes): {{ event.ext_price }}
+                    Prix (externes): {{ event.ext_price }} €
                 </div>
             </div>
         </div>
     </div>
     <div class="row justify-content-between">
+        {% if not modify %}
         <div class="float-left">
             <!-- FIXME: Link to register form -->
             <div class="button btn-info btn-sm">
                 Inscription
             </div>
         </div>
-        <div class="col-sm-auto">
+        {% endif %}
+        <div class="col-sm-auto float-right">
             <img src="{{ event.orga.logo }}">
         </div>
     </div>
