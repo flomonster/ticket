@@ -24,16 +24,18 @@ Statistiques
       </li>
     </ul>
 
+    {% if method != 'all' %}
     <div class="dropdown col-md-3 col-md-pull-9">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Période
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         {% for period in periods %}
-        <a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">{{ period.name }}</a>
         {% endfor %}
       </div>
     </div>
+    {% endif %}
     </div>
   </div>
 
