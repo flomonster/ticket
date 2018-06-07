@@ -31,7 +31,7 @@ Statistiques
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         {% for period in periods %}
-        <a class="dropdown-item" href="#">{{ period.name }}</a>
+        <a class="dropdown-item" href="{% url 'core:stats' method period.nb %}">{{ period.name }}</a>
         {% endfor %}
       </div>
     </div>

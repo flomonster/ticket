@@ -116,7 +116,7 @@ def getperiods(method, no):
     periods = []
     year = 2018
 
-    for i in range(no + 1):
+    for i in range(no):
         periods.append(Period(labels[it] + ' ' + str(year), i + 1))
         it += 1
 
