@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}
    Mes évènements
+   {% if respo %}
+   <button type="button" class="btn btn-sm btn-info"
+     onclick="window.location.href='{% url 'core:stats' %}'">
+     <i data-feather="bar-chart-2"></i>
+   </button>
+   {% endif %}
 {% endblock %}
 
 {% block content %}
