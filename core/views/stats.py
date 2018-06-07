@@ -13,6 +13,20 @@ class Constants:
     methods = {'all': 0, 'trimester': 3, 'month': 1, 'semester': 6}
     begin = dt.datetime(2018, 1, 1)
     end = None
+    labels = {
+            'month': [
+                'Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin',
+                'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre',
+                'Décembre'
+            ],
+            'semester': ['1er Semestre', '2e Semestre'],
+            'trimester': ['Hiver', 'Printemps', 'Eté', 'Automne']
+    }
+
+class Period:
+    def __init__(self, name, nb):
+        self.name = name
+        self.nb = nb
 
 class Stat:
     def __init__(self, **kwargs):
@@ -95,12 +109,31 @@ def allintervals(method):
 
     return i
 
+def getperiods(method, no):
+    labels = Constants.labels[method]
+    t = len(labels)
+    it = 0
+    periods = []
+    year = 2018
+
+    for i in range(no + 1):
+        periods.append(Period(labels[it] + ' ' + str(year), i + 1))
+        it += 1
+
+        if it == t:
+            year += 1
+            it = 0
+    return periods
+
 pytz.timezone(timezone.get_default_timezone_name()).localize(Constants.begin)
 
 @login_required
 def view(request, method='all', no=1):
     if method != 'all':
-        if not method in Constants.methods.keys() or no > allintervals(method) or no <= 0:
+        intervals = allintervals(method)
+
+    if method != 'all':
+        if not method in Constants.methods.keys() or no > intervals or no <= 0:
             return redirect(reverse('core:my_events'))
 
     if method != 'all':
@@ -112,5 +145,6 @@ def view(request, method='all', no=1):
     variables['event_stats'] = event_stats
     variables['register_stats'] = registerstats()
     variables['method'] = method
+    variables['periods'] = None if method == 'all' else getperiods(method, intervals)
 
     return render(request, 'stats.html', variables)
