@@ -22,6 +22,7 @@ class Constants:
             'semester': ['1er Semestre', '2e Semestre'],
             'trimester': ['Hiver', 'Printemps', 'Eté', 'Automne']
     }
+    period = ''
 
 class Period:
     def __init__(self, name, nb):
@@ -109,7 +110,7 @@ def allintervals(method):
 
     return i
 
-def getperiods(method, no):
+def getperiods(method, no, current):
     labels = Constants.labels[method]
     t = len(labels)
     it = 0
@@ -123,6 +124,7 @@ def getperiods(method, no):
         if it == t:
             year += 1
             it = 0
+    Constants.period = periods[current - 1].name
     return periods
 
 pytz.timezone(timezone.get_default_timezone_name()).localize(Constants.begin)
@@ -131,6 +133,8 @@ pytz.timezone(timezone.get_default_timezone_name()).localize(Constants.begin)
 def view(request, method='all', no=1):
     if method != 'all':
         intervals = allintervals(method)
+    else:
+        Constants.period = 'Toute l\'année'
 
     if method != 'all':
         if not method in Constants.methods.keys() or no > intervals or no <= 0:
@@ -145,6 +149,7 @@ def view(request, method='all', no=1):
     variables['event_stats'] = event_stats
     variables['register_stats'] = registerstats()
     variables['method'] = method
-    variables['periods'] = None if method == 'all' else getperiods(method, intervals)
+    variables['periods'] = None if method == 'all' else getperiods(method, intervals, no)
+    variables['current'] = Constants.period
 
     return render(request, 'stats.html', variables)
