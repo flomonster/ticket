@@ -145,6 +145,25 @@ h2 {
     font-weight: bold;
 }
 
+h3 {
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    color: #315d84;
+}
+
+#main-title {
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+p {
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    font-size: large;
+    color: #fab810;
+}
+
 #prix, #event_name {
     margin-bottom: 1.5rem;
 }
@@ -340,4 +359,10 @@ h2 {
   margin-bottom: 10px;
   overflow: hidden;
   background-color: #bbbbbb;
+}
+
+.carousel-inner > .item > img {
+  width:640px;
+  height:380px;
+    width: 100%;
 }
