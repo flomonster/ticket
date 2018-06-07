@@ -46,7 +46,7 @@ class Event(models.Model):
     start = models.DateTimeField() # Start of the event
     end = models.DateTimeField() # End of the event
     place = models.CharField(max_length=200)
-    cover = models.ImageField(blank=True)
+    cover = models.ImageField(upload_to='img/', blank=True)
     orga = models.ForeignKey(Association, on_delete=models.CASCADE)
     closing = models.DateTimeField() # Date of subscription closing
     int_capacity = models.IntegerField() # Available tickets for members
