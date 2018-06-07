@@ -160,7 +160,7 @@
 <!-- Search result template -->
 {% verbatim %}
 <script type="text/template" id="hit-template">
-  <a href="{{objectID}}" class="list-group-item list-group-item-action active" style="padding: .5rem;">{{{ _highlightResult.title.value }}}</a>
+  <a href="{{link}}" class="list-group-item list-group-item-action active" style="padding: .5rem;">{{{ _highlightResult.title.value }}}</a>
 </script>
 {% endverbatim %}
 
@@ -190,7 +190,12 @@
       if (content.hits.length === 0)
         $hits.html('<a href="#" class="list-group-item disabled">No results</a>');
       else
+      {
+        console.log(content.hits[0].objectID);
+        var id = content.hits[0].objectID;
+        content.hits[0].link = "{% url 'core:event' 42 %}".replace("42", id.toString());
         $hits.html(hitTemplate.render(content.hits[0]));
+      }
     });
 
   });
