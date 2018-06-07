@@ -3,7 +3,7 @@
    Mes évènements
    {% if respo %}
    <button type="button" class="btn btn-sm btn-info"
-     onclick="window.location.href='{% url 'core:stats' %}'">
+     onclick="window.location.href='{% url 'core:stats' 'all' 0 %}'">
      <i data-feather="bar-chart-2"></i>
    </button>
    {% endif %}
