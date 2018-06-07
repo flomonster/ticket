@@ -1,6 +1,100 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+{% load static %}
+
+
+<style>
+    .carousel-inner > .item > img,
+    .carousel-inner > .item > a > img {
+        width: 70%;
+        margin: auto;
+    }
+</style>
+
 
 {% block content %}
-  <p>Your username is : <b>{{ user.username }}</b></p>
-  <p>Your email is : <b>{{ user.email }}</b></p>
+
+    <div id="home-carousel" class="carousel slide" data-ride="carousel">
+        <!-- Carousel indicators, might be dropped -->
+        <ol class="carousel-indicators">
+            <li data-target="#home-carousel" data-slide-to="0" class="item1 active"></li>
+            <li data-target="#home-carousel" data-slide-to="1" class="item2"></li>
+            <li data-target="#home-carousel" data-slide-to="2" class="item3"></li>
+            <li data-target="#home-carousel" data-slide-to="3" class="item4"></li>
+            <li data-target="#home-carousel" data-slide-to="4" class="item5"></li>
+        </ol>
+
+        <!-- Displayer -->
+        <div class="carousel-inner" role="listbox">
+            <!-- Put some python code here to generate the carousel items from images -->
+            <!-- carousel items are of the following format: -->
+            <!-- Current active item -->
+
+            <div class="item carousel-item active">
+                <img id="image" class="d-block w-100" src="{% static 'img/event.jpg' %}" alt="first slides"
+                     data-holder-rendered="true">
+                <div class="carousel-caption d-none d-md-block">
+                    <h3 id="main-title">BIENVENUE SUR LA BILLETTERIE D'EPITA</h3>
+                    <p>Venez faire la fête avec nous!</p>
+                </div>
+            </div>
+
+            {% for event in events%}
+                <div class="item carousel-item">
+                    <img id="image" class="d-block w-100" src="{{ event.cover.url }}" alt="other slide">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h3>{{event.title}}</h3>
+                        <p>{{event.description}}</p>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        <!-- Left/right carousel controls -->
+        <a class="left carousel-control-prev" href="#home-carousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control-next" href="#home-carousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Activate Carousel
+            $("#home-carousel").carousel();
+
+            // Enable Carousel Indicators
+            $(".item1").click(function () {
+                $("#home-carousel").carousel(0);
+            });
+            $(".item2").click(function () {
+                $("#home-carousel").carousel(1);
+            });
+            $(".item3").click(function () {
+                $("#home-carousel").carousel(2);
+            });
+            $(".item4").click(function () {
+                $("#home-carousel").carousel(3);
+            });
+
+            // Enable Carousel Controls
+            $(".left").click(function () {
+                $("#home-carousel").carousel("prev");
+            });
+            $(".right").click(function () {
+                $("#home-carousel").carousel("next");
+            });
+        });
+
+    </script>
+
+    <br>
+    <br>
+
+    <p>Your username is : <b>{{ user.username }}</b></p>
+    <p>Your email is : <b>{{ user.email }}</b></p>
 {% endblock %}
