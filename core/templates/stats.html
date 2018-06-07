@@ -14,20 +14,34 @@ Statistiques
 
   <div class="tab-content">
     <div id="events" class="tab-pane fade in active">
-      <div class="card" style="margin-top: 1%">
-        <div class="card-header">Evènements</div>
-        <div class="card-body">
-          <table class="table table-sm table-striped">
-
+      <div class="card" style="border-top: none; height: -webkit-fill-available">
+        <div class="card-body" style="overflow-y: scroll">
+          <table class="table table-hover table-sm">
+            <thead class="thead-light">
             <tr>
               <th>Association</th>
-              <th>Nombre d'évènements</th>
+              <th>Terminés</th>
+              <th>En cours</th>
+              <th>Validés</th>
+              <th>En attente</th>
+              <th>Rejetés</th>
+              <th>Total</th>
             </tr>
+            </thead>
 
-            <tr>
-              <td>LOUL</td>
-              <td>MDR</td>
-            </tr>
+            <tbody>
+              {% for e in event_stats %}
+              <tr>
+                <td>{{ e.name }}</td>
+                <td>{{ e.finished }}</td>
+                <td>{{ e.pending }}</td>
+                <td>{{ e.validated }}</td>
+                <td>{{ e.waiting }}</td>
+                <td>{{ e.rejected }}</td>
+                <td>{{ e.total }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
 
           </table>
         </div>

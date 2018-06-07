@@ -118,6 +118,4 @@ class MyEvents:
         participations = Participant.objects.filter(user__exact=user)\
                                             .select_related('event')
         participations = [p['event'] for p in list(participations.values('event').all())]
-        return Event.objects.filter(id__in=participations)\
-                            .exclude(status=EventStatus.REJECTED._value_)\
-                            .exclude(status=EventStatus.FINISHED._value_)
+        return Event.objects.filter(id__in=participations)
