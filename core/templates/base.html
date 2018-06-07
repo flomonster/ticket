@@ -151,11 +151,19 @@
 
 <!-- box -->
 <div class="content-container">
-    <h1>{% block title %}{% endblock %}</h1>
+    <h1>
+      <i data-feather="chevron-right"></i>
+      {% block title %}{% endblock %}
+    </h1>
+    <div class="title-sep"></div>
     <div id="content">
         {% block content %}{% endblock %}
     </div>
 </div>
+
+<footer>
+  <br />
+</footer>
 
 <!-- Search result template -->
 {% verbatim %}
@@ -169,6 +177,7 @@
 <script src="//cdn.jsdelivr.net/hogan.js/3.0.2/hogan.min.js"></script>
 <script>
 
+  feather.replace();
   function stopSearch() { $('#hits').hide(); }
   function startSearch() { $('#hits').show(); }
 
