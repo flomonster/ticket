@@ -1,3 +1,7 @@
+html {
+  height: 100%;
+}
+
 .top {
     width: 100%;
 }
@@ -306,4 +310,14 @@ h2 {
   box-shadow: 0 10px 10px rgba(0,0,0,.25);
   margin-left: 5%;
   margin-right: 5%;
+  min-height: -webkit-fill-available;
+}
+
+.title-sep {
+  height: 1px;
+  width: 96%;
+  display:block;
+  margin: auto;
+  overflow: hidden;
+  background-color: #00435f;
 }
