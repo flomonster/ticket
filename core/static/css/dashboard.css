@@ -10,9 +10,19 @@
 }
 
 #panel-asso-events {
+  height: 300px;
+}
+
+#asso-events-body {
+  overflow-y: scroll;
 }
 
 #panel-asso-office {
+  height: 300px;
+}
+
+#asso-office-body {
+  overflow-y: scroll;
 }
 
 .event-link {

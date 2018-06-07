@@ -5,65 +5,23 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row">
+
+    <div class="container">
+      <div class="row" style="margin-left: 1px; margin-bottom: 7px;">
         <div class="btn-group" role="group" style="margin-bottom: 1%">
-            <button type="button" class="btn btn-primary" data-toggle="modal"
-                    data-target="#addModal">
-                Ajouter membre
-            </button>
-            <button type="button" class="btn btn-primary" data-toggle="modal"
-                    data-target="#removeModal">
-                Supprimer membre
-            </button>
+          <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                        data-target="#addModal">
+            Ajouter membre
+          </button>
+          <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                        data-target="#removeModal">
+            Supprimer membre
+          </button>
         </div>
-    </div>
-
-
-
-    <div class="panels container">
+      </div>
         <!-- Office members -->
         <div class="row">
-
-            <div class="col-md-4">
-                <div class="card panel" id="panel-asso-office">
-                <div class="card-header">
-                    Bureau
-                    <button type="button" class="btn btn-info btn-xs"
-                            data-toggle="modal" data-target="#officeModal">
-                        &#x2795;
-                    </button>
-                </div>
-
-                {% if not office %}
-                    <div class="card-body">Aucun membre de bureau</div>
-                {% else %}
-                    <table class="table table-sm table-striped panel-body">
-                        {% for member in office %}
-                            <tr>
-                                <td>
-                                    {% if member.role == 3 %}
-                                        &#9819;
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {{ member.member.username }}
-                                </td>
-
-                                <td>
-                                    <button type="button"
-                                            class="btn btn-danger btn-xs"
-                                            onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
-                                        &#x2715;
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                {% endif %}
-            </div>
-            </div>
-
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="card panel card-info" id="panel-asso-events">
                     <div class="card-header">
                         Evénements
@@ -71,9 +29,10 @@
                     </div>
 
                     {% if not events %}
-                        <div class="card-body">Aucun évènement prévu</div>
+                        <div class="card-body" id="asso-events-body">Aucun évènement prévu</div>
                     {% else %}
-                        <table class="table table-condensed table-sm card-body">
+                      <div class="card-body" id="asso-events-body">
+                        <table class="table table-condensed table-sm" id="asso-events-body">
                             <thead>
                             <tr>
                                 <th>Nom</th>
@@ -116,11 +75,52 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                      </div>
                     {% endif %}
                 </div>
             </div>
-        </div>
+            <div class="col-md-5">
+                <div class="card panel" id="panel-asso-office">
+                <div class="card-header">
+                    Bureau
+                    <button type="button" class="btn btn-info btn-xs"
+                            data-toggle="modal" data-target="#officeModal">
+                        &#x2795;
+                    </button>
+                </div>
 
+                {% if not office %}
+                    <div class="card-body" id="asso-office-body">Aucun membre de bureau</div>
+                {% else %}
+                    <div class="card-body" id="asso-office-body">
+                    <table class="table table-sm table-striped panel-body">
+                        {% for member in office %}
+                            <tr>
+                                <td>
+                                    {% if member.role == 3 %}
+                                        &#9819;
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ member.member.username }}
+                                </td>
+
+                                <td>
+                                    <button type="button"
+                                            class="btn btn-danger btn-xs"
+                                            onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
+                                        &#x2715;
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+                {% endif %}
+            </div>
+            </div>
+
+        </div>
     </div>
 
     {% include "modal_form.html" with form=office_form action="Ajouter" desc="Ajouter un membre au bureau" id="officeModal" %}

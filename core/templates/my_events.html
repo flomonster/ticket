@@ -14,6 +14,7 @@
         Aucun évènement prévu
     {% endif %}
     {% for event in events %}
+        {% if event.status != 5 %}
         <div class="card event">
             <div class="card-header container">
                 <div class="row">
@@ -150,6 +151,7 @@
 
             </div>
         </div>
+        {% endif %}
     {% endfor %}
 
    {% for event in events %}
