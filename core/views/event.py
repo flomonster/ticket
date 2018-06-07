@@ -6,9 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 
-from core.models import Association, Event, Staff, EventStatus, Membership, MemberRole
-
-#FIXME: add a boolean to compute rights
+from core.models import Association, Event, Staff, EventStatus, Membership, MemberRole, Participant
 
 @login_required
 def view(request, id):
@@ -16,12 +14,22 @@ def view(request, id):
     staffs = get_staff(event)
     members = get_members(event, event.orga)
     user = request.user
+    remaining_int = event.int_capacity
+    remaining_ext = event.ext_capacity
     modify = False
 
     for s in staffs:
         if s.event == event and s.member == user:
             modify = True
             break
+
+    participants = Participant.objects.filter(event__exact=event)
+
+    for p in participants:
+        if "epita" in p.mail:
+            remaining_int -= 1
+        else:
+            remaining_ext -= 1
 
     print(modify)
 
@@ -50,20 +58,14 @@ def view(request, id):
     else:
         add_form = AddStaff()
 
-    #print(type(user))
-    #print(members)
-    #for s in staffs:
-     #   print(type(s))
-
     variables = {}
     variables['event'] = event
     variables['staff'] = staffs
     variables['members'] = members
-    #variables['request'] = request
     variables['modify'] = modify
-    #variables['delete_form'] = rm_form
-    #variables['user'] = user
     variables['add_form'] = add_form
+    variables['remaining_int'] = remaining_int
+    variables['remaining_ext'] = remaining_ext
 
     return render(request, 'event.html', variables)
 
@@ -96,7 +98,6 @@ def add_staff(event, form):
 
 def rm_staff(request, id, member):
     event = get_object_or_404(Event, id=id)
-    #staffs = get_staff(event)
     tmp = Staff.objects.select_related('member') \
           .filter(member__username=member) \
           .filter(event__exact=event)

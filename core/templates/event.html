@@ -95,7 +95,6 @@
     <div class="row justify-content-between">
         {% if modify %}
         <div class="col-sm-2">
-            <!-- Staffs: FIXME: different behaviour if user is registered as staff/part of organizing asso -->
             <div class="card panel panel-fixed" id="staff-panel">
                 <div class="card-header">
                     Staff
@@ -125,6 +124,7 @@
                 {% endif %}
             </div>
 
+            <!-- FIXME: Maybe add a dropdown menu to handle staff from each supporting assos -->
                 {% include "add_staff.html" with form=delete_form action="Supprimer" desc="Supprimer un staff" id="del_staff" %}
                 {% include "add_staff.html" with form=add_form action="Ajouter" desc="Ajouter un staff" id="add_staff" %}
         </div>
@@ -152,14 +152,21 @@
                     Fin: {{ event.end }}
                 </div>
             </div>
+            {% if modify %}
             <div class="row">
                 <div class="col text-right">
                     Deadline: {{ event.closing }}
                 </div>
             </div>
+            {% endif %}
             <div class="row">
                 <div class="col text-right">
-                    Places restantes: <!--FIXME: Compute remaining capacity -->
+                    Places restantes (internes) : {{ remaining_int }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-right">
+                    Places restantes (externes) : {{ remaining_ext }}
                 </div>
             </div>
             <div class="row">
@@ -182,10 +189,9 @@
     <div class="row justify-content-between">
         {% if not modify %}
         <div class="float-left">
-            <!-- FIXME: Link to register form -->
-            <div class="button btn-info btn-sm">
-                Inscription
-            </div>
+            <form action="{% url 'core:register' event.id %}">
+                <button class="btn btn-primary btn-sm" type="submit">S'inscrire</button>
+            </form>
         </div>
         {% endif %}
         <div class="col-sm-auto float-right">
