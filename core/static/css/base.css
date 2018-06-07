@@ -10,6 +10,16 @@ body {
     padding-top: 110px;
 }
 
+a.nav-link
+{
+  color: #007bff;
+}
+
+a.nav-link:hover
+{
+  color: #0056b3;
+}
+
 .navbar-inverse .navbar-nav > li > a {
     color: #777;
 }
@@ -321,3 +331,4 @@ h2 {
   overflow: hidden;
   background-color: #00435f;
 }
+
