@@ -26,7 +26,7 @@ Statistiques
       </ul>
 
       {% if method != 'all' %}
-      <div class="dropdown col-md-3 col-md-pull-9">
+      <div class="dropdown col-md-3 col-md-pull-9" id="drop">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Période
         </button>
@@ -143,6 +143,9 @@ Statistiques
 </div>
 
 <script>
+  $(document).ready(function() {
+    $(".dropdown-toggle").dropdown();
+  });
   $('.nav-tabs li a').click(function(event){
     var elements = document.querySelectorAll(".nav-tabs li a");
 
