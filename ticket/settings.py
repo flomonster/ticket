@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'epita_connect',
     'paypal.standard.ipn',
     'algoliasearch_django',
+    'rest_framework',
 ]
 
 AUTHENTICATION_BACKENDS = (

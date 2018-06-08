@@ -6,6 +6,7 @@ from core.views import index, dashboard, association_create, associations, \
 
 app_name = 'core'
 
+
 urlpatterns = [
     path('', index.view, name='index'),
 
@@ -45,5 +46,5 @@ urlpatterns = [
     path('mail/<int:participant_id>/', sendMail.send_mail, name='mail'),
 
     # Stats
-    path('stats/<str:method>/<int:no>/', stats.view, name='stats')
+    path('stats/<str:method>/<int:no>/', stats.view, name='stats'),
 ]
