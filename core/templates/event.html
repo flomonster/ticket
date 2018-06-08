@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-<div class="container">
+<div class="container" xmlns:max-width="http://www.w3.org/1999/xhtml">
     <div class="row">
         <div class="col-sm-auto event-col">
             {{event.title}}
@@ -52,7 +52,7 @@
                         </button>
                     {% endif %}
                 {% elif respo %}
-                    {% if not event.resp %}
+                    {% if not event.respo %}
                         <button type="button"
                                 class="btn btn-success btn-xs"
                                 onclick="window.location.href='{% url 'core:confirm_event' event.orga.name event.id %}'">
@@ -78,9 +78,9 @@
 {% block content %}
 <div class="container">
     <div class="row-sm-auto">
-        <img src="{{ event.cover }}">
+        <!--FIXME: Size image -->
+        <img src="{{ event.cover.url }}" class="img-fluid">
     </div>
-    <!-- FIXME: Hide token and modify button if not authorized -->
     {% if modify %}
     <div class="row justify-content-between">
         <div class="col-sm-8">
@@ -196,9 +196,11 @@
                 <button class="btn btn-primary btn-sm" type="submit">S'inscrire</button>
             </form>
         </div>
+        {% else %}
+        <div class="float-left"></div>
         {% endif %}
         <div class="col-sm-auto float-right">
-            <img src="{{ event.orga.logo }}">
+            <img src="{{ event.orga.logo.url }}" class="img-fluid logo">
         </div>
     </div>
     <script>
