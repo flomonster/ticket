@@ -23,6 +23,13 @@ def view(request, id):
             modify = True
             break
 
+    for m in members:
+        if m.member == user:
+            modify = True
+            break
+
+    print(modify)
+
     participants = Participant.objects.filter(event__exact=event)
 
     for p in participants:
@@ -73,7 +80,6 @@ def view(request, id):
                         .filter(member__exact=user) \
                         .filter(role__exact=3)) > 0
 
-    print(pres)
     variables['pres'] = pres
 
     return render(request, 'event.html', variables)
