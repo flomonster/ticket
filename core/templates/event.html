@@ -23,14 +23,14 @@
             </h5>
         </div>
         <div class="col-sm-auto event-col">
-            {% if event.stat.pres %}
+            {% if event.pres %}
             <h5><span class="badge badge-success badge-event">Président</span></h5>
             {% else %}
             <h5><span class="badge badge-danger badge-event">Président</span></h5>
             {% endif %}
         </div>
         <div class="col-sm-auto event-col">
-            {% if event.stat.respo %}
+            {% if event.respo %}
             <h5><span class="badge badge-success badge-event">Responsable</span></h5>
             {% else %}
             <h5><span class="badge badge-danger badge-event">Responsable</span></h5>
@@ -38,7 +38,7 @@
         </div>
         <div class="col-sm-1 event-col">
             {% if event.status == 1 %}
-                {% if event.valid %}
+                {% if pres %}
                     {% if not event.pres %}
                         <button type="button"
                                 class="btn btn-success btn-xs"
