@@ -67,9 +67,12 @@ def view(request, id):
     variables['remaining_int'] = remaining_int
     variables['remaining_ext'] = remaining_ext
     variables['respo'] = request.user.has_perm('core.respo')
-    variables['pres'] = Membership.objects.select_related('asso') \
+    #variables['pres']
+    pres = len(Membership.objects.select_related('asso') \
                         .filter(asso__exact=event.orga) \
-                        .filter(role__exact=3)
+                        .filter(member__exact=user) \
+                        .filter(role__exact=3)) > 0
+    variables['pres'] = pres
 
     return render(request, 'event.html', variables)
 
