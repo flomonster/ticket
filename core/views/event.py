@@ -28,10 +28,10 @@ def view(request, id):
     for p in participants:
         if "epita" in p.mail:
             remaining_int -= 1
+            remaining_int = max(0, remaining_int)
         else:
             remaining_ext -= 1
-
-    print(modify)
+            remaining_ext = max(0, remaining_ext)
 
     try:
         event.valid = Membership.objects.filter(asso=event.orga) \
@@ -66,6 +66,10 @@ def view(request, id):
     variables['add_form'] = add_form
     variables['remaining_int'] = remaining_int
     variables['remaining_ext'] = remaining_ext
+    variables['respo'] = request.user.has_perm('core.respo')
+    variables['pres'] = Membership.objects.select_related('asso') \
+                        .filter(asso__exact=event.orga) \
+                        .filter(role__exact=3)
 
     return render(request, 'event.html', variables)
 
