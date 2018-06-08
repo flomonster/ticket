@@ -94,7 +94,7 @@
 
             <form class="form-inline my-2 my-lg-0 navbar-form" role="search">
                 <div class="">
-                  <input id="q" name="q" type="text" class="form-control mr-sm-2" placeholder="Recherche" autocomplete="off" autocarrect="false" spellcheck="false" onfocus="startSearch()" onfocusout="stopSearch()">
+                  <input id="q" name="q" type="text" class="form-control mr-sm-2" placeholder="Recherche" autocomplete="off" autocarrect="false" spellcheck="false" onfocus="startSearch()">
                   <div id="hits" class="list-group mr-sm-2"></div>
                 </div>
                 <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Recherche</button>
@@ -194,7 +194,6 @@
 <script>
 
   feather.replace();
-  function stopSearch() { $('#hits').hide(); }
   function startSearch() { $('#hits').show(); }
 
   $(document).ready(function() {
@@ -216,11 +215,11 @@
         $hits.html('<a href="#" class="list-group-item disabled">No results</a>');
       else
       {
-        console.log(content.hits[0].objectID);
         var id = content.hits[0].objectID;
         content.hits[0].link = "{% url 'core:event' 42 %}".replace("42", id.toString());
         $hits.html(hitTemplate.render(content.hits[0]));
       }
+
     });
 
   });
