@@ -142,6 +142,8 @@ def view(request, method='all', no=1):
 
     if method != 'all':
         Constants.end = enddate(method, no)
+    else:
+        Constants.end = None
 
     event_stats = eventstats()
 

@@ -47,6 +47,9 @@ Statistiques
         <a data-toggle="tab" href="#events" id="first">Evènements</a>
       </li>
       <li><a data-toggle="tab" href="#registrations">Inscriptions</a></li>
+      <li style="margin-left: 10px">
+        <input type="text" id="filterInput" onkeyup="filter()" placeholder="Rechercher..." class="form-control">
+      </li>
     </ul>
 
     <div class="tab-content">
@@ -54,7 +57,7 @@ Statistiques
       <div id="events" class="tab-pane active">
         <div class="card" style="border-top: none">
           <div class="card-body" style="overflow-y: scroll">
-            <table class="table table-hover table-sm">
+            <table class="table table-hover table-sm" id="events_table">
               <thead class="thead-light">
                 <tr>
                   <th>Association</th>
@@ -92,7 +95,7 @@ Statistiques
       <div id="registrations" class="tab-pane">
         <div class="card" style="border-top: none">
           <div class="card-body" style="overflow-y: scroll">
-            <table class="table table-hover table-sm">
+            <table class="table table-hover table-sm" id="reg_table">
               <thead class="thead-light">
                 <tr>
                   <th>Evènement</th>
@@ -197,5 +200,32 @@ type: 'bar',
         }
     }
 });
+</script>
+
+<script>
+  function tableFilter(filter, table) {
+    tr = table.getElementsByTagName("tr");
+
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+
+  function filter() {
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("filterInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("events_table");
+    tableFilter(filter, table);
+    var table2 = document.getElementById("reg_table");
+    tableFilter(filter, table2);
+  }
 </script>
 {% endblock %}
