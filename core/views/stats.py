@@ -15,8 +15,8 @@ class Constants:
     end = None
     labels = {
             'month': [
-                'Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin',
-                'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre',
+                'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre',
                 'Décembre'
             ],
             'semester': ['1er Semestre', '2e Semestre'],
