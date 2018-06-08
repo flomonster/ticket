@@ -7,7 +7,8 @@ from django.contrib.auth.decorators import login_required
 from core.forms.event_create import event_form
 
 def generate_token(id):
-    return str(id * 54321 % 1000000)
+    return str(id * 54321 % 1000000).zfill(6)
+
 
 @login_required
 def view(request):
