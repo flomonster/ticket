@@ -7,10 +7,10 @@ from ticket.settings import STATIC_URL
 
 
 def view(request):
-    events = Event.objects.all()
-    return render(request, 'index.html', {"events":events, 'static_url': STATIC_URL})
+    events = Event.objects.all().exclude(cover="")
+    return render(request, 'index.html', {"events":events, "nb_events": range(1, events.count() + 1), 'static_url': STATIC_URL})
 
 def logout(request):
     auth.logout(request)
-    events = Event.objects.all()
+    events = Event.objects.all().exclude(cover="")
     return render(request, 'index.html', {'events':events, 'info': "Vous étes déconnecté" })
