@@ -131,6 +131,12 @@
             {% else %}
             <a class="btn btn-warning my-2 my-sm-0" href="{% url 'core:logout' %}">Déconnexion</a>
             {% endif %}
+        <script>
+            $(document).ready(function() {
+                $(".dropdown-toggle").dropdown();
+            });
+        </script>
+
         </div>
     </nav>
 
