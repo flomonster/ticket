@@ -19,13 +19,15 @@
 
     <div id="home-carousel" class="carousel slide" data-ride="carousel">
         <!-- Carousel indicators, might be dropped -->
+
+
         <ol class="carousel-indicators">
-            <li data-target="#home-carousel" data-slide-to="0" class="item1 active"></li>
-            <li data-target="#home-carousel" data-slide-to="1" class="item2"></li>
-            <li data-target="#home-carousel" data-slide-to="2" class="item3"></li>
-            <li data-target="#home-carousel" data-slide-to="3" class="item4"></li>
-            <li data-target="#home-carousel" data-slide-to="4" class="item5"></li>
+        <li data-target="#home-carousel" data-slide-to="0" class="item0 active"></li>
+            {% for i in nb_events %}
+                <li data-target="#home-carousel" data-slide-to="{{ i }}" class="item{{ i }}"></li>
+            {% endfor %}
         </ol>
+
 
         <!-- Displayer -->
         <div class="carousel-inner" role="listbox">
@@ -42,12 +44,12 @@
                 </div>
             </div>
 
-            {% for event in events%}
+            {% for event in events %}
                 <div class="item carousel-item">
                     <img id="image" class="d-block w-100" src="{{ event.cover.url }}" alt="other slide">
                     <div class="carousel-caption d-none d-md-block">
-                        <h3>{{event.title}}</h3>
-                        <p>{{event.description}}</p>
+                        <h3>{{ event.title }}</h3>
+                        <p>{{ event.description }}</p>
                     </div>
                 </div>
             {% endfor %}
@@ -71,18 +73,17 @@
             $("#home-carousel").carousel();
 
             // Enable Carousel Indicators
-            $(".item1").click(function () {
+            $(".item0").click(function () {
                 $("#home-carousel").carousel(0);
             });
-            $(".item2").click(function () {
-                $("#home-carousel").carousel(1);
-            });
-            $(".item3").click(function () {
-                $("#home-carousel").carousel(2);
-            });
-            $(".item4").click(function () {
-                $("#home-carousel").carousel(3);
-            });
+
+
+            {% for i in nb_events %}
+                $(".item{{ i }}").click(function () {
+                    $("#home-carousel").carousel({{ i }});
+                });
+            {% endfor %}
+
 
             // Enable Carousel Controls
             $(".left").click(function () {
