@@ -72,6 +72,8 @@ def view(request, id):
                         .filter(asso__exact=event.orga) \
                         .filter(member__exact=user) \
                         .filter(role__exact=3)) > 0
+
+    print(pres)
     variables['pres'] = pres
 
     return render(request, 'event.html', variables)
