@@ -6,162 +6,196 @@ Statistiques
 
 {% block content %}
 <div class="card">
-
   <div class="card-header container">
     <h4>{{ current }}</h4>
     <div class="stat-sep"></div>
     <div class="row">
-    <ul class="nav nav-pills col-md-9 col-md-push-3">
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'core:stats' 'all' 1 %}" id="all">Tous</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'core:stats' 'month' 1 %}" id="month">Par mois</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'core:stats' 'trimester' 1 %}" id="trimester">Par trimestre</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'core:stats' 'semester' 1 %}" id="semester">Par semestre</a>
-      </li>
-    </ul>
+      <ul class="nav nav-pills col-md-9 col-md-push-3">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'core:stats' 'all' 1 %}" id="all">Tous</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'core:stats' 'month' 1 %}" id="month">Par mois</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'core:stats' 'trimester' 1 %}" id="trimester">Par trimestre</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'core:stats' 'semester' 1 %}" id="semester">Par semestre</a>
+        </li>
+      </ul>
 
-    {% if method != 'all' %}
-    <div class="dropdown col-md-3 col-md-pull-9">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Période
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        {% for period in periods %}
-        <a class="dropdown-item" href="{% url 'core:stats' method period.nb %}">{{ period.name }}</a>
-        {% endfor %}
+      {% if method != 'all' %}
+      <div class="dropdown col-md-3 col-md-pull-9">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Période
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          {% for period in periods %}
+          <a class="dropdown-item" href="{% url 'core:stats' method period.nb %}">{{ period.name }}</a>
+          {% endfor %}
+        </div>
       </div>
-    </div>
-    {% endif %}
+      {% endif %}
     </div>
 
   </div>
 
   <div class="card-body">
-  <ul class="nav nav-tabs">
-    <li class="active">
-      <a data-toggle="tab" href="#events" id="first">Evènements</a>
-    </li>
-    <li><a data-toggle="tab" href="#registrations">Inscriptions</a></li>
-  </ul>
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <a data-toggle="tab" href="#events" id="first">Evènements</a>
+      </li>
+      <li><a data-toggle="tab" href="#registrations">Inscriptions</a></li>
+    </ul>
 
-  <div class="tab-content">
+    <div class="tab-content">
 
-    <div id="events" class="tab-pane in active">
-      <div class="card" style="border-top: none; height: -webkit-fill-available">
-        <div class="card-body" style="overflow-y: scroll">
-          <table class="table table-hover">
-            <thead class="thead-light">
-            <tr>
-              <th>Association</th>
-              <th>Terminés</th>
-              <th>En cours</th>
-              <th>Validés</th>
-              <th>En attente</th>
-              <th>Rejetés</th>
-              <th>Total</th>
-            </tr>
-            </thead>
+      <div id="events" class="tab-pane active">
+        <div class="card" style="border-top: none">
+          <div class="card-body" style="overflow-y: scroll">
+            <table class="table table-hover table-sm">
+              <thead class="thead-light">
+                <tr>
+                  <th>Association</th>
+                  <th>Terminés</th>
+                  <th>En cours</th>
+                  <th>Validés</th>
+                  <th>En attente</th>
+                  <th>Rejetés</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
 
-            <tbody>
-              {% for e in event_stats %}
-              <tr>
-                <td>{{ e.name }}</td>
-                <td>{{ e.finished }}</td>
-                <td>{{ e.pending }}</td>
-                <td>{{ e.validated }}</td>
-                <td>{{ e.waiting }}</td>
-                <td>{{ e.rejected }}</td>
-                <td>{{ e.total }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
+              <tbody>
+                {% for e in event_stats %}
+                <tr>
+                  <td>{{ e.name }}</td>
+                  <td>{{ e.finished }}</td>
+                  <td>{{ e.pending }}</td>
+                  <td>{{ e.validated }}</td>
+                  <td>{{ e.waiting }}</td>
+                  <td>{{ e.rejected }}</td>
+                  <td>{{ e.total }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
 
-          </table>
+            </table>
+          </div>
+          <div class="card-footer">
+            <canvas class="my-4 w-100 chartjs-render-monitor" id="eventsChart" width="590" height="249" style="display: block; width: 590px; height: 249px;"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div id="registrations" class="tab-pane">
+        <div class="card" style="border-top: none">
+          <div class="card-body" style="overflow-y: scroll">
+            <table class="table table-hover table-sm">
+              <thead class="thead-light">
+                <tr>
+                  <th>Evènement</th>
+                  <th>Externes inscrits</th>
+                  <th>Externes</th>
+                  <th>Internes inscrits</th>
+                  <th>Internes</th>
+                  <th>Staffs</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for r in register_stats %}
+                <tr class="
+                {% if r.status == 1 %}
+                table-secondary
+                {% elif r.status == 2 %}
+                table-warning
+                {% elif r.status == 3 %}
+                table-success
+                {% elif r.status == 4 %}
+                table-danger
+                {% else %}
+                table-dark
+                {% endif %}
+                ">
+                  <td>{{ r.name }}</td>
+                  <td>{{ r.ext_reg }}</td>
+                  <td>{{ r.ext }}</td>
+                  <td>{{ r.int_reg }}</td>
+                  <td>{{ r.int }}</td>
+                  <td>{{ r.staffs }}</td>
+                  <td>{{ r.total }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+
+            </table>
+          </div>
         </div>
       </div>
     </div>
-
-    <div id="registrations" class="tab-pane fade">
-      <div class="card" style="border-top: none; height: -webkit-fill-available">
-        <div class="card-body" style="overflow-y: scroll">
-          <table class="table table-hover">
-            <thead class="thead-light">
-              <tr>
-                <th>Evènement</th>
-                <th>Externes inscrits</th>
-                <th>Externes</th>
-                <th>Internes inscrits</th>
-                <th>Internes</th>
-                <th>Staffs</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {% for r in register_stats %}
-              <tr class="
-              {% if r.status == 1 %}
-              table-secondary
-              {% elif r.status == 2 %}
-              table-warning
-              {% elif r.status == 3 %}
-              table-success
-              {% elif r.status == 4 %}
-              table-danger
-              {% else %}
-              table-dark
-              {% endif %}
-              ">
-                <td>{{ r.name }}</td>
-                <td>{{ r.ext_reg }}</td>
-                <td>{{ r.ext }}</td>
-                <td>{{ r.int_reg }}</td>
-                <td>{{ r.int }}</td>
-                <td>{{ r.staffs }}</td>
-                <td>{{ r.total }}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
   </div>
 </div>
 
-  <script>
-    $('.nav-tabs li a').click(function(event){
-      var elements = document.querySelectorAll(".nav-tabs li a");
+<script>
+  $('.nav-tabs li a').click(function(event){
+    var elements = document.querySelectorAll(".nav-tabs li a");
 
-      for (var i = 0; i < elements.length; i++)
-      {
-        elements.item(i).style.border = ""
-      }
-      event.target.style.border = "1px solid transparent";
-      event.target.style.borderColor = "#dee2e6 #dee2e6 #fff";
-      event.target.style.borderTopLeftRadius = "5px";
-      event.target.style.borderTopRightRadius = "5px";
-      event.target.style.borderBottomColor = "transparent";
+    for (var i = 0; i < elements.length; i++)
+    {
+      elements.item(i).style.border = ""
+    }
+    event.target.style.border = "1px solid transparent";
+    event.target.style.borderColor = "#dee2e6 #dee2e6 #fff";
+    event.target.style.borderTopLeftRadius = "5px";
+    event.target.style.borderTopRightRadius = "5px";
+    event.target.style.borderBottomColor = "transparent";
 
 
-    });
+  });
 
-    var link = document.getElementById("{{ method }}");
-    link.className += " active";
+var link = document.getElementById("{{ method }}");
+link.className += " active";
 
-    var first = document.getElementById("first");
-    first.style.border = "1px solid transparent";
-    first.style.borderColor = "#dee2e6 #dee2e6 #fff";
-    first.style.borderTopLeftRadius = "5px";
-    first.style.borderTopRightRadius = "5px";
-    first.style.borderBottomColor = "transparent";
-  </script>
+var first = document.getElementById("first");
+first.style.border = "1px solid transparent";
+first.style.borderColor = "#dee2e6 #dee2e6 #fff";
+first.style.borderTopLeftRadius = "5px";
+first.style.borderTopRightRadius = "5px";
+first.style.borderBottomColor = "transparent";
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+
+<script>
+  var ctx = document.getElementById("eventsChart");
+var myChart = new Chart(ctx, {
+type: 'bar',
+    data: {
+      labels: [{% for e in event_stats %}"{{ e.name }}",{% endfor %}],
+      datasets: [
+        {
+          label: "Nombre d'évènements",
+          backgroundColor: [{% for e in event_stats %}"#3e95cd",{% endfor %}],
+          data: [{% for e in event_stats %} {{ e.total }},{% endfor %}]
+        }
+      ]
+    },
+    options: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: 'Nombre d\'évènements'
+      },
+       scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+</script>
 {% endblock %}
