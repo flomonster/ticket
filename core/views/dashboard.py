@@ -26,7 +26,10 @@ class Dashboard:
         @return an HttpResponse serving the web page.
         """
         asso = get_object_or_404(Association, name=name)
-        member = get_object_or_404(Membership, member=request.user, asso=asso)
+        if not request.user.is_superuser:
+            member = get_object_or_404(Membership, member=request.user, asso=asso)
+        else:
+            member = None
 
         # Prepare useful queryset
         simples = Dashboard.get_members(asso, MemberRole.SIMPLE)
@@ -80,8 +83,8 @@ class Dashboard:
         variables['office'] = office
         variables['asso'] = asso
         variables['info'] = Dashboard.msg
-        variables['respo'] = request.user.has_perm('core.respo')
-        variables['pres'] = member.role == MemberRole.PRESIDENT._value_
+        variables['respo'] = True if request.user.is_superuser else request.user.has_perm('core.respo')
+        variables['pres'] = True if request.user.is_superuser else member.role == MemberRole.PRESIDENT._value_
 
         variables['office_form'] = office_form
         variables['add_form'] = add_form
