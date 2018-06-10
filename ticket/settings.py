@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'paypal.standard.ipn',
     'algoliasearch_django',
     'rest_framework',
+    'django_filters',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -200,4 +201,8 @@ EMAIL_PORT = 587
 ALGOLIA = {
   'APPLICATION_ID': 'N6SDHHN99O',
   'API_KEY': '648892de55c19c611e727082f2ccb79b'
+}
+
+REST_FRAMEWORK = {
+  'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
