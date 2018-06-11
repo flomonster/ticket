@@ -35,7 +35,10 @@
                 <div class="card panel card-info" id="panel-asso-events">
                     <div class="card-header">
                         Evénements
-                        <a class="btn btn-primary" href="{% url 'core:event_create' %}">+</a>
+                            <button type="button" class="btn btn-primary btn-sm"
+                                                  onclick="window.location.href='{% url 'core:event_create' %}'">
+                              <i data-feather="plus"></i>
+                            </button>
                     </div>
 
                     {% if not events %}
@@ -90,7 +93,7 @@
                     {% if can_add_office %}
                     <button type="button" class="btn btn-info btn-xs"
                             data-toggle="modal" data-target="#officeModal">
-                        &#x2795;
+                      <i data-feather="plus"></i>
                     </button>
                     {% endif %}
                 </div>
@@ -116,7 +119,7 @@
                                     <button type="button"
                                             class="btn btn-danger btn-xs"
                                             onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
-                                        &#x2715;
+                                      <i data-feather="x"></i>
                                     </button>
                                   {% endif %}
                                 </td>
@@ -143,4 +146,8 @@
     {% include "modal_form.html" with form=president_form action="Désigner" desc="Désigner le président" id="presidentModal" %}
     {% endif %}
     <img href="{{ asso.logo }}"/>
+
+  <script>
+    feather.replace({'width': 12, 'height': 12});
+  </script>
 {% endblock %}
