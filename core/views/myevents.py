@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from core.models import Event, EventStatus, Participant, Staff, Membership, MemberRole, User
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
+from rolepermissions.checkers import has_role, has_object_permission
 
 class MyEvents:
     class Stat:
@@ -44,7 +45,7 @@ class MyEvents:
     def view(request):
         memberships = Membership.objects.filter(member=request.user)
 
-        if request.user.has_perm('core.respo'):
+        if has_role(request.user, 'respo'):
             events = Event.objects.all()
         else:
             events = MyEvents.get_events(request.user)
@@ -57,6 +58,11 @@ class MyEvents:
             form = MyEvents.BaseForm(request.POST)
             MyEvents.validate_ticket(request.POST['member'], request.POST['event'])
             return redirect(reverse('core:my_events'))
+
+        events = events.exclude(status__exact=EventStatus.FINISHED._value_)\
+                       .exclude(status__exact=EventStatus.REJECTED._value_)\
+                       .order_by('start')\
+                       .order_by('status')
 
         for event in events:
             set = Participant.objects.filter(event=event, used=False)\
@@ -71,12 +77,7 @@ class MyEvents:
 
             event.stat = MyEvents.Stat(event)
             event.disp = MyEvents.is_staff(event, request.user)
-            try:
-                event.valid = Membership.objects.filter(asso=event.orga)\
-                                                .get(member=request.user)\
-                                                .role == MemberRole.PRESIDENT._value_
-            except ObjectDoesNotExist:
-                event.valid = False
+            event.valid = has_object_permission('event_status_change', request.user, event)
 
         # Template variables
         variables = {}
@@ -84,7 +85,7 @@ class MyEvents:
         variables['waiting'] = str(EventStatus.WAITING._value_)
         variables['validated'] = str(EventStatus.VALIDATED._value_)
         variables['pending'] = str(EventStatus.PENDING._value_)
-        variables['respo'] = request.user.has_perm('core.respo')
+        variables['respo'] = has_role(request.user, 'respo')
 
         return render(request, 'my_events.html', variables)
 

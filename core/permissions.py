@@ -28,3 +28,16 @@ def validate_member(role, user, asso):
         return False
 
     return True
+
+@register_object_checker()
+def event_status_change(role, user, event):
+    if user.is_superuser or role == Respo:
+        return True
+
+    try:
+        member = Membership.objects.filter(asso=event.orga, role__exact=MemberRole.PRESIDENT._value_)\
+                .get(member=user)
+    except:
+        return False
+
+    return True

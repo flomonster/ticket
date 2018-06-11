@@ -230,9 +230,9 @@ class Dashboard:
         asso = get_object_or_404(Association, name=name)
         event = Event.objects.all().get(pk=id)
 
-        if request.user.has_perm('core.respo'):
+        if has_role(request.user, 'respo'):
             event.respo = True
-        else:
+        if :
             event.pres = True
 
         if event.pres and event.respo:

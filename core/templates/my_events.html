@@ -65,12 +65,12 @@
                             {% if event.status == 1 %}
                             <div class="list-group-item">
                                 {% if event.valid %}
-                                    {% if not event.pres %}
+                                    {% if not respo and not event.pres %}
                                         {% include 'validation.html' %}
                                     {% endif %}
-                                {% elif respo %}
-                                    {% if not event.resp %}
-                                        {% include 'validation.html' %}
+
+                                    {% if respo and not event.respo %}
+                                      {% include 'validation.html' %}
                                     {% endif %}
                                 {% endif %}
 
