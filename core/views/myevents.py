@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from core.models import Event, EventStatus, Participant, Staff, Membership, MemberRole, User
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
-from rolepermissions.checkers import has_role, has_object_permission
+from rolepermissions.checkers import has_role, has_object_permission, has_permission
 
 class MyEvents:
     class Stat:
@@ -96,7 +96,7 @@ class MyEvents:
 
     @staticmethod
     def premium(request, id):
-        if has_permission('make_premium', request.user):
+        if has_permission(request.user, 'make_premium'):
             ev = Event.objects.get(id=id)
             ev.premium = not ev.premium
             ev.save()
