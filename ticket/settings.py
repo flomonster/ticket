@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'algoliasearch_django',
     'rest_framework',
     'django_filters',
+    'rolepermissions',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -206,3 +207,6 @@ ALGOLIA = {
 REST_FRAMEWORK = {
   'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
+
+# Permissions
+ROLEPERMISSIONS_MODULE = 'core.roles'

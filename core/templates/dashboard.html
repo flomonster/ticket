@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load permission_tags %}
 
 {% block title %}
 {{ asso.name }}
@@ -9,6 +10,7 @@
     <div class="container">
       <div class="row" style="margin-left: 1px; margin-bottom: 7px;">
         <div class="btn-group" role="group" style="margin-bottom: 1%">
+          {% if can_manage_members %}
           <button type="button" class="btn btn-primary" data-toggle="modal"
                                                         data-target="#addModal">
             Ajouter membre
@@ -17,6 +19,13 @@
                                                         data-target="#removeModal">
             Supprimer membre
           </button>
+          {% endif %}
+          {% if user|can:'designate_pres' %}
+          <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                        data-target="#presidentModal">
+            Désigner président
+          </button>
+          {% endif %}
         </div>
       </div>
         <!-- Office members -->
@@ -83,10 +92,12 @@
                 <div class="card panel" id="panel-asso-office">
                 <div class="card-header">
                     Bureau
+                    {% if can_add_office %}
                     <button type="button" class="btn btn-info btn-xs"
                             data-toggle="modal" data-target="#officeModal">
                         &#x2795;
                     </button>
+                    {% endif %}
                 </div>
 
                 {% if not office %}
@@ -106,11 +117,13 @@
                                 </td>
 
                                 <td>
+                                  {% if can_remove_office and member.role != 3 %}
                                     <button type="button"
                                             class="btn btn-danger btn-xs"
                                             onclick="window.location.href='{% url 'core:association_remove' asso.name member.member.username %}'">
                                         &#x2715;
                                     </button>
+                                  {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -123,8 +136,17 @@
         </div>
     </div>
 
+    {% if can_add_office %}
     {% include "modal_form.html" with form=office_form action="Ajouter" desc="Ajouter un membre au bureau" id="officeModal" %}
+    {% endif %}
+
+    {% if can_manage_members %}
     {% include "modal_form.html" with form=add_form action="Ajouter" desc="Ajouter un membre" id="addModal" %}
     {% include "modal_form.html" with form=remove_form action="Supprimer" desc="Supprimer un membre" id="removeModal" %}
+    {% endif %}
+
+    {% if user|can:'designate_pres' %}
+    {% include "modal_form.html" with form=president_form action="Désigner" desc="Désigner le président" id="presidentModal" %}
+    {% endif %}
     <img href="{{ asso.logo }}"/>
 {% endblock %}

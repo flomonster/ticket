@@ -9,12 +9,14 @@ from django.urls import reverse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from rolepermissions.checkers import has_role, has_object_permission
 
 from core.models import Association, Event, Membership, MemberRole, EventStatus
 
 
 class Dashboard:
     msg = None
+    error = None
 
     @staticmethod
     @login_required
@@ -52,19 +54,27 @@ class Dashboard:
 
         class AddForm(AssoForm):
             membre = forms.ModelChoiceField(queryset=others, required=True)
-            role = forms.ChoiceField(choices=MemberRole.choices())
 
         class RemoveForm(AssoForm):
             membre = forms.ModelChoiceField(queryset=all,
                                             required=True)
 
+        class PresForm(AssoForm):
+            membre = forms.ModelChoiceField(queryset=(simples | office).exclude(role__exact=MemberRole.PRESIDENT._value_), required=True)
+
         if request.method == 'POST':
             if 'officeModal' in request.POST:
                 form = OfficeForm(request.POST)
                 Dashboard.add_office_member(asso, form)
+
             elif 'addModal' in request.POST:
                 form = AddForm(request.POST)
                 Dashboard.add_member(asso, form)
+
+            elif 'presidentModal' in request.POST:
+                form = PresForm(request.POST)
+                Dashboard.designate_president(asso, form)
+
             else:
                 form = RemoveForm(request.POST)
                 Dashboard.remove_member(asso, form)
@@ -76,19 +86,25 @@ class Dashboard:
             office_form = OfficeForm()
             add_form = AddForm()
             remove_form = RemoveForm()
+            president_form = PresForm()
 
         # Creating templates variables
         variables = {}
+        variables['can_add_office'] = has_object_permission('add_office', request.user, asso)
+        variables['can_remove_office'] = variables['can_add_office']
+        variables['can_manage_members'] = has_object_permission('validate_member', request.user, asso)
         variables['events'] = Dashboard.related_events(asso)
         variables['office'] = office
         variables['asso'] = asso
         variables['info'] = Dashboard.msg
-        variables['respo'] = True if request.user.is_superuser else request.user.has_perm('core.respo')
+        variables['fail'] = Dashboard.error
+        variables['respo'] = True if request.user.is_superuser else has_role(request.user, 'respo')
         variables['pres'] = True if request.user.is_superuser else member.role == MemberRole.PRESIDENT._value_
 
         variables['office_form'] = office_form
         variables['add_form'] = add_form
         variables['remove_form'] = remove_form
+        variables['president_form'] = president_form
 
         variables['waiting'] = str(EventStatus.WAITING._value_)
         variables['validated'] = str(EventStatus.VALIDATED._value_)
@@ -130,6 +146,24 @@ class Dashboard:
         Dashboard.msg = user + ' a bien été ajouté au bureau.'
 
     @staticmethod
+    def designate_president(asso, form):
+        if not form.is_valid():
+            return None
+
+        try:
+            old = Membership.objects.get(asso=asso, role__exact=MemberRole.PRESIDENT._value_)
+            old.role = MemberRole.OFFICE._value_
+            old.save()
+        except:
+            pass
+
+        member = form.cleaned_data['membre']
+        member.role = MemberRole.PRESIDENT._value_
+        member.save()
+
+        Dashboard.msg = member.member.username + ' a bien été nommé président.'
+
+    @staticmethod
     def remove_member(asso, form):
         """
         @brief completely remove a membership row
@@ -156,8 +190,7 @@ class Dashboard:
             return
 
         member = form.cleaned_data['membre']
-        role = form.cleaned_data['role']
-        membership = Membership(asso=asso, member=member, role=role)
+        membership = Membership(asso=asso, member=member, role=MemberRole.SIMPLE._value_)
         membership.save()
 
         Dashboard.msg = member.username + " a bien été ajouté à l'association."
