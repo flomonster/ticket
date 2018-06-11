@@ -252,4 +252,4 @@ class Dashboard:
         event.save()
 
         Dashboard.msg = "L'évènement " + event.title + ' a été rejeté.'
-        return redirect(reverse('core:event', args=[event.id]))
+        return redirect(reverse('core:my_events'))
