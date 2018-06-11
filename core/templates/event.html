@@ -1,207 +1,125 @@
 {% extends "base.html" %}
 
 {% block title %}
-<div class="container" xmlns:max-width="http://www.w3.org/1999/xhtml">
-    <div class="row">
-        <div class="col-sm-auto event-col">
-            {{event.title}}
-            {% if event.premium %}
-            <i data-feather="star"></i>
-            {% endif %}
-        </div>
-        <div class="col-sm-auto event-col">
-            <h5>
-                {% if event.status == 1 %}
-                    <span class="badge badge-secondary badge-event">Waiting</span>
-                {% elif event.status == 2 %}
-                    <span class="badge badge-warning badge-event">Validated</span>
-                {% elif event.status == 3 %}
-                    <span class="badge badge-success badge-event">Pending</span>
-                {% else %}
-                    <span class="badge badge-danger badge-event">Finished</span>
-                {% endif %}
-            </h5>
-        </div>
-        <div class="col-sm-auto event-col">
-            {% if event.pres %}
-            <h5><span class="badge badge-success badge-event">Président</span></h5>
-            {% else %}
-            <h5><span class="badge badge-danger badge-event">Président</span></h5>
-            {% endif %}
-        </div>
-        <div class="col-sm-auto event-col">
-            {% if event.respo %}
-            <h5><span class="badge badge-success badge-event">Responsable</span></h5>
-            {% else %}
-            <h5><span class="badge badge-danger badge-event">Responsable</span></h5>
-            {% endif %}
-        </div>
-        <div class="col-sm-1 event-col">
-            {% if event.status == 1 %}
-                {% if pres %}
-                    {% if not event.pres %}
-                        <button type="button"
-                                class="btn btn-success btn-xs"
-                                onclick="window.location.href='{% url 'core:confirm_event' event.orga.name event.id %}'">
-                            &#10004;
-                        </button>
-                        <button type="button"
-                                class="btn btn-danger btn-xs"
-                                onclick="window.location.href='{%  url 'core:reject_event' event.orga.name event.id %}'">
-                            &#x2715;
-                        </button>
-                    {% endif %}
-                {% elif respo %}
-                    {% if not event.respo %}
-                        <button type="button"
-                                class="btn btn-success btn-xs"
-                                onclick="window.location.href='{% url 'core:confirm_event' event.orga.name event.id %}'">
-                            &#10004;
-                        </button>
-                        <button type="button"
-                                class="btn btn-danger btn-xs"
-                                onclick="window.location.href='{%  url 'core:reject_event' event.orga.name event.id %}'">
-                            &#x2715;
-                        </button>
-                    {% endif %}
-                {% endif %}
-            {% endif %}
-        </div>
-        <div class="col-sm text-right event-col asso-title">
-            {{ event.orga.name }}
-        </div>
-    </div>
-<!-- FIXME: The photo there too?-->
-</div>
+{{ event.title }}
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="mx-auto">
-            <img src="{{ event.cover.url }}" class="img-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="item carousel-item active" style="text-shadow: 1px 1px 5px #000000">
+            <img id="cover" src="{{ event.cover.url }}" class="img-fluid d-block w-100">
+            <div class="carousel-caption d-none d-lg-block">
+              <h1>{{ event.title }}</h1>
+              <p id="carousel-par">{{ event.place }}</p>
+            </div>
+          </div>
         </div>
+
+        <div class="card-body">
+          {{ event.desc }}
+          <div class="row">
+            <div class="col-4">
+              <div class="list-group" id="list-tab" role="tablist">
+
+                <a class="list-group-item list-group-item-action active" id="list-desc-list" data-toggle="list" href="#list-desc" role="tab" aria-controls="desc">
+                  <div class="d-flex w-100 justify-content-between">
+                    Description
+                    <small><i data-feather="align-left"></i></small>
+                  </div>
+                </a>
+
+                <a class="list-group-item list-group-item-action" id="list-infos-list" data-toggle="list" href="#list-infos" role="tab" aria-controls="infos">
+                  <div class="d-flex w-100 justify-content-between">
+                    Informations pratiques
+                    <small><i data-feather="info"></i></small>
+                  </div>
+                </a>
+
+                <a class="list-group-item list-group-item-action" id="list-asso-list" data-toggle="list" href="#list-asso" role="tab" aria-controls="asso">
+                  <div class="d-flex w-100 justify-content-between">
+                    Association
+                    <small><i data-feather="users"></i></small>
+                  </div>
+                </a>
+
+                <a class="list-group-item list-group-item-action" id="list-price-list" data-toggle="list" href="#list-price" role="tab" aria-controls="price">
+                  <div class="d-flex w-100 justify-content-between">
+                    Prix
+                    <small><i data-feather="credit-card"></i></small>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div class="col-8">
+              <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="list-desc" role="tabpanel" aria-labelledby="list-desc-list">
+                  <div class="jumbotron">
+                    <p class="lead">{{ event.description }}</p>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="list-infos" role="tabpanel" aria-labelledby="list-infos-list">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                      <label>Début : </label>
+                      {{ event.start }}
+                      <br />
+                      <label>Fin : </label>
+                      {{ event.end }}
+                    </li>
+
+                    <li class="list-group-item">
+                      <address>
+                        {{ event.place }}
+                      </address>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="tab-pane fade" id="list-asso" role="tabpanel" aria-labelledby="list-asso-list">
+                  <p>Cet évènement vous est proposé par {{ event.orga.name }}.</p>
+                  <p><a href="{{ event.orga.website }}">{{ event.orga.website }}</a></p>
+                  <img src="{{ event.orga.logo.url }}" class="img-fluid logo">
+                </div>
+
+                <div class="tab-pane fade" id="list-price" role="tabpanel" aria-labelledby="list-price-list">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                      <label>Prix pour interne : </label>
+                      {{ event.int_price }}.00 €
+                    </li>
+
+                    <li class="list-group-item">
+                      <label>Prix pour externe : </label>
+                      {{ event.ext_price }}.00 €
+                    </li>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          {% if can_register %}
+          <button type="button" class="btn btn-primary" style="float: right"
+                   onclick="window.location = '{% url 'core:register' event.id %}'">
+            S'inscrire
+          </button>
+          {% else %}
+          <p style="text-align: right">Vous êtes inscrit à cet évènement</p>
+          {% endif %}
+        </div>
+      </div>
     </div>
-
-    <br />
-
-    {% if modify %}
-    <div class="row justify-content-between">
-        <div class="col-sm-8">
-            <u>Token: {{ event.token }}</u>
-        </div>
-        <div class="float-right">
-            <!-- FIXME: Script to modify event -->
-            <button type="button" class="btn btn-info btn-xs">
-                Modifier
-            </button>
-        </div>
-    </div>
-    {% endif %}
-
-    <br />
-
-    <div class="row justify-content-between">
-        {% if modify %}
-        <div class="col-sm-2">
-            <div class="card panel panel-fixed" id="staff-panel">
-                <div class="card-header">
-                    Staff
-                    <button type="button" class="btn btn-info btn-xs float-right" data-toggle="modal" data-target="#add_staff">
-                        Ajouter
-                    </button>
-                </div>
-                {% if not staff %}
-                    <div class="card-body">Pas de staff</div>
-                {% else %}
-                <table class="table table-sm table-striped card-body">
-                    {% for staff in staff %}
-                    <tr>
-                        <td>
-                            {{staff.member.username}}
-                        </td>
-
-                        <td>
-                            <button type="button" class="btn btn-danger btn-xs"
-                                    onclick="window.location.href='{% url 'core:rm_staff' event.id staff.member %}'">
-                                &#x2715;
-                            </button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-                {% endif %}
-            </div>
-
-            <!-- FIXME: Maybe add a dropdown menu to handle staff from each supporting assos -->
-                {% include "add_staff.html" with form=delete_form action="Supprimer" desc="Supprimer un staff" id="del_staff" %}
-                {% include "add_staff.html" with form=add_form action="Ajouter" desc="Ajouter un staff" id="add_staff" %}
-        </div>
-        {% endif %}
-
-        <div class="col col-sm-7">
-            <div class="panels container">
-                <div class="card panel card-info">
-                    <div>
-                        <div class="card-body">
-                            {{ event.description }}
-                            <br />
-                            <br />
-                            <div class="title-sep"></div>
-                            <br />
-                            <u>Début:</u> {{ event.start }}
-                            <br />
-                            <u>Fin:</u> {{ event.end }}
-                            <br />
-                            <u>Lieu:</u> {{ event.place }}
-                            <br />
-                            <b>Prix (internes): {{ event.int_price }} €</b>
-                            <br />
-                            <b>Prix (externes): {{ event.ext_price }} €</b>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col col-sm-3">
-            {% if modify %}
-            <div class="row">
-                <div class="col text-right">
-                    <u>Deadline:</u> {{ event.closing }}
-                </div>
-            </div>
-            {% endif %}
-            <div class="row">
-                <div class="col text-right">
-                    <u>Places restantes (internes):</u> {{ remaining_int }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col text-right">
-                    <u>Places restantes (externes):</u> {{ remaining_ext }}
-                </div>
-            </div>
-        </div>
-    </div>
-    <br />
-    <div class="row justify-content-between">
-        {% if not modify %}
-        <div class="float-left">
-            <form action="{% url 'core:register' event.id %}">
-                <button class="btn btn-primary btn-sm" type="submit">S'inscrire</button>
-            </form>
-        </div>
-        {% else %}
-        <div class="float-left"></div>
-        {% endif %}
-        <div class="col-sm-auto float-right">
-            <a href="{{event.orga.email}}">
-                <img src="{{ event.orga.logo.url }}" class="img-fluid logo">
-            </a>
-        </div>
-    </div>
-    <script>
-    feather.replace({ 'width': 25, 'height': 25 })
-    </script>
 </div>
+
+<script>
+feather.replace();
+</script>
 {% endblock %}
