@@ -61,8 +61,7 @@ class MyEvents:
 
         events = events.exclude(status__exact=EventStatus.FINISHED._value_)\
                        .exclude(status__exact=EventStatus.REJECTED._value_)\
-                       .order_by('start')\
-                       .order_by('status')
+                       .order_by('start')
 
         for event in events:
             set = Participant.objects.filter(event=event, used=False)\
@@ -97,9 +96,10 @@ class MyEvents:
 
     @staticmethod
     def premium(request, id):
-        ev = Event.objects.get(id=id)
-        ev.premium = not ev.premium
-        ev.save()
+        if has_permission('make_premium', request.user):
+            ev = Event.objects.get(id=id)
+            ev.premium = not ev.premium
+            ev.save()
 
         return redirect(reverse('core:my_events'))
 

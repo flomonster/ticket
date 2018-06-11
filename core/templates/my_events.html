@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load permission_tags %}
+
 {% block title %}
    Mes évènements
    {% if respo %}
@@ -78,7 +80,7 @@
                             {% endif %}
 
 
-                        {% if respo and event.status == 2 %}
+                        {% if user|can:'make_premium' and event.status == 2 %}
                           <div class="list-group-item">
                             {% if event.premium %}
                             <button type="button" class="btn btn-danger btn-sm"

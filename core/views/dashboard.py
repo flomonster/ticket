@@ -242,7 +242,7 @@ class Dashboard:
         event.save()
 
         Dashboard.msg = "L'évènement " + event.title + ' a été confirmé.'
-        return redirect(reverse('core:association', args=[asso.name]))
+        return redirect(reverse('core:event', args=[event.id]))
 
     @staticmethod
     def reject_event(request, name, id):
@@ -252,4 +252,4 @@ class Dashboard:
         event.save()
 
         Dashboard.msg = "L'évènement " + event.title + ' a été rejeté.'
-        return redirect(reverse('core:association', args=[asso.name]))
+        return redirect(reverse('core:event', args=[event.id]))
