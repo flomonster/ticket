@@ -59,6 +59,7 @@ class Event(models.Model):
     respo = models.BooleanField(default=False)
     pres = models.BooleanField(default=False)
     premium = models.BooleanField(default=False)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, default=None, null=True, blank=True)
 
     def __str__(self):
         return self.title
