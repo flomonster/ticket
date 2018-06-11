@@ -2,6 +2,12 @@
 
 {% block title %}
 {{ event.title }}
+{% if manage %}
+<button onclick="window.location = '{% url 'core:event_manage' event.id %}'"
+        type="button" class="btn btn-info btn-sm">
+  <i data-feather="grid"></i>
+</button>
+{% endif %}
 {% endblock %}
 
 {% block content %}

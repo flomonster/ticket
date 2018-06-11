@@ -2,7 +2,7 @@ from django.urls import path
 
 from django.contrib.auth import views as auth_views
 from core.views import index, dashboard, association_create, associations, \
-    myevents, register, payment, sendMail, event, event_create, stats
+    myevents, register, payment, sendMail, event, event_create, stats, event_manage
 
 app_name = 'core'
 
@@ -35,6 +35,7 @@ urlpatterns = [
     path('event/<int:id>/', event.view, name='event'),
     path('event/<int:id>/remove/staff/<str:member>/',
         event.rm_staff, name="rm_staff"),
+    path('event/manage/<int:id>/', event_manage.view, name='event_manage'),
 
     # Register to an evenement
     path('registration/<int:id>/', register.view, name='register'),
