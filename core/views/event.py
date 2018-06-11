@@ -5,6 +5,7 @@ from core.models import Event
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 
 from core.models import Association, Event, Staff, EventStatus, Membership, MemberRole, Participant
 
@@ -72,6 +73,7 @@ def view(request, id):
     variables['remaining_int'] = remaining_int
     variables['remaining_ext'] = remaining_ext
     variables['respo'] = request.user.has_perm('core.respo')
+    variables['can_register'] = can_register(event, request.user)
     pres = len(Membership.objects.select_related('asso') \
                         .filter(asso__exact=event.orga) \
                         .filter(member__exact=user) \
@@ -116,3 +118,13 @@ def rm_staff(request, id, member):
     tmp.delete()
 
     return redirect(reverse('core:event', args=[event.id]))
+
+def can_register(event, user):
+    staff = Staff.objects.filter(member=user, event=event)
+    if staff.count() != 0:
+        return False
+
+    if timezone.now() > event.closing:
+        return False
+
+    return True
