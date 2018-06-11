@@ -77,6 +77,11 @@
                         {{ event.place }}
                       </address>
                     </li>
+
+                    <li class="list-group-item">
+                      <label>Fin des inscriptions : </label>
+                      {{ event.closing }}
+                    </li>
                   </ul>
                 </div>
 
@@ -112,7 +117,7 @@
             S'inscrire
           </button>
           {% else %}
-          <p style="text-align: right">Vous êtes inscrit à cet évènement</p>
+          <p style="text-align: right">{{ status }}</p>
           {% endif %}
         </div>
       </div>

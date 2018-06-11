@@ -73,7 +73,7 @@ def view(request, id):
     variables['remaining_int'] = remaining_int
     variables['remaining_ext'] = remaining_ext
     variables['respo'] = request.user.has_perm('core.respo')
-    variables['can_register'] = can_register(event, request.user)
+    variables['can_register'], variables['status'] = can_register(event, request.user)
     pres = len(Membership.objects.select_related('asso') \
                         .filter(asso__exact=event.orga) \
                         .filter(member__exact=user) \
@@ -120,11 +120,14 @@ def rm_staff(request, id, member):
     return redirect(reverse('core:event', args=[event.id]))
 
 def can_register(event, user):
+    if event.status == EventStatus.FINISHED._value_:
+        return (False, 'Cet évènement est fini')
+
     staff = Staff.objects.filter(member=user, event=event)
     if staff.count() != 0:
-        return False
+        return (False, 'Vous êtes staff de cet évènement')
 
     if timezone.now() > event.closing:
-        return False
+        return (False, 'Les inscriptions sont closes')
 
-    return True
+    return (True, '')
