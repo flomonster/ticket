@@ -10,6 +10,7 @@ Mes associations
     <div class="card event">
         <div class="card-header">
             <a href="{% url 'core:association' asso.name %}">{{ asso.name }}</a>
+            <img src="{{ asso.logo.url }}" class="img-fluid logo">
 
         {% if respo %}
             <button type="button" class="btn btn-danger btn-xs" style="float: right;"
