@@ -5,13 +5,15 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 from core.forms.event_create import event_form
+from core.models import Association
 
 def generate_token(id):
     return str(id * 54321 % 1000000).zfill(6)
 
 
 @login_required
-def view(request):
+def view(request, asso_id):
+    asso = Association.objects.get(pk=asso_id)
     if request.method == 'POST':
         form = event_form(request.POST, request.FILES)
         print(request.POST)
@@ -27,7 +29,7 @@ def view(request):
             evt.end = form.cleaned_data['end']
             evt.place = form.cleaned_data['place']
             evt.cover = form.cleaned_data['cover']
-            evt.orga = form.cleaned_data['orga']
+            evt.orga = asso
             evt.closing = form.cleaned_data['closing']
             evt.int_capacity = form.cleaned_data['int_capacity']
             evt.ext_capacity = form.cleaned_data['ext_capacity']
@@ -43,4 +45,4 @@ def view(request):
             return redirect(reverse('core:event', args=[evt.id]))
     else:
         form = event_form()
-    return render(request, 'event_create.html', {'form': form})
+    return render(request, 'event_create.html', {'form': form, 'asso': asso})

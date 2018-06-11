@@ -7,8 +7,12 @@ Créer un évènement
 {% block content %}
     <div class="card">
         <div class="card-body">
-            <form enctype='multipart/form-data' action="{% url 'core:event_create' %}" method="post">
+            <form enctype='multipart/form-data' action="{% url 'core:event_create' asso.id %}" method="post">
                 {% csrf_token %}
+                <p>
+                  <label for="orga">Association organisatrice</label>
+                  <input type="text" name="orga" value="{{ asso.name }}" maxlength="200" class="form-control" required="" id="orga" disabled />
+                </p>
                 {{ form.as_p }}
 
                <button type="submit" class="btn btn-primary">Valider</button>
