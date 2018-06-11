@@ -12,8 +12,13 @@ class EventSerializer(serializers.ModelSerializer):
         model = Event
         fields = ('title', 'token', 'id')
 
-class TicketSerializer(serializers.ModelSerializer):
+class TicketSerializerUser(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=True)
     class Meta:
         model = Participant
-        fields = ('id', 'event', 'user', 'used')
+        fields = ('event', 'user', 'used')
+
+class TicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Participant
+        fields = ('event', 'user', 'used')

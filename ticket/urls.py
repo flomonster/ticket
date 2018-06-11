@@ -22,7 +22,8 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'events', api.EventViewSet)
-router.register(r'ticket', api.TicketView, base_name='Participant')
+router.register(r'ticket', api.TicketViewUser, base_name='Participant')
+router.register(r'validate', api.TicketView, base_name='Participant')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

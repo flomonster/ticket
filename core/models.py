@@ -91,7 +91,7 @@ class Participant(models.Model):
     """
     An user has subscribed for an event
     """
-    paid = models.IntegerField()
+    paid = models.IntegerField(default=0)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     mail = models.EmailField()
