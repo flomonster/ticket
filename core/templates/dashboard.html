@@ -3,6 +3,7 @@
 
 {% block title %}
 {{ asso.name }}
+<img src="{{ asso.logo.url }}" class="img-fluid logo">
 {% endblock %}
 
 {% block content %}
@@ -135,7 +136,6 @@
 
         </div>
     </div>
-
     {% if can_add_office %}
     {% include "modal_form.html" with form=office_form action="Ajouter" desc="Ajouter un membre au bureau" id="officeModal" %}
     {% endif %}
