@@ -124,6 +124,8 @@ class Dashboard:
         """
         e = Event.objects.select_related('orga') \
             .filter(orga__exact=asso) \
+            .exclude(status__exact=EventStatus.FINISHED._value_)\
+            .exclude(status__exact=EventStatus.REJECTED._value_)\
             .order_by('start')
         return e
 
@@ -232,7 +234,7 @@ class Dashboard:
 
         if has_role(request.user, 'respo'):
             event.respo = True
-        if :
+        else:
             event.pres = True
 
         if event.pres and event.respo:
