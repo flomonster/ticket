@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'rolepermissions',
+    'django_cron',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -79,6 +80,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+CRON_CLASSES = [
+    'core.job.Update',
 ]
 
 ROOT_URLCONF = 'ticket.urls'
