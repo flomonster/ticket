@@ -45,10 +45,10 @@
             </div>
 
             {% for event in events %}
-                <div class="item carousel-item" style="text-shadow: 1px 1px 3px #000000">
+                <div class="item carousel-item" style="text-shadow: 1px 1px 3px #000000; cursor: pointer" onclick="window.location = '{% url 'core:event' event.id %}'">
                     <img id="image" class="d-block w-100" src="{{ event.cover.url }}" alt="other slide">
                     <div class="carousel-caption d-none d-md-block">
-                        <h3>{{ event.title }}</h3>
+                      <h3>{{ event.title }}</h3>
                         <p id="carousel-par">{{ event.place }}</p>
                         <p>{{ event.start }}</p>
                     </div>
