@@ -14,15 +14,21 @@ class event_form(forms.Form):
             required=False,
             widget=widgets.Textarea(attrs={'placeholder': 'Description de l\'évènement...'})
     )
-    start = forms.DateTimeField(
+    start_date = forms.CharField(
             label="Date de début",
-            widget=widgets.DateInput(attrs={'type':'datetime-local'}),
-            input_formats=['%Y-%m-%dT%H:%M']
+            widget=widgets.DateInput(attrs={'type': 'date'}),
     )
-    end = forms.DateTimeField(
+    start_time = forms.CharField(
+            label="Heure de début",
+            widget=widgets.TimeInput(attrs={'type': 'time'}),
+    )
+    end_date = forms.CharField(
             label="Date de fin",
-            widget=widgets.DateInput(attrs={'type':'datetime-local'}),
-            input_formats=['%Y-%m-%dT%H:%M']
+            widget=widgets.DateInput(attrs={'type':'date'}),
+    )
+    end_time = forms.CharField(
+            label="Heure de fin",
+            widget=widgets.TimeInput(attrs={'type': 'time'}),
     )
     place = forms.CharField(
             label="Lieu de l'évènement", max_length=200,
@@ -31,15 +37,15 @@ class event_form(forms.Form):
     cover = forms.ImageField(
             label='Photo de couverture'
     )
-    orga = forms.ModelChoiceField(
-            label='Association organisatrice',
-            queryset=Association.objects.all()
-    )
-    closing = forms.DateTimeField(
+    closing_date = forms.CharField(
             label="Date butoire d'inscription",
-            widget=widgets.DateInput(attrs={'type':'datetime-local'}),
-            input_formats=['%Y-%m-%dT%H:%M']
+            widget=widgets.DateInput(attrs={'type':'date'}),
     )
+    closing_time = forms.CharField(
+            label="Date butoire d'inscription",
+            widget=widgets.TimeInput(attrs={'type':'time'}),
+    )
+
     int_capacity = forms.IntegerField(
             label="Capacité maximale d'internes", initial=0
     )

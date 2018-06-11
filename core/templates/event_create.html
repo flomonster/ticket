@@ -13,7 +13,72 @@ Créer un évènement
                   <label for="orga">Association organisatrice</label>
                   <input type="text" name="orga" value="{{ asso.name }}" maxlength="200" class="form-control" required="" id="orga" disabled />
                 </p>
-                {{ form.as_p }}
+
+                <p>
+                  {{ form.title.label_tag }}
+                  {{ form.title }}
+                </p>
+
+                {{ form.start_date.label_tag }}
+                <div class="form-row" id="start">
+                  <div class="col">{{ form.start_date }}</div>
+                  <div class="col">{{ form.start_time }}</div>
+                </div>
+                <br />
+
+                {{ form.end_date.label_tag }}
+                <div class="form-row" id="start">
+                  {{ form.end_date.errors }}
+                  <div class="col">{{ form.end_date }}</div>
+                  {{ form.end_time.errors }}
+                  <div class="col">{{ form.end_time }}</div>
+                </div>
+                <br />
+
+                <p>
+                  {{ form.place.label_tag }}
+                  {{ form.place }}
+                </p>
+
+                <p>
+                  {{ form.cover.label_tag }}
+                  {{ form.cover }}
+                </p>
+
+                {{ form.closing_date.label_tag }}
+                <div class="form-row" id="start">
+                  <div class="col">{{ form.closing_date }}</div>
+                  <div class="col">{{ form.closing_time }}</div>
+                </div>
+                <br />
+
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    {{ form.int_capacity.label_tag }}
+                    {{ form.int_capacity }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    {{ form.ext_capacity.label_tag }}
+                    {{ form.ext_capacity }}
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    {{ form.int_price.label_tag }}
+                    {{ form.int_price }}
+                  </div>
+                  <div class="form-group col-md-6">
+                    {{ form.ext_price.label_tag }}
+                    {{ form.ext_price }}
+                  </div>
+                </div>
+                <br />
+
+                <p>
+                  {{ form.display.label_tag }}
+                  {{ form.display }}
+                </p>
 
                <button type="submit" class="btn btn-primary">Valider</button>
             </form>
