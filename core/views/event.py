@@ -6,12 +6,27 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
+from rolepermissions.checkers import has_role, has_permission
+from core.roles import Respo
 
 from core.models import Association, Event, Staff, EventStatus, Membership, MemberRole, Participant
+
+def manager_check(event, user):
+    staff = get_staff(event)
+    if staff.filter(member=user).count() != 0:
+        return True
+
+    if has_permission(user, 'manage'):
+        return True
+
+    return False
 
 @login_required
 def view(request, id):
     event = get_object_or_404(Event, id=id)
+
+    manage = manager_check(event, request.user)
+
     staffs = get_staff(event)
     members = get_members(event, event.orga)
     user = request.user
@@ -65,6 +80,7 @@ def view(request, id):
         add_form = AddStaff()
 
     variables = {}
+    variables['manage'] = manage
     variables['event'] = event
     variables['staff'] = staffs
     variables['members'] = members

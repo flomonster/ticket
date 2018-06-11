@@ -17,6 +17,6 @@ class Update(CronJobBase):
             if timezone.now() > event.end:
                 event.status = EventStatus.FINISHED._value_
                 event.save()
-            if timezone.now() > event.start:
+            elif timezone.now() > event.start:
                 event.status = EventStatus.PENDING._value_
                 event.save()
