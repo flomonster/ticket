@@ -5,4 +5,101 @@ Dashboard {{ event.title }}
 {% endblock %}
 
 {% block content %}
+<div class="card">
+<div class="card-body">
+
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <a class="nav-item nav-link active" id="nav-staff-tab" data-toggle="tab" href="#nav-staff" role="tab" aria-controls="nav-staff" aria-selected="true">
+      <i data-feather="user-plus"></i> Staff
+    </a>
+
+    <a class="nav-item nav-link" id="nav-infos-tab" data-toggle="tab" href="#nav-infos" role="tab" aria-controls="nav-infos" aria-selected="false">
+      <i data-feather="info"></i> Informations
+    </a>
+  </div>
+</nav>
+
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-staff" role="tabpanel" aria-labelledby="nav-staff-tab">
+    <div class="container">
+      <div class="row">
+        <table class="table table-hover table-sm table-condensed table-striped" id="staff_table" style="border-top: none">
+          <caption>Liste des staffs</caption>
+          <thead>
+            <tr>
+              <th>Nom d'utilisateur</th>
+
+              <th>
+                <input type="text" id="filterInput" onkeyup="filter()" placeholder="Rechercher..." class="form-control">
+              </th>
+
+              <th>
+                <button type="button" class="btn btn-sm btn-info">
+                  <i data-feather="plus"></i>
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in staff %}
+            <tr>
+              <td>
+                {{ s.member.username }}
+              </td>
+
+              <td>
+              </td>
+
+              <td>
+                <button type="button" class="btn btn-sm btn-danger">
+                  <i data-feather="x"></i>
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="tab-pane fade" id="nav-infos" role="tabpanel" aria-labelledby="nav-infos-tab">
+  </div>
+
+
+</div>
+
+</div>
+</div>
+
+<script>
+feather.replace({'width': 16, 'height': 16});
+</script>
+
+<script>
+  function tableFilter(filter, table) {
+    tr = table.getElementsByTagName("tr");
+
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+
+  function filter() {
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("filterInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("staff_table");
+    tableFilter(filter, table);
+  }
+</script>
 {% endblock %}
