@@ -19,6 +19,12 @@ def manager_check(event, user):
     if has_permission(user, 'manage'):
         return True
 
+    if Membership.objects.filter(asso=event.orga, member=user, role__exact=MemberRole.PRESIDENT._value_).count() != 0:
+        return True
+
+    if event.creator == user:
+        return True
+
     return False
 
 @login_required
