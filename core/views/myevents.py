@@ -75,7 +75,7 @@ class MyEvents:
             event.form.fields['event'].widget.attrs['readonly'] = True
 
             event.stat = MyEvents.Stat(event)
-            event.disp = MyEvents.is_staff(event, request.user)
+            event.disp = MyEvents.is_allowed(event, request.user)
             event.valid = has_object_permission('event_status_change', request.user, event)
 
         # Template variables
@@ -89,10 +89,12 @@ class MyEvents:
         return render(request, 'my_events.html', variables)
 
     @staticmethod
-    def is_staff(event, user):
-        return Staff.objects.filter(event__exact=event)\
-                            .filter(member__exact=user)\
-                            .count() == 1
+    def is_allowed(event, user):
+        staff = Staff.objects.filter(event__exact=event)\
+                             .filter(member__exact=user)
+        others = Membership.objects.filter(asso=event.orga)\
+                                   .filter(member__exact=user)
+        return others.count() == 1 or staff.count() == 1
 
     @staticmethod
     def premium(request, id):

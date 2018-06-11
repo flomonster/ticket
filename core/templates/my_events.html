@@ -25,6 +25,16 @@
                         {% if event.premium %}
                           <i data-feather="star"></i>
                         {% endif %}
+
+                        {% if event.valid %}
+                        {% if not respo and not event.pres %}
+                        <i data-feather="clock"></i>
+                        {% endif %}
+
+                        {% if respo and not event.respo %}
+                        <i data-feather="clock"></i>
+                        {% endif %}
+                        {% endif %}
                         {% include 'event_status.html' %}
                     </div>
 
@@ -54,7 +64,7 @@
                   <div class="event-tools container {% if event.status == 3 %} col-md-4 {% else %} col-md-12 {% endif %}">
                       <ul class="list-group list-group-flush">
                             {% if event.status == 3 %}
-                                {% if disp or respo %}
+                                {% if event.disp or respo %}
                                 <div class="list-group-item">
                                     <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
                                             data-target="#{{ event.id }}">
