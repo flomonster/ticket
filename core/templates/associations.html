@@ -2,7 +2,9 @@
 
 {% block title %}
 Mes associations
+{% if respo %}
 <a class="btn btn-primary" href="{% url 'core:association_create' %}">+</a>
+{% endif %}
 {% endblock %}
 
 {% block content %}

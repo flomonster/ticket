@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from core.models import Association, Membership
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
+from rolepermissions.checkers import has_role, has_object_permission
 
 @login_required
 def view(request):
@@ -13,7 +14,7 @@ def view(request):
 
     variables = {}
     variables['associations'] = assos
-    variables['respo'] = request.user.has_perm('core.respo')
+    variables['respo'] = has_role(request.user, 'respo')
     return render(request, 'associations.html', variables)
 
 @permission_required('core.respo')
