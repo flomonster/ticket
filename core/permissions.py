@@ -9,7 +9,7 @@ def add_office(role, user, asso):
         return True
 
     try:
-        member = Membership.objects.get(member=user, role__exact=MemberRole.PRESIDENT._value_)
+        member = Membership.objects.get(asso=asso, member=user, role__exact=MemberRole.PRESIDENT._value_)
     except:
         return False
 
@@ -21,8 +21,8 @@ def validate_member(role, user, asso):
         return True
 
     try:
-        member = Membership.objects.filter(role__exact=MemberRole.PRESIDENT._value_) |\
-                 Membership.objects.filter(role__exact=MemberRole.OFFICE._value_)\
+        member = (Membership.objects.filter(asso=asso, role__exact=MemberRole.PRESIDENT._value_) |\
+                 Membership.objects.filter(asso=asso, role__exact=MemberRole.OFFICE._value_))\
                  .get(member=user)
     except:
         return False
