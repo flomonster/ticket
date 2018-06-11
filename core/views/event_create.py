@@ -1,16 +1,40 @@
+from core.models import Event, EventStatus
+from django.core.mail import EmailMessage
+from datetime import datetime
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from core.models import Event, EventStatus
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
-from datetime import datetime
+from reportlab.lib.pagesizes import A4
+from rolepermissions.checkers import has_role, has_object_permission
 
 from core.forms.event_create import event_form
-from core.models import Association
+from core.models import Association, MemberRole
 
 def generate_token(id):
     return str(id * 54321 % 1000000).zfill(6)
 
+def notify(event):
+    event = event[0]
+    dests = []
+    for r in User.objects.all():
+        if has_role(r, 'respo'):
+            dests.append(r.email)
+    try:
+        dests.append(Membership.get(asso=event.orga, role__exact=MemberRole.PRESIDENT._value_).email)
+    except:
+        pass
+
+    email = EmailMessage(
+        'Création de l\'évènement ' + event.title,
+        'Bonjour, un évènement de l\'association ' + event.orga.name
+        + ' a été créée par ' + event.creator.username
+        + '. Vous pouvez le valider dès à présent.',
+        dests,
+    )
+    email.send(fail_silently=False)
+    print(email)
 
 @login_required
 def view(request, asso_id):
@@ -50,10 +74,12 @@ def view(request, asso_id):
             evt.display = form.cleaned_data['display']
             evt.status = EventStatus.WAITING._value_
             evt.token = ''
+            evt.creator = request.user
             evt.premium = False
             evt.save()
             evt.token = generate_token(evt.id)
             evt.save()
+            notify(event)
             return redirect(reverse('core:event', args=[evt.id]))
     else:
         form = event_form()
