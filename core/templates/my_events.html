@@ -106,6 +106,7 @@
                           </div>
                         {% endif %}
 
+                        {% if event.status == 1 %}
 
                         <div class="list-group-item">
                             {% if event.stat.pres %}
@@ -115,6 +116,7 @@
                             {% endif %}
                         </div>
 
+
                         <div class="list-group-item">
                             {% if event.stat.respo %}
                                 <div class="badge badge-success">Accord responsable</div>
@@ -122,6 +124,7 @@
                                 <div class="badge badge-danger">Accord responsable</div>
                             {% endif %}
                         </div>
+                        {% endif %}
 
                       </ul>
                     </div>

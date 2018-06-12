@@ -31,6 +31,7 @@ def notify(event):
         'Bonjour, un évènement de l\'association ' + event.orga.name
         + ' a été créée par ' + event.creator.username
         + '. Vous pouvez le valider dès à présent.',
+        'ticket.choisir.epita@gmail.com',
         dests,
     )
     email.send(fail_silently=False)
