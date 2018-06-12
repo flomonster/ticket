@@ -9,7 +9,7 @@ from django.utils import timezone
 from datetime import datetime
 
 from core.views.event import manager_check
-from core.models import Event, Staff, MemberRole, Membership, EventStatus, Association, Participant
+from core.models import Event, Staff, MemberRole, Membership, EventStatus, Association, Participant, AssociationStaff
 from core.forms.event_create import event_form
 
 def can_manage_staff(event, user):
@@ -156,6 +156,14 @@ def get_members(event, asso):
                                 .values('member')))
     return o
 
+def get_assos(event):
+    o = Association.objects\
+    .exclude(id=event.orga.id)\
+    .exclude(id__in=(AssociationStaff.objects.select_related('asso')\
+                                                    .filter(event__exact=event)\
+                                                    .values('asso')))
+    return o
+
 def add_staff(event, staff):
     s = Staff(event=event, member=staff.member, asso=event.orga)
     s.save()
@@ -166,16 +174,26 @@ def view(request, id):
     if not manager_check(event, request.user):
         return redirect(reverse('core:event', args=[event.id]))
 
-    class StaffForm(forms.Form):
-        staff = forms.ModelChoiceField(queryset=get_members(event, event.orga), required=True)
-
+    class Form(forms.Form):
         def __init__(self, *args, **kwargs):
-            super(StaffForm, self).__init__(*args, **kwargs)
+            super(Form, self).__init__(*args, **kwargs)
             for field_name, field in self.fields.items():
                 field.widget.attrs['class'] = 'form-control'
 
+    class StaffForm(Form):
+        staff = forms.ModelChoiceField(queryset=get_members(event, event.orga), required=True)
+
+    class AssoForm(Form):
+        association = forms.ModelChoiceField(queryset=get_assos(event), required=True)
+
 
     if request.method == 'POST':
+        if 'assos-modal' in request.POST:
+            form = AssoForm(request.POST)
+            if form.is_valid() and request.user == event.creator:
+                pass
+                return redirect(reverse('core:event_manage', args=[event.id]))
+
         if 'staff-modal' in request.POST:
             form = StaffForm(request.POST)
             if form.is_valid():
@@ -196,9 +214,12 @@ def view(request, id):
     variables['form'] = form
     variables['event'] = event
     variables['staff'] = staff
+    variables['assos'] = AssociationStaff.objects.filter(event=event)
     variables['can_manage_staff'] = can_manage_staff(event, request.user)
     variables['staff_form'] = StaffForm()
+    variables['asso_staff_form'] = AssoForm()
     variables['can_edit'] = can_edit(event, request.user)
+    variables['creator'] = request.user == event.creator
 
     return render(request, 'event_manage.html', variables)
 

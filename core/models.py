@@ -40,6 +40,7 @@ class Association(models.Model):
         return self.name
 
 
+
 class Event(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -108,3 +109,9 @@ class Participant(models.Model):
     def is_external(self):
         user_mail = self.user.email
         return not user_mail.endswith('epita.fr')
+
+
+class AssociationStaff(models.Model):
+    asso = models.ForeignKey(Association, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    capacity = models.IntegerField()
