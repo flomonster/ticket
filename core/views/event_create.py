@@ -41,7 +41,6 @@ def view(request, asso_id):
     asso = Association.objects.get(pk=asso_id)
     if request.method == 'POST':
         form = event_form(request.POST, request.FILES)
-        print(form.errors)
         if form.is_valid():
             event = Event.objects.all().filter(title=form.cleaned_data['title'])
             if event.count() != 0:
