@@ -99,9 +99,11 @@ Dashboard {{ event.title }}
     <form enctype='multipart/form-data' action="{% url 'core:event_manage' event.id %}" method="post" id="edit-form">
       {% csrf_token %}
       {% include 'event_form.html' %}
+      {% if can_edit %}
       <p style="text-align: right">
         <button id="submit-edit" type="submit" class="btn btn-primary" disabled>Valider</button>
       </p>
+      {% endif %}
     </form>
   </div>
 
