@@ -71,6 +71,7 @@ class Staff(models.Model):
     """
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     member = models.ForeignKey(User, on_delete=models.CASCADE)
+    asso = models.ForeignKey(Association, on_delete=models.CASCADE, default=None, null=True, blank=True)
 
     def __str__(self):
         return self.member.username

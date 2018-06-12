@@ -141,6 +141,17 @@ def rm_staff(request, id, member):
 
     return redirect(reverse('core:event', args=[event.id]))
 
+def count_participants(event):
+    participants = Participant.objects.filter(event=event)
+    ext_count = 0
+    int_count = 0
+    for par in participants:
+        if par.is_external():
+            ext_count += 1
+        else:
+            int_count += 1
+    return (ext_count, int_count)
+
 def can_register(event, user):
     if event.status == EventStatus.FINISHED._value_:
         return (False, 'Cet évènement est fini')
@@ -148,6 +159,22 @@ def can_register(event, user):
     staff = Staff.objects.filter(member=user, event=event)
     if staff.count() != 0:
         return (False, 'Vous êtes staff de cet évènement')
+
+    office = Membership.objects.filter(asso=event.orga, role__exact=MemberRole.OFFICE._value_) |\
+             Membership.objects.filter(asso=event.orga, role__exact=MemberRole.PRESIDENT._value_)
+    if office.filter(member=user).count() == 1:
+        return (False, 'Vous êtes membre du bureau de l\'association organisatrice')
+
+    if Participant.objects.filter(event=event, user=user).count() == 1:
+        return (False, 'Vous êtes déjà inscrit à cet évènement')
+
+    ext_count, int_count = count_participants(event)
+    if user.email.endswith('epita.fr'):
+        if int_count == event.int_capacity:
+            return (False, 'Plus de places internes disponibles')
+    else:
+        if ext_count == event.ext_capacity:
+            return (False, 'Plus de places externes disponibles')
 
     if timezone.now() > event.closing:
         return (False, 'Les inscriptions sont closes')
