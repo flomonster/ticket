@@ -171,6 +171,9 @@ def can_register(event, user):
     if event.status == EventStatus.FINISHED._value_:
         return (False, 'Cet évènement est fini')
 
+    if event.status == EventStatus.WAITING._value_:
+        return (False, 'Cet évènement n\'est pas encore validé')
+
     staff = Staff.objects.filter(member=user, event=event)
     if staff.count() != 0:
         return (False, 'Vous êtes staff de cet évènement')
