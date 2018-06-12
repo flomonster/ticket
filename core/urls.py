@@ -33,8 +33,8 @@ urlpatterns = [
     path('events/premium/<int:id>/', myevents.MyEvents.premium, name='premium'),
     path('events/create/<int:asso_id>/', event_create.view, name='event_create'),
     path('event/<int:id>/', event.view, name='event'),
-    path('event/<int:id>/remove/staff/<str:member>/',
-        event.rm_staff, name="rm_staff"),
+    path('event/manage/remove/staff/',
+        event_manage.rm_staff, name="rm_staff"),
     path('event/manage/<int:id>/', event_manage.view, name='event_manage'),
 
     # Register to an evenement
