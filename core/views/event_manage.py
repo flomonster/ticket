@@ -269,7 +269,7 @@ def is_staff(event, user):
     staff = Staff.objects.filter(event=event, member=user)
 
     return staff.count() == 1 or has_role(user, 'respo')\
-            or user.is_superuser or user == creator
+            or user.is_superuser or user == event.creator
 
 
 @login_required
