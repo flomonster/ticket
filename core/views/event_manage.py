@@ -239,6 +239,7 @@ def view(request, id):
 
     variables = {}
     variables['office'] = from_asso_staff(event, request.user)
+    variables['is_staff'] = is_staff(event, request.user)
     for off in variables['office']:
         off.staffs = list(Staff.objects.filter(event=event, asso=off.asso))
         diff = off.capacity - len(off.staffs)
@@ -263,6 +264,12 @@ def view(request, id):
     variables['can_add_staff'] = timezone.now() < event.start
 
     return render(request, 'event_manage.html', variables)
+
+def is_staff(event, user):
+    staff = Staff.objects.filter(event=event, member=user)
+
+    return staff.count() == 1 or has_role(user, 'respo')\
+            or user.is_superuser or user == creator
 
 
 @login_required

@@ -10,9 +10,11 @@ Dashboard {{ event.title }}
 
 {% block content %}
 <div class="card">
+  {% if is_staff %}
 <div class="card-header">
-  <h5>Jeton de l'évènement : {{ event.token }}</h5>
+  <h4 style="font-weight: bold">Jeton de l'évènement : {{ event.token }}</h4>
 </div>
+{% endif %}
 
 <div class="card-body">
 
