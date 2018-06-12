@@ -86,10 +86,10 @@ Dashboard {{ event.title }}
   <div class="tab-pane fade" id="nav-infos" role="tabpanel" aria-labelledby="nav-infos-tab">
     <br />
     <p style="text-align: right">
-      <button type="button" class="btn btn-sm btn-primary"><i data-feather="edit"></i></button>
+      <button type="button" class="btn btn-sm btn-primary" id="edit-button"><i data-feather="edit"></i></button>
     </p>
-    <form enctype='multipart/form-data' action="#" method="post">
-      {{ crsf_token }}
+    <form enctype='multipart/form-data' action="#" method="post" id="edit-form">
+      {% csrf_token %}
       {% include 'event_form.html' %}
       <p style="text-align: right">
         <button id="submit-edit" type="submit" class="btn btn-primary" disabled>Valider</button>
@@ -157,5 +157,25 @@ feather.replace({'width': 16, 'height': 16});
     table = document.getElementById("staff_table");
     tableFilter(filter, table);
   }
+</script>
+
+<script>
+  var edit = document.getElementById('edit-button');
+
+  edit.onclick = function() {
+    var form = document.forms["edit-form"];
+
+    var inputs = form.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].removeAttribute('readonly');
+    }
+
+    var textareas = form.getElementsByTagName('textarea');
+    for (var i = 0; i < textareas.length; i++) {
+      textareas[i].removeAttribute('readonly');
+    }
+
+    document.getElementById('submit-edit').removeAttribute('disabled');
+  };
 </script>
 {% endblock %}
