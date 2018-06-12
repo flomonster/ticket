@@ -1,3 +1,4 @@
+from django import forms
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required
@@ -147,13 +148,40 @@ def edit(event, form):
 
     event.save()
 
+def get_members(event, asso):
+    o = Membership.objects.select_related('asso') \
+        .filter(asso__exact=asso) \
+        .exclude(member__in=(Staff.objects.select_related('member') \
+                                .filter(event__exact=event) \
+                                .values('member')))
+    return o
+
+def add_staff(event, staff):
+    s = Staff(event=event, member=staff.member, asso=event.orga)
+    s.save()
+
 @login_required
 def view(request, id):
     event = get_object_or_404(Event, id=id)
     if not manager_check(event, request.user):
         return redirect(reverse('core:event', args=[event.id]))
 
+    class StaffForm(forms.Form):
+        staff = forms.ModelChoiceField(queryset=get_members(event, event.orga), required=True)
+
+        def __init__(self, *args, **kwargs):
+            super(StaffForm, self).__init__(*args, **kwargs)
+            for field_name, field in self.fields.items():
+                field.widget.attrs['class'] = 'form-control'
+
+
     if request.method == 'POST':
+        if 'staff-modal' in request.POST:
+            form = StaffForm(request.POST)
+            if form.is_valid():
+                add_staff(event, form.cleaned_data['staff'])
+                return redirect(reverse('core:event_manage', args=[event.id]))
+
         form = event_form(request.POST, request.FILES)
         if form.is_valid() and can_edit(event, request.user):
             edit(event, form)
@@ -169,6 +197,7 @@ def view(request, id):
     variables['event'] = event
     variables['staff'] = staff
     variables['can_manage_staff'] = can_manage_staff(event, request.user)
+    variables['staff_form'] = StaffForm()
     variables['can_edit'] = can_edit(event, request.user)
 
     return render(request, 'event_manage.html', variables)
