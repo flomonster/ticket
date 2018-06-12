@@ -4,6 +4,15 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from core.forms.registration import registration_form
 from core.models import Participant, Event, User
 
+@login_required
+def cancel(request, id):
+    try:
+        p = Participant.objects.get(id=id)
+    except:
+        return redirect(reverse('core:index'))
+    p.delete()
+    return redirect(reverse('core:index'))
+
 
 @login_required
 def view(request, id):
@@ -47,8 +56,7 @@ def view(request, id):
                 return redirect(reverse('core:mail', args=[participant.id]))
 
             return render(request, 'payment.html', {'form': form, 'id': id, 'event_price': event_price,
-                                                     'event': event, 'participant': participant,
-                                                     'info': 'Vous êtes bien inscrit à cet évènement'})
+                                                     'event': event, 'participant': participant})
     else:
         form = registration_form()
 
