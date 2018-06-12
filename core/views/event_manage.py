@@ -259,6 +259,8 @@ def view(request, id):
     variables['asso_staff_form'] = AssoForm()
     variables['can_edit'] = can_edit(event, request.user)
     variables['creator'] = request.user == event.creator
+    variables['can_add_asso'] = variables['creator'] and timezone.now() < event.start
+    variables['can_add_staff'] = timezone.now() < event.start
 
     return render(request, 'event_manage.html', variables)
 
