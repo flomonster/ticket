@@ -38,6 +38,7 @@ urlpatterns = [
     path('event/manage/add/staff/',
         event_manage.add_other_staff, name="add_staff"),
     path('event/manage/<int:id>/', event_manage.view, name='event_manage'),
+    path('event/register/cancel/<int:id>/', register.cancel, name='cancel'),
 
     # Register to an evenement
     path('registration/<int:id>/', register.view, name='register'),

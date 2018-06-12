@@ -63,9 +63,6 @@
             },
 
             onAuthorize: function (data, actions) {
-                /*
-                 * Execute the payment here
-                 */
                 return actions.payment.execute().then(function () {
                     window.alert("Paiement effectué, vous allez être redirigé vers la page d'accueil");
                     window.location.replace("{% url 'core:mail' participant.id %}");
@@ -73,21 +70,11 @@
             },
 
             onCancel: function (data, actions) {
-                /*
-                 * Buyer cancelled the payment
-                 */
-
-
-                /*FIXME*/
-                /*Suppr the participant*/
+                    window.location.replace("{% url 'core:cancel' participant.id %}");
             },
 
             onError: function (err) {
-                /*
-                 * An error occurred during the transaction
-                 */
-                /*FIXME*/
-                /*Suppr the participant*/
+                    window.location.replace("{% url 'core:cancel' participant.id %}");
             }
         }, '#paypal-button');
 
