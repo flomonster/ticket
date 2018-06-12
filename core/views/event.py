@@ -170,10 +170,10 @@ def can_register(event, user):
 
     ext_count, int_count = count_participants(event)
     if user.email.endswith('epita.fr'):
-        if int_count == event.int_capacity:
+        if int_count >= event.int_capacity:
             return (False, 'Plus de places internes disponibles')
     else:
-        if ext_count == event.ext_capacity:
+        if ext_count >= event.ext_capacity:
             return (False, 'Plus de places externes disponibles')
 
     if timezone.now() > event.closing:
