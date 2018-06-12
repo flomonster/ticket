@@ -25,6 +25,10 @@ Dashboard {{ event.title }}
     <a class="nav-item nav-link" id="nav-infos-tab" data-toggle="tab" href="#nav-infos" role="tab" aria-controls="nav-infos" aria-selected="false">
       <i data-feather="info"></i> Informations
     </a>
+
+    <a class="nav-item nav-link" id="nav-assos-tab" data-toggle="tab" href="#nav-assos" role="tab" aria-controls="nav-assos" aria-selected="false">
+      <i data-feather="users"></i> Associations
+    </a>
   </div>
 </nav>
 
@@ -99,6 +103,59 @@ Dashboard {{ event.title }}
     </form>
   </div>
 
+  <div class="tab-pane fade" id="nav-assos" role="tabpanel" aria-labelledby="nav-assos-tab">
+    <div class="container">
+      <div class="row">
+        <table class="table table-hover table-sm table-condensed table-striped" id="staff_table" style="border-top: none">
+          <caption>Liste des associations</caption>
+          <thead>
+            <tr>
+              <th>Association</th>
+
+              <th>Nombre de places</th>
+
+              <th>
+                <input type="text" id="filterInput" onkeyup="filter()" placeholder="Rechercher..." class="form-control">
+              </th>
+
+              <th>
+                {% if creator %}
+                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#assos-modal">
+                  <i data-feather="plus"></i>
+                </button>
+                {% endif %}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in assos %}
+            <tr id="assoline{{ s.id }}">
+              <td>
+                {{ s.asso.name }}
+              </td>
+
+              <td>
+                {{ s.capacity }}
+              </td>
+
+              <td>
+              </td>
+
+              <td>
+                {% if creator %}
+                <button type="button" class="btn btn-sm btn-danger" id="asso{{ s.id }}">
+                  <i data-feather="x"></i>
+                </button>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
 
 </div>
 
@@ -107,6 +164,10 @@ Dashboard {{ event.title }}
 
 {% if can_manage_staff %}
 {% include "add_staff.html" with form=staff_form action="Ajouter" desc="Ajouter un staff" id="staff-modal" %}
+{% endif %}
+
+{% if creator %}
+{% include "add_staff.html" with form=asso_staff_form action="Ajouter" desc="Ajouter une association staff" id="assos-modal" %}
 {% endif %}
 
 <script>
