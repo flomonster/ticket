@@ -153,6 +153,58 @@ Dashboard {{ event.title }}
           </tbody>
         </table>
       </div>
+
+      {% for a in office %}
+      <div class="row">
+        <h3>{{ a.asso.name }}</h3>
+        <table class="table table-hover table-sm table-condensed table-striped" id="{{ a.id }}-table">
+
+          <thead>
+            <tr>
+              <th>Nom d'utilisateur</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for s in a.staffs %}
+            <tr>
+              {% if s.member %}
+              <td>{{ s.member.username }}</td>
+              <td>{{ s.email }}</td>
+              <td></td>
+              {% else %}
+              <td id="choice-{{ a.id }}-{{ s }}">{{ a.field }}</td>
+              <td><input type="email" class="form-control" id="email-{{ a.id }}-{{ s }}" placeholder="foo@bar.baz"></td>
+              <td><button type="button" class="btn btn-primary btn-sm" id="submit-{{ a.id }}-{{ s }}">Ajouter</button></td>
+
+  <script>
+    document.getElementById("submit-{{ a.id }}-{{ s }}").onclick = function() {
+      var select = document.getElementById("choice-{{ a.id }}-{{ s }}").firstChild;
+      $.ajax({
+        url: '{% url 'core:add_staff' %}',
+        data: {
+          'event': {{ event.id }},
+          'member_id': select.options[select.selectedIndex].value,
+          'email': document.getElementById("email-{{ a.id }}-{{ s }}").value,
+          'asso': {{ a.asso.id }}
+        },
+        datatype: 'json',
+        success: function(data) {
+          document.location.href = "{% url 'core:event_manage' event.id %}";
+        }
+      });
+    };
+  </script>
+
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+
+        </table>
+      </div>
+      {% endfor %}
     </div>
 
   </div>

@@ -35,6 +35,8 @@ urlpatterns = [
     path('event/<int:id>/', event.view, name='event'),
     path('event/manage/remove/staff/',
         event_manage.rm_staff, name="rm_staff"),
+    path('event/manage/add/staff/',
+        event_manage.add_other_staff, name="add_staff"),
     path('event/manage/<int:id>/', event_manage.view, name='event_manage'),
 
     # Register to an evenement
