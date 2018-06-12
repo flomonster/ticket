@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 
+from core.views.event import manager_check
 from core.models import Event, EventStatus, Participant, Staff, Membership, MemberRole, User
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
@@ -118,7 +119,13 @@ class MyEvents:
         @brief get the set of events to be displayed
         @return query set of Event
         """
+        events = Event.objects.all()
+        e = []
+        for event in events:
+            if manager_check(event, user):
+                e.append(event.id)
+
         participations = Participant.objects.filter(user__exact=user)\
                                             .select_related('event')
         participations = [p['event'] for p in list(participations.values('event').all())]
-        return Event.objects.filter(id__in=participations)
+        return Event.objects.filter(id__in=participations) | Event.objects.filter(id__in=e)
