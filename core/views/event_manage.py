@@ -13,6 +13,9 @@ from core.models import Event, Staff, MemberRole, Membership, EventStatus, Assoc
 from core.forms.event_create import event_form
 
 def can_manage_staff(event, user):
+    if timezone.now() > event.start:
+        return False
+
     if has_role(user, 'respo') or user.is_superuser:
         return True
 

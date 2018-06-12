@@ -9,7 +9,18 @@ from django.utils import timezone
 from rolepermissions.checkers import has_role, has_permission
 from core.roles import Respo
 
-from core.models import Association, Event, Staff, EventStatus, Membership, MemberRole, Participant
+from core.models import Association, Event, Staff, EventStatus, Membership, MemberRole, Participant, AssociationStaff
+
+def from_office(asso, user):
+    office = Membership.objects.filter(asso=asso, role__exact=MemberRole.PRESIDENT._value_) |\
+            Membership.objects.filter(asso=asso, role__exact=MemberRole.OFFICE._value_)
+    return office.filter(member=user).count() != 0
+
+def from_asso_staff(event, user):
+    for a in AssociationStaff.objects.filter(event=event):
+        if from_office(a.asso, user):
+            return True
+    return False
 
 def manager_check(event, user):
     staff = get_staff(event)
@@ -19,7 +30,10 @@ def manager_check(event, user):
     if has_permission(user, 'manage'):
         return True
 
-    if Membership.objects.filter(asso=event.orga, member=user, role__exact=MemberRole.PRESIDENT._value_).count() != 0:
+    if from_office(event.orga, user):
+        return True
+
+    if from_asso_staff(event, user):
         return True
 
     if event.creator == user:
