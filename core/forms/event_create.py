@@ -35,7 +35,8 @@ class event_form(forms.Form):
             widget=forms.TextInput(attrs={'placeholder': 'Kremlin-Bicêtre'})
     )
     cover = forms.ImageField(
-            label='Photo de couverture'
+            label='Photo de couverture',
+            required=False,
     )
     closing_date = forms.CharField(
             label="Date butoire d'inscription",

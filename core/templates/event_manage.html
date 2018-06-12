@@ -85,10 +85,12 @@ Dashboard {{ event.title }}
 
   <div class="tab-pane fade" id="nav-infos" role="tabpanel" aria-labelledby="nav-infos-tab">
     <br />
+    {% if can_edit %}
     <p style="text-align: right">
       <button type="button" class="btn btn-sm btn-primary" id="edit-button"><i data-feather="edit"></i></button>
     </p>
-    <form enctype='multipart/form-data' action="#" method="post" id="edit-form">
+    {% endif %}
+    <form enctype='multipart/form-data' action="{% url 'core:event_manage' event.id %}" method="post" id="edit-form">
       {% csrf_token %}
       {% include 'event_form.html' %}
       <p style="text-align: right">

@@ -2,9 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from rolepermissions.checkers import has_role
 from django.http import JsonResponse
+from django.utils import timezone
+from datetime import datetime
 
 from core.views.event import manager_check
-from core.models import Event, Staff, MemberRole, Membership
+from core.models import Event, Staff, MemberRole, Membership, EventStatus
 from core.forms.event_create import event_form
 
 def can_manage_staff(event, user):
@@ -20,6 +22,9 @@ def can_manage_staff(event, user):
         return True
 
     return False
+
+def can_edit(event, user):
+    return event.creator == user and timezone.now() < event.closing
 
 def prefilled_form(event):
     form = event_form(initial={
@@ -44,6 +49,55 @@ def prefilled_form(event):
         field.widget.attrs['readonly'] = True
     return form
 
+def edit(event, form):
+    total = False
+    partial = False
+    def update(field, total=False):
+        if field in ['start', 'end', 'closing']:
+            if (str(form.cleaned_data[field]) + '+00:00') != str(getattr(event, field)):
+                print('Hello')
+                setattr(event, field, form.cleaned_data[field])
+                return True
+            return total
+        if form.cleaned_data[field] != getattr(event, field):
+            setattr(event, field, form.cleaned_data[field])
+            return True
+        return total
+
+    start_date = form.cleaned_data['start_date']
+    start_time = form.cleaned_data['start_time'][:5]
+    form.cleaned_data['start'] = datetime.strptime(start_date + ' ' + start_time, '%Y-%m-%d %H:%M')
+
+    end_date = form.cleaned_data['end_date']
+    end_time = form.cleaned_data['end_time'][:5]
+    form.cleaned_data['end'] = datetime.strptime(end_date + ' ' + end_time, '%Y-%m-%d %H:%M')
+
+    closing_date = form.cleaned_data['closing_date']
+    closing_time = form.cleaned_data['closing_time'][:5]
+    form.cleaned_data['closing'] = datetime.strptime(closing_date + ' ' + closing_time, '%Y-%m-%d %H:%M')
+
+    total = update('title', total)
+    total = update('place', total)
+    total = update('int_capacity', total)
+    total = update('ext_capacity', total)
+    total = update('start', total)
+    total = update('end', total)
+    total = update('closing', total)
+    partial = update('int_price', partial)
+    partial = update('ext_price', partial)
+    update('description')
+    update('display')
+
+    if total:
+        event.status = EventStatus.WAITING._value_
+        event.respo = False
+        event.pres = False
+    elif partial:
+        event.status = EventStatus.WAITING._value_
+        event.pres = False
+
+    event.save()
+
 @login_required
 def view(request, id):
     event = get_object_or_404(Event, id=id)
@@ -52,9 +106,9 @@ def view(request, id):
 
     if request.method == 'POST':
         form = event_form(request.POST, request.FILES)
-        if form.is_valid():
-            # FIXME
-            pass
+        if form.is_valid() and can_edit(event, request.user):
+            edit(event, form)
+            return redirect(reverse('core:event', args=[event.id]))
     else:
         form = prefilled_form(event)
 
@@ -66,6 +120,7 @@ def view(request, id):
     variables['event'] = event
     variables['staff'] = staff
     variables['can_manage_staff'] = can_manage_staff(event, request.user)
+    variables['can_edit'] = can_edit(event, request.user)
 
     return render(request, 'event_manage.html', variables)
 
