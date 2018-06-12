@@ -1,12 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
+from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from rolepermissions.checkers import has_role
 from django.http import JsonResponse
 from django.utils import timezone
 from datetime import datetime
 
 from core.views.event import manager_check
-from core.models import Event, Staff, MemberRole, Membership, EventStatus
+from core.models import Event, Staff, MemberRole, Membership, EventStatus, Association, Participant
 from core.forms.event_create import event_form
 
 def can_manage_staff(event, user):
@@ -48,6 +50,49 @@ def prefilled_form(event):
     for field in form.fields.values():
         field.widget.attrs['readonly'] = True
     return form
+
+def notify_total(event):
+    pres = Membership.objects.get(asso=event.orga, role__exact=MemberRole.PRESIDENT._value_)
+    dests = [pres.member.email]
+    for resp in User.objects.all():
+        if has_role(resp, 'respo'):
+            dests.append(resp.email)
+    email = EmailMessage(
+        'Modification de l\'évènement ' + event.title,
+        'Bonjour, un évènement de l\'association ' + event.orga.name
+        + ' a été modifié'
+        + '. Vous devez le revalider à nouveau.',
+        'ticket.choisir.epita@gmail.com',
+        dests,
+    )
+    email.send(fail_silently=False)
+
+def notify_partial(event):
+    pres = Membership.objects.get(asso=event.orga, role__exact=MemberRole.PRESIDENT._value_)
+    email = EmailMessage(
+        'Modification de l\'évènement ' + event.title,
+        'Bonjour, un évènement de l\'association ' + event.orga.name
+        + ' a été modifié'
+        + '. Vous devez le revalider à nouveau.',
+        'ticket.choisir.epita@gmail.com',
+        [pres.member.email],
+    )
+    email.send(fail_silently=False)
+
+def notify_participants(event):
+    participants = Participant.objects.filter(event=event)
+    dests = []
+    for par in participants:
+        dests.append(par.user.email)
+    email = EmailMessage(
+        'Modification de l\'évènement ' + event.title,
+        'Bonjour, auquel vous participez ' + event.orga.name
+        + ' a été modifié'
+        + '. Cet évènement doit être revalidé.',
+        'ticket.choisir.epita@gmail.com',
+        dests,
+    )
+    email.send(fail_silently=False)
 
 def edit(event, form):
     total = False
@@ -92,9 +137,13 @@ def edit(event, form):
         event.status = EventStatus.WAITING._value_
         event.respo = False
         event.pres = False
+        notify_total(event)
+        notify_participants(event)
     elif partial:
         event.status = EventStatus.WAITING._value_
         event.pres = False
+        notify_partial(event)
+        notify_participants(event)
 
     event.save()
 
