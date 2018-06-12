@@ -17,10 +17,11 @@ def from_office(asso, user):
     return office.filter(member=user).count() != 0
 
 def from_asso_staff(event, user):
+    l = []
     for a in AssociationStaff.objects.filter(event=event):
         if from_office(a.asso, user):
-            return True
-    return False
+            l.append(a)
+    return l
 
 def manager_check(event, user):
     staff = get_staff(event)
