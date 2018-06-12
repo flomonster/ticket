@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body">
             <form enctype="multipart/form-data" method="post"
-                  action="{% url 'core:event' event.id %}">
+                  action="{% url 'core:event_manage' event.id %}">
                 {% csrf_token %}
                 {{ form.as_p }}
 

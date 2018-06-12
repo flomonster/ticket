@@ -46,7 +46,7 @@ Dashboard {{ event.title }}
 
               <th>
                 {% if can_manage_staff %}
-                <button type="button" class="btn btn-sm btn-info">
+                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#staff-modal">
                   <i data-feather="plus"></i>
                 </button>
                 {% endif %}
@@ -104,6 +104,10 @@ Dashboard {{ event.title }}
 
 </div>
 </div>
+
+{% if can_manage_staff %}
+{% include "add_staff.html" with form=staff_form action="Ajouter" desc="Ajouter un staff" id="staff-modal" %}
+{% endif %}
 
 <script>
 feather.replace({'width': 16, 'height': 16});
