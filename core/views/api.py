@@ -21,6 +21,20 @@ class TicketView(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('event', 'user', 'id')
 
+    def put(self, request, *args, **kwargs):
+        if (not "event" in request.data or not "user" in request.data):
+            return ParseError()
+        used = False
+        if ("used" in request.data):
+            used = request.data["used"] == "true"
+        event = int(request.data["event"])
+        user = int(request.data["user"])
+        tickets = Participant.objects.filter(event = event, user = user)
+        if not tickets:
+            return NotFound()
+        tickets[0].used = used
+        tickets[0].save()
+
 class TicketViewUser(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
