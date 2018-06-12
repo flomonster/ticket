@@ -2,6 +2,10 @@
 
 {% block title %}
 Dashboard {{ event.title }}
+<button onclick="window.location = '{% url 'core:event' event.id %}'"
+        type="button" class="btn btn-info btn-sm">
+  <i data-feather="calendar"></i>
+</button>
 {% endblock %}
 
 {% block content %}
@@ -30,6 +34,8 @@ Dashboard {{ event.title }}
             <tr>
               <th>Nom d'utilisateur</th>
 
+              <th>Association</th>
+
               <th>
                 <input type="text" id="filterInput" onkeyup="filter()" placeholder="Rechercher..." class="form-control">
               </th>
@@ -48,6 +54,10 @@ Dashboard {{ event.title }}
             <tr id="line{{ s.id }}">
               <td>
                 {{ s.member.username }}
+              </td>
+
+              <td>
+                {{ s.asso.name }}
               </td>
 
               <td>

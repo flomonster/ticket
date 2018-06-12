@@ -50,4 +50,4 @@ def send_mail(request, participant_id):
     gen_pdf(request, participant_id)
     email.attach_file("ticket.pdf")
     email.send(fail_silently=False)
-    return redirect(reverse("core:index"))
+    return redirect(reverse("core:event", args=[participant.event.id]))

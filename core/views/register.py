@@ -43,6 +43,9 @@ def view(request, id):
             participant.event = event
 
             participant.save()
+            if event_price == 0:
+                return redirect(reverse('core:mail', args=[participant.id]))
+
             return render(request, 'payment.html', {'form': form, 'id': id, 'event_price': event_price,
                                                      'event': event, 'participant': participant,
                                                      'info': 'Vous êtes bien inscrit à cet évènement'})

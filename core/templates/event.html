@@ -102,11 +102,17 @@
                     <li class="list-group-item">
                       <label>Prix pour interne : </label>
                       {{ event.int_price }}.00 €
+                      {% if event.display %}
+                      ({{ remaining_int }} places disponibles)
+                      {% endif %}
                     </li>
 
                     <li class="list-group-item">
                       <label>Prix pour externe : </label>
                       {{ event.ext_price }}.00 €
+                      {% if event.display %}
+                      ({{ remaining_ext }} places disponibles)
+                      {% endif %}
                     </li>
                   </ul>
 
