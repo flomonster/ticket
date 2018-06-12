@@ -35,15 +35,17 @@ Dashboard {{ event.title }}
               </th>
 
               <th>
+                {% if can_manage_staff %}
                 <button type="button" class="btn btn-sm btn-info">
                   <i data-feather="plus"></i>
                 </button>
+                {% endif %}
               </th>
             </tr>
           </thead>
           <tbody>
             {% for s in staff %}
-            <tr>
+            <tr id="line{{ s.id }}">
               <td>
                 {{ s.member.username }}
               </td>
@@ -52,9 +54,11 @@ Dashboard {{ event.title }}
               </td>
 
               <td>
-                <button type="button" class="btn btn-sm btn-danger">
+                {% if can_manage_staff %}
+                <button type="button" class="btn btn-sm btn-danger" id="staff{{ s.id }}">
                   <i data-feather="x"></i>
                 </button>
+                {% endif %}
               </td>
             </tr>
             {% endfor %}
@@ -76,6 +80,33 @@ Dashboard {{ event.title }}
 
 <script>
 feather.replace({'width': 16, 'height': 16});
+</script>
+
+<script>
+  {% for s in staff %}
+    $("#staff{{ s.id }}").click(function() {
+      var id = {{ event.id }};
+
+      $.ajax({
+        url: '{% url 'core:rm_staff' %}',
+        data: {
+          'event': id,
+          'staff': {{ s.id }}
+        },
+        datatype: 'json',
+        success: function(data) {
+          if (data.success) {
+            var row = document.getElementById("line{{ s.id }}");
+            row.remove();
+            var info = document.getElementById("info-alert");
+            info.style.display = "block";
+            info.querySelector("#info-text").textContent =
+              "{{ s.member.username }} a été retiré de la liste des staffs";
+          }
+        }
+      });
+    });
+  {% endfor %}
 </script>
 
 <script>

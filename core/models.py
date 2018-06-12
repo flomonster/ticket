@@ -98,6 +98,9 @@ class Participant(models.Model):
     mail = models.EmailField()
     used = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = (('event', 'user'),)
+
     def __str__(self):
         return self.user.username + ' ' + self.event.title
 

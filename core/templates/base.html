@@ -158,12 +158,10 @@
 {% endif %}
 
 <!-- A success alert check -->
-{% if info is not None %}
-    <div class="alert alert-success alert-dismissible" role="alert">
+    <div {%if info is None %}style="display: none"{%endif%} class="alert alert-success alert-dismissible" role="alert" id="info-alert">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ info }}
+        <span id="info-text">{{ info }}</span>
     </div>
-{% endif %}
 
 <!-- box -->
 <div class="content-container">
