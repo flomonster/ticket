@@ -8,7 +8,7 @@
 
     <label for=prix">Prix:</label>
     <input type="text" id="prix" disabled class="textInput form-control"
-           name="prix" value="{{ event.int_price }} €">
+           name="prix" value="{{ event_price }} €">
 
     <label for="event_name">Evènement</label>
     <input type="text" id="event_name" disabled class="textInput form-control"
@@ -55,7 +55,7 @@
                     payment: {
                         transactions: [
                             {
-                                amount: {total: {{ event.int_price }}, currency: 'EUR'}
+                                amount: {total: {{ event_price }}, currency: 'EUR'}
                             }
                         ]
                     }
