@@ -17,7 +17,7 @@
 
 {% block content %}
 
-    <div id="home-carousel" class="carousel slide" data-ride="carousel">
+    <div id="home-carousel" class="carousel slide shadow" data-ride="carousel">
         <!-- Carousel indicators, might be dropped -->
 
 
@@ -66,6 +66,54 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>
+    </div>
+
+    <br />
+
+<style>
+.footer-widget {
+    height: 100%;
+    width: 100%;
+}
+</style>
+
+    <div class="container bg-white shadow">
+      <h2>Prochains évènements</h2>
+      <div style="border-top:1px solid black"></div>
+      <br />
+      {% for row in calendar %}
+      <div class="row">
+
+        {% for col in row %}
+        <div class="col-md-4">
+          <div class="card border-info footer-widget shadow-sm">
+
+            <div class="card-header border-info">
+              {{ col.date }}
+            </div>
+
+              {% if col.events %}
+              <ul class="list-group">
+                {% for event in col.events %}
+                <a href="{% url 'core:event' event.id %}" class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                  {{ event.title }}
+                  <span class="badge badge-primary badge-pill">{{ event.time }}</span>
+                </a>
+                {% endfor %}
+              </ul>
+              {% else %}
+              <div class="card-body">
+              </div>
+              {% endif %}
+
+
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+      <br />
+      {% endfor %}
     </div>
 
     <script>
