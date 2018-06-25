@@ -2,7 +2,8 @@ from django.core.mail import EmailMessage
 from django.shortcuts import get_object_or_404, redirect, reverse
 from reportlab.lib.pagesizes import A4
 
-from core.models import Participant, Event
+from django.http import JsonResponse
+from core.models import Participant, Event, User
 from django.contrib.auth.decorators import login_required
 from reportlab.pdfgen import canvas
 import qrcode
@@ -51,3 +52,17 @@ def send_mail(request, participant_id):
     email.attach_file("ticket.pdf")
     email.send(fail_silently=False)
     return redirect(reverse("core:event", args=[participant.event.id]))
+
+@login_required
+def mail(request):
+    event_id = request.GET.get('event_id', None)
+    member_id = request.GET.get('member_id', None)
+    paid = request.GET.get('paid', None)
+    email = request.GET.get('email', None)
+    participant = Participant()
+    participant.event = get_object_or_404(Event, id=event_id)
+    participant.user = get_object_or_404(User, id=member_id)
+    participant.paid = paid
+    participant.email = email
+    participant.save()
+    return redirect(reverse('core:mail', args=[participant.id]))
