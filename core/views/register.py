@@ -51,13 +51,13 @@ def view(request, id):
             participant.paid = event_price
             participant.event = event
 
-            participant.save()
             if event_price == 0:
+                participant.save()
                 return redirect(reverse('core:mail', args=[participant.id]))
 
             return render(request, 'payment.html', {'form': form, 'id': id, 'event_price': event_price,
                                                      'event': event, 'participant': participant})
     else:
-        form = registration_form()
+        form = registration_form(initial={'mail': request.user.email})
 
     return render(request, 'register.html', {'form': form, 'id': id, 'event_price': event_price})

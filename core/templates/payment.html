@@ -65,16 +65,27 @@
             onAuthorize: function (data, actions) {
                 return actions.payment.execute().then(function () {
                     window.alert("Paiement effectué, vous allez être redirigé vers la page d'accueil");
-                    window.location.replace("{% url 'core:mail' participant.id %}");
+                    $.ajax({
+                      url: '{% url 'core:paid_mail' %}',
+                      data: {
+                        'event_id': {{ participant.event.id }},
+                        'member_id': {{ participant.user.id }},
+                        'paid': {{ participant.paid }},
+                        'email': "{{ participant.email }}"
+                      },
+                      datatype: 'json',
+                      success: function(data) {
+                        window.location.replace("{% url 'core:index' %}");
+                      }
+                    });
+
                 });
             },
 
             onCancel: function (data, actions) {
-                    window.location.replace("{% url 'core:cancel' participant.id %}");
             },
 
             onError: function (err) {
-                    window.location.replace("{% url 'core:cancel' participant.id %}");
             }
         }, '#paypal-button');
 

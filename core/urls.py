@@ -48,6 +48,7 @@ urlpatterns = [
 
     # Path
     path('mail/<int:participant_id>/', sendMail.send_mail, name='mail'),
+    path('mail/', sendMail.mail, name='paid_mail'),
 
     # Stats
     path('stats/<str:method>/<int:no>/', stats.view, name='stats'),
