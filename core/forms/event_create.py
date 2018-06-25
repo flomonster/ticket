@@ -48,20 +48,25 @@ class event_form(forms.Form):
     )
 
     int_capacity = forms.IntegerField(
-            label="Capacité maximale d'internes", initial=0
+            label="Capacité maximale d'internes", initial=0,
+            min_value = 0
     )
     ext_capacity = forms.IntegerField(
-            label="Capacité maximale d'externes", initial=0
+            label="Capacité maximale d'externes", initial=0,
+            min_value = 0
     )
     int_price = forms.IntegerField(
-            label="Prix internes", initial=0
+            label="Prix internes", initial=0,
+            min_value = 0
     )
     ext_price = forms.IntegerField(
-            label="Prix externes", initial=0
+            label="Prix externes", initial=0,
+            min_value = 0
     )
     display = forms.BooleanField(
             label="Montrer les effectifs",
-            widget=widgets.CheckboxInput(attrs={'type': 'checkbox'})
+            widget=widgets.CheckboxInput(attrs={'type': 'checkbox'}),
+            required = False
     )
 
     def __init__(self, *args, **kwargs):
