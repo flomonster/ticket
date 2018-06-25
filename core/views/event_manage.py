@@ -13,13 +13,13 @@ from core.views.event import manager_check, from_asso_staff
 from core.models import Event, Staff, MemberRole, Membership, EventStatus, Association, Participant, AssociationStaff
 from core.forms.event_create import event_form
 
+
+##
+# @brief Add an association member to the staff list.
+# @param request HTTP request.
+# @return JSON object to indicate the success of the request.
 @login_required
 def add_other_staff(request):
-    """
-    @brief Add an association member to the staff list.
-    @param request HTTP request.
-    @return JSON object to indicate the success of the request.
-    """
     event_id = request.GET.get('event', None)
     member_id = request.GET.get('member_id', None)
     email = request.GET.get('email', None)
@@ -37,13 +37,13 @@ def add_other_staff(request):
 
     return JsonResponse({'success': True})
 
+
+##
+# @brief Determine if a user can manage the staff of an event.
+# @param event Event object representing the event.
+# @param user User object to check.
+# @return True if the user can manage staff, False otherwise.
 def can_manage_staff(event, user):
-    """
-    @brief Determine if a user can manage the staff of an event.
-    @param event Event object representing the event.
-    @param user User object to check.
-    @return True if the user can manage staff, False otherwise.
-    """
     if timezone.now() > event.start:
         return False
 
@@ -60,109 +60,111 @@ def can_manage_staff(event, user):
 
     return False
 
+
+##
+# @brief Determine if a user can edit an event.
+# @param event Event we want to edit.
+# @param user User object to check.
+# @return True if the user can edit an event, False otherwise.
 def can_edit(event, user):
-    """
-    @brief Determine if a user can edit an event.
-    @param event Event we want to edit.
-    @param user User object to check.
-    @return True if the user can edit an event, False otherwise.
-    """
     return event.creator == user and timezone.now() < event.closing
 
+
+##
+# @brief Fill a form with the info of an event.
+# @param event Event that contains all the info
+# @return Prefilled form.
 def prefilled_form(event):
-    """
-    @brief Fill a form with the info of an event.
-    @param event Event that contains all the info
-    @return Prefilled form.
-    """
-    form = event_form(initial={
-        'title': event.title,
-        'orga': event.orga,
-        'description': event.description,
-        'start_date': event.start.date(),
-        'start_time': event.start.time(),
-        'end_date': event.end.date(),
-        'end_time': event.end.time(),
-        'place': event.place,
-        'cover': event.cover,
-        'closing_date': event.closing.date(),
-        'closing_time': event.closing.time(),
-        'int_capacity': event.int_capacity,
-        'ext_capacity': event.ext_capacity,
-        'int_price': event.int_price,
-        'ext_price': event.ext_price,
-        'display': event.display
-    })
+    form = event_form(
+        initial={
+            'title': event.title,
+            'orga': event.orga,
+            'description': event.description,
+            'start_date': event.start.date(),
+            'start_time': event.start.time(),
+            'end_date': event.end.date(),
+            'end_time': event.end.time(),
+            'place': event.place,
+            'cover': event.cover,
+            'closing_date': event.closing.date(),
+            'closing_time': event.closing.time(),
+            'int_capacity': event.int_capacity,
+            'ext_capacity': event.ext_capacity,
+            'int_price': event.int_price,
+            'ext_price': event.ext_price,
+            'display': event.display
+        })
     for field in form.fields.values():
         field.widget.attrs['readonly'] = True
     return form
 
+
+##
+# @brief Send a mail to notify major updates on the event.
+# @param event Event object that was updated.
 def notify_total(event):
-    """
-    @brief Send a mail to notify major updates on the event.
-    @param event Event object that was updated.
-    """
-    pres = Membership.objects.get(asso=event.orga, role__exact=MemberRole.PRESIDENT._value_)
+    pres = Membership.objects.get(
+        asso=event.orga, role__exact=MemberRole.PRESIDENT._value_)
     dests = [pres.member.email]
     for resp in User.objects.all():
         if has_role(resp, 'respo'):
             dests.append(resp.email)
     email = EmailMessage(
         'Modification de l\'évènement ' + event.title,
-        'Bonjour, un évènement de l\'association ' + event.orga.name
-        + ' a été modifié'
-        + '. Vous devez le revalider à nouveau.',
+        'Bonjour, un évènement de l\'association ' + event.orga.name +
+        ' a été modifié' + '. Vous devez le revalider à nouveau.',
         'ticket.choisir.epita@gmail.com',
         dests,
     )
     email.send(fail_silently=False)
 
+
+##
+# @brief Send a mail to notify minor updates on the event.
+# @param event Event object that was updated.
 def notify_partial(event):
-    """
-    @brief Send a mail to notify minor updates on the event.
-    @param event Event object that was updated.
-    """
-    pres = Membership.objects.get(asso=event.orga, role__exact=MemberRole.PRESIDENT._value_)
+    pres = Membership.objects.get(
+        asso=event.orga, role__exact=MemberRole.PRESIDENT._value_)
     email = EmailMessage(
         'Modification de l\'évènement ' + event.title,
-        'Bonjour, un évènement de l\'association ' + event.orga.name
-        + ' a été modifié'
-        + '. Vous devez le revalider à nouveau.',
+        'Bonjour, un évènement de l\'association ' + event.orga.name +
+        ' a été modifié' + '. Vous devez le revalider à nouveau.',
         'ticket.choisir.epita@gmail.com',
         [pres.member.email],
     )
     email.send(fail_silently=False)
 
+
+##
+# @brief Send a mail to participants to notify an update of an event.
+# @param event Updated event.
 def notify_participants(event):
-    """
-    @brief Send a mail to participants to notify an update of an event.
-    @param event Updated event.
-    """
     participants = Participant.objects.filter(event=event)
     dests = []
     for par in participants:
         dests.append(par.user.email)
     email = EmailMessage(
         'Modification de l\'évènement ' + event.title,
-        'Bonjour, auquel vous participez ' + event.orga.name
-        + ' a été modifié'
+        'Bonjour, auquel vous participez ' + event.orga.name + ' a été modifié'
         + '. Cet évènement doit être revalidé.',
         'ticket.choisir.epita@gmail.com',
         dests,
     )
     email.send(fail_silently=False)
 
+
+##
+# @brief Edit an event with the info contained in a form.
+# @param event Event to edit.
+# @param form Form with the new info.
 def edit(event, form):
-    """
-    @brief Edit an event with the info contained in a form.
-    @param event Event to edit.
-    @param form Form with the new info.
-    """
     total = False
     partial = False
+
     def update(field, total=False):
         if field in ['start', 'end', 'closing']:
-            if (str(form.cleaned_data[field]) + '+00:00') != str(getattr(event, field)):
+            if (str(form.cleaned_data[field]) + '+00:00') != str(
+                    getattr(event, field)):
                 print('Hello')
                 setattr(event, field, form.cleaned_data[field])
                 return True
@@ -174,15 +176,18 @@ def edit(event, form):
 
     start_date = form.cleaned_data['start_date']
     start_time = form.cleaned_data['start_time'][:5]
-    form.cleaned_data['start'] = datetime.strptime(start_date + ' ' + start_time, '%Y-%m-%d %H:%M')
+    form.cleaned_data['start'] = datetime.strptime(
+        start_date + ' ' + start_time, '%Y-%m-%d %H:%M')
 
     end_date = form.cleaned_data['end_date']
     end_time = form.cleaned_data['end_time'][:5]
-    form.cleaned_data['end'] = datetime.strptime(end_date + ' ' + end_time, '%Y-%m-%d %H:%M')
+    form.cleaned_data['end'] = datetime.strptime(end_date + ' ' + end_time,
+                                                 '%Y-%m-%d %H:%M')
 
     closing_date = form.cleaned_data['closing_date']
     closing_time = form.cleaned_data['closing_time'][:5]
-    form.cleaned_data['closing'] = datetime.strptime(closing_date + ' ' + closing_time, '%Y-%m-%d %H:%M')
+    form.cleaned_data['closing'] = datetime.strptime(
+        closing_date + ' ' + closing_time, '%Y-%m-%d %H:%M')
 
     total = update('title', total)
     total = update('place', total)
@@ -210,13 +215,13 @@ def edit(event, form):
 
     event.save()
 
+
+##
+# @brief Fetch members of an association that are not part of the staff.
+# @param event Event object.
+# @param asso Association object.
+# @return Queryset of Membership.
 def get_members(event, asso):
-    """
-    @brief Fetch members of an association that are not part of the staff.
-    @param event Event object.
-    @param asso Association object.
-    @return Queryset of Membership.
-    """
     o = Membership.objects.select_related('asso') \
         .filter(asso__exact=asso) \
         .exclude(member__in=(Staff.objects.select_related('member') \
@@ -224,13 +229,13 @@ def get_members(event, asso):
                                 .values('member')))
     return o
 
+
+##
+# @brief Fetch associations that are not part of the staff, or the creating
+#             association of the event.
+# @param event Event object.
+# @return Queryset of Association.
 def get_assos(event):
-    """
-    @brief Fetch associations that are not part of the staff, or the creating
-            association of the event.
-    @param event Event object.
-    @return Queryset of Association.
-    """
     o = Association.objects\
     .exclude(id=event.orga.id)\
     .exclude(id__in=(AssociationStaff.objects.select_related('asso')\
@@ -238,33 +243,33 @@ def get_assos(event):
                                                     .values('asso')))
     return o
 
+
+##
+# @brief Add a new staff as member of the creating association.
+# @param event Event object.
+# @param staff Membership object of the staff to add.
 def add_staff(event, staff):
-    """
-    @brief Add a new staff as member of the creating association.
-    @param event Event object.
-    @param staff Membership object of the staff to add.
-    """
     s = Staff(event=event, member=staff.member, asso=event.orga)
     s.save()
 
+
+    ##
+    # @brief Add an association to the list of staff.
+    # @param event Event object.
+    # @param asso Association object to add.
+    # @param capacity number of members that can be staff in this association.
 def add_asso_staff(event, asso, capacity):
-    """
-    @brief Add an association to the list of staff.
-    @param event Event object.
-    @param asso Association object to add.
-    @param capacity number of members that can be staff in this association.
-    """
     s = AssociationStaff(event=event, asso=asso, capacity=capacity)
     s.save()
 
+
+##
+# @brief View that provides a web page to manage an event.
+# @param request HTTP request.
+# @param id id of the event to manage.
+# @return Rendered web page.
 @login_required
 def view(request, id):
-    """
-    @brief View that provides a web page to manage an event.
-    @param request HTTP request.
-    @param id id of the event to manage.
-    @return Rendered web page.
-    """
     event = get_object_or_404(Event, id=id)
     if not manager_check(event, request.user):
         return redirect(reverse('core:event', args=[event.id]))
@@ -276,18 +281,21 @@ def view(request, id):
                 field.widget.attrs['class'] = 'form-control'
 
     class StaffForm(Form):
-        staff = forms.ModelChoiceField(queryset=get_members(event, event.orga), required=True)
+        staff = forms.ModelChoiceField(
+            queryset=get_members(event, event.orga), required=True)
 
     class AssoForm(Form):
-        association = forms.ModelChoiceField(queryset=get_assos(event), required=True)
-        nombre = forms.IntegerField(label='Capacité', initial=1, validators=[MinValueValidator(1)])
-
+        association = forms.ModelChoiceField(
+            queryset=get_assos(event), required=True)
+        nombre = forms.IntegerField(
+            label='Capacité', initial=1, validators=[MinValueValidator(1)])
 
     if request.method == 'POST':
         if 'assos-modal' in request.POST:
             form = AssoForm(request.POST)
             if form.is_valid() and request.user == event.creator:
-                add_asso_staff(event, form.cleaned_data['association'], form.cleaned_data['nombre'])
+                add_asso_staff(event, form.cleaned_data['association'],
+                               form.cleaned_data['nombre'])
                 return redirect(reverse('core:event_manage', args=[event.id]))
 
         if 'staff-modal' in request.POST:
@@ -313,7 +321,11 @@ def view(request, id):
         diff = off.capacity - len(off.staffs)
         off.staffs += list(range(diff))
         off.members = Membership.objects.filter(asso=off.asso)
-        members = [k['member'] for k in list(Staff.objects.filter(event=event, asso=off.asso).values('member'))]
+        members = [
+            k['member'] for k in list(
+                Staff.objects.filter(event=event, asso=off.asso).values(
+                    'member'))
+        ]
         off.members = off.members.exclude(member__id__in=members)
         off.field = forms.ModelChoiceField(queryset=off.members)
         off.field.widget.attrs['class'] = 'form-control'
@@ -328,31 +340,31 @@ def view(request, id):
     variables['asso_staff_form'] = AssoForm()
     variables['can_edit'] = can_edit(event, request.user)
     variables['creator'] = request.user == event.creator
-    variables['can_add_asso'] = variables['creator'] and timezone.now() < event.start
+    variables[
+        'can_add_asso'] = variables['creator'] and timezone.now() < event.start
     variables['can_add_staff'] = timezone.now() < event.start
 
     return render(request, 'event_manage.html', variables)
 
+
+##
+# @brief Determine if a user is part of the staff of an event.
+# @param event Event object.
+# @param user User to check.
+# @return True if the user is staff or if he is a superuser.
 def is_staff(event, user):
-    """
-    @brief Determine if a user is part of the staff of an event.
-    @param event Event object.
-    @param user User to check.
-    @return True if the user is staff or if he is a superuser.
-    """
     staff = Staff.objects.filter(event=event, member=user)
 
     return staff.count() == 1 or has_role(user, 'respo')\
             or user.is_superuser or user == event.creator
 
 
+##
+# @brief Remove a staff from the list.
+# @param request HTTP request.
+# @return JSON response.
 @login_required
 def rm_staff(request):
-    """
-    @brief Remove a staff from the list.
-    @param request HTTP request.
-    @return JSON response.
-    """
     event_id = request.GET.get('event', None)
     staff_id = request.GET.get('staff', None)
     if event_id is None or staff_id is None:
@@ -366,14 +378,14 @@ def rm_staff(request):
     if staff.event != event:
         return redirect(reverse('core:event_manage', args=[event_id]))
 
-    staff.delete();
+    staff.delete()
 
     return JsonResponse({'success': True, 'id': staff_id})
 
+
+##
+# @brief Fetch staff from an event.
+# @param event Event object.
+# @return Queryset of Staff.
 def get_staff(event):
-    """
-    @brief Fetch staff from an event.
-    @param event Event object.
-    @return Queryset of Staff.
-    """
     return Staff.objects.filter(event=event)

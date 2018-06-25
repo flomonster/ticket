@@ -18,18 +18,18 @@ class Dashboard:
     msg = None
     error = None
 
+    ##
+    # @brief display the dashboard of an association if it exists.
+    # @param request request for the current page.
+    # @param name name of the requested association.
+    # @return an HttpResponse serving the web page.
     @staticmethod
     @login_required
     def view(request, name):
-        """
-        @brief display the dashboard of an association if it exists.
-        @param request request for the current page.
-        @param name name of the requested association.
-        @return an HttpResponse serving the web page.
-        """
         asso = get_object_or_404(Association, name=name)
         if not request.user.is_superuser:
-            member = get_object_or_404(Membership, member=request.user, asso=asso)
+            member = get_object_or_404(
+                Membership, member=request.user, asso=asso)
         else:
             member = None
 
@@ -56,11 +56,13 @@ class Dashboard:
             membre = forms.ModelChoiceField(queryset=others, required=True)
 
         class RemoveForm(AssoForm):
-            membre = forms.ModelChoiceField(queryset=all,
-                                            required=True)
+            membre = forms.ModelChoiceField(queryset=all, required=True)
 
         class PresForm(AssoForm):
-            membre = forms.ModelChoiceField(queryset=(simples | office).exclude(role__exact=MemberRole.PRESIDENT._value_), required=True)
+            membre = forms.ModelChoiceField(
+                queryset=(simples | office
+                          ).exclude(role__exact=MemberRole.PRESIDENT._value_),
+                required=True)
 
         if request.method == 'POST':
             if 'officeModal' in request.POST:
@@ -90,16 +92,20 @@ class Dashboard:
 
         # Creating templates variables
         variables = {}
-        variables['can_add_office'] = has_object_permission('add_office', request.user, asso)
+        variables['can_add_office'] = has_object_permission(
+            'add_office', request.user, asso)
         variables['can_remove_office'] = variables['can_add_office']
-        variables['can_manage_members'] = has_object_permission('validate_member', request.user, asso)
+        variables['can_manage_members'] = has_object_permission(
+            'validate_member', request.user, asso)
         variables['events'] = Dashboard.related_events(asso)
         variables['office'] = office
         variables['asso'] = asso
         variables['info'] = Dashboard.msg
         variables['fail'] = Dashboard.error
-        variables['respo'] = True if request.user.is_superuser else has_role(request.user, 'respo')
-        variables['pres'] = True if request.user.is_superuser else member.role == MemberRole.PRESIDENT._value_
+        variables['respo'] = True if request.user.is_superuser else has_role(
+            request.user, 'respo')
+        variables[
+            'pres'] = True if request.user.is_superuser else member.role == MemberRole.PRESIDENT._value_
 
         variables['office_form'] = office_form
         variables['add_form'] = add_form
@@ -115,13 +121,12 @@ class Dashboard:
 
         return render(request, 'dashboard.html', variables)
 
+    ##
+    # @brief search for the events related to an association.
+    # @param asso query object of the requested association.
+    # @return a query set of all the related events.
     @staticmethod
     def related_events(asso):
-        """
-        @brief search for the events related to an association.
-        @param asso query object of the requested association.
-        @return a query set of all the related events.
-        """
         e = Event.objects.select_related('orga') \
             .filter(orga__exact=asso) \
             .exclude(status__exact=EventStatus.FINISHED._value_)\
@@ -129,13 +134,12 @@ class Dashboard:
             .order_by('start')
         return e
 
+    ##
+    # @brief update membership to OFFICE role
+    # @param asso association to update
+    # @param form form with the requested update
     @staticmethod
     def add_office_member(asso, form):
-        """
-        @brief update membership to OFFICE role
-        @param asso association to update
-        @param form form with the requested update
-        """
         if not form.is_valid():
             return None
 
@@ -153,7 +157,8 @@ class Dashboard:
             return None
 
         try:
-            old = Membership.objects.get(asso=asso, role__exact=MemberRole.PRESIDENT._value_)
+            old = Membership.objects.get(
+                asso=asso, role__exact=MemberRole.PRESIDENT._value_)
             old.role = MemberRole.OFFICE._value_
             old.save()
         except:
@@ -165,13 +170,12 @@ class Dashboard:
 
         Dashboard.msg = member.member.username + ' a bien été nommé président.'
 
+    ##
+    # @brief completely remove a membership row
+    # @param asso association to update
+    # @param form form with the update
     @staticmethod
     def remove_member(asso, form):
-        """
-        @brief completely remove a membership row
-        @param asso association to update
-        @param form form with the update
-        """
         if not form.is_valid():
             return
 
@@ -181,18 +185,18 @@ class Dashboard:
 
         Dashboard.msg = user + " a bien été supprimé de l'association"
 
+    ##
+    # @brief add a new membership row
+    # @param asso association of the new membership
+    # @param form form with the member
     @staticmethod
     def add_member(asso, form):
-        """
-        @brief add a new membership row
-        @param asso association of the new membership
-        @param form form with the member
-        """
         if not form.is_valid():
             return
 
         member = form.cleaned_data['membre']
-        membership = Membership(asso=asso, member=member, role=MemberRole.SIMPLE._value_)
+        membership = Membership(
+            asso=asso, member=member, role=MemberRole.SIMPLE._value_)
         membership.save()
 
         Dashboard.msg = member.username + " a bien été ajouté à l'association."
@@ -205,15 +209,14 @@ class Dashboard:
 
         return o
 
+    ##
+    # @brief delete a member from the office of an association.
+    # @param request http request
+    # @param name name of the association
+    # @param member user object of the member to add
+    # @return redirection to dashboard
     @staticmethod
     def delete_office_view(request, name, member):
-        """
-        @brief delete a member from the office of an association.
-        @param request http request
-        @param name name of the association
-        @param member user object of the member to add
-        @return redirection to dashboard
-        """
         asso = get_object_or_404(Association, name=name)
         office = Dashboard.get_members(asso, MemberRole.OFFICE)
         pres = Dashboard.get_members(asso, MemberRole.PRESIDENT)
@@ -227,15 +230,14 @@ class Dashboard:
 
         return redirect(reverse('core:association', args=[asso.name]))
 
+    ##
+    # @brief Confirm an event.
+    # @param request HTTP request.
+    # @param name name of the association that created the event.
+    # @param id id of the event to confirm.
+    # @return redirection to the confirmed event.
     @staticmethod
     def confirm_event(request, name, id):
-        """
-        @brief Confirm an event.
-        @param request HTTP request.
-        @param name name of the association that created the event.
-        @param id id of the event to confirm.
-        @return redirection to the confirmed event.
-        """
         asso = get_object_or_404(Association, name=name)
         event = Event.objects.all().get(pk=id)
 
@@ -251,15 +253,14 @@ class Dashboard:
         Dashboard.msg = "L'évènement " + event.title + ' a été confirmé.'
         return redirect(reverse('core:event', args=[event.id]))
 
+    ##
+    # @brief Reject an event.
+    # @param request HTTP request.
+    # @param name name of the association that created the event.
+    # @param id id of the event to reject.
+    # @return redirection to the list of events.
     @staticmethod
     def reject_event(request, name, id):
-        """
-        @brief Reject an event.
-        @param request HTTP request.
-        @param name name of the association that created the event.
-        @param id id of the event to reject.
-        @return redirection to the list of events.
-        """
         asso = get_object_or_404(Association, name=name)
         event = Event.objects.all().get(pk=id)
         event.status = EventStatus.REJECTED._value_

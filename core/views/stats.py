@@ -12,6 +12,7 @@ from core.models import Association, Event, Membership, MemberRole, EventStatus,
 import datetime as dt
 from dateutil.relativedelta import relativedelta
 
+
 class Constants:
     """
     Datas to compute and display statistics.
@@ -20,23 +21,25 @@ class Constants:
     begin = dt.datetime(2018, 1, 1)
     end = None
     labels = {
-            'month': [
-                'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre',
-                'Décembre'
-            ],
-            'semester': ['1er Semestre', '2e Semestre'],
-            'trimester': ['Hiver', 'Printemps', 'Eté', 'Automne']
+        'month': [
+            'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+            'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+        ],
+        'semester': ['1er Semestre', '2e Semestre'],
+        'trimester': ['Hiver', 'Printemps', 'Eté', 'Automne']
     }
     period = ''
+
 
 class Period:
     """
     A period of time.
     """
+
     def __init__(self, name, nb):
         self.name = name
         self.nb = nb
+
 
 class Stat:
     def __init__(self, **kwargs):
@@ -50,12 +53,14 @@ class Stat:
         for a in dir(self):
             self.total += getattr(self, a)
 
+
 class EventStat(Stat):
     def __init__(self, **kwargs):
         Stat.__init__(self, **kwargs)
 
     def __dir__(self):
         return ['finished', 'rejected', 'waiting', 'pending', 'validated']
+
 
 class RegisterStat(Stat):
     def __init__(self, **kwargs):
@@ -64,51 +69,58 @@ class RegisterStat(Stat):
     def __dir__(self):
         return ['ext_reg', 'ext', 'int', 'int_reg', 'staffs']
 
+
+##
+# @brief Compute the end date of a period.
+# @param method period type (semester, trimester...)
+# @param n number of the period.
 def enddate(method, n):
-    """
-    @brief Compute the end date of a period.
-    @param method period type (semester, trimester...)
-    @param n number of the period.
-    """
-    date = Constants.begin + relativedelta(months=(n * Constants.methods[method]))
+    date = Constants.begin + relativedelta(
+        months=(n * Constants.methods[method]))
     pytz.timezone(timezone.get_default_timezone_name()).localize(date)
     return date
 
+
+##
+# @brief Compute all the statistics of events for an association.
+# @param asso Association object.
+# @return EventStat object.
 def assoevents(asso):
-    """
-    @brief Compute all the statistics of events for an association.
-    @param asso Association object.
-    @return EventStat object.
-    """
     events = Event.objects.filter(orga__exact=asso)
 
     if Constants.end is not None:
-        events = events.filter(start__gt=Constants.begin, end__lt=Constants.end)
+        events = events.filter(
+            start__gt=Constants.begin, end__lt=Constants.end)
 
     stat = EventStat(name=asso.name)
-    stat.rejected = events.filter(status__exact=EventStatus.REJECTED._value_).count()
-    stat.finished = events.filter(status__exact=EventStatus.FINISHED._value_).count()
-    stat.pending = events.filter(status__exact=EventStatus.PENDING._value_).count()
-    stat.waiting = events.filter(status__exact=EventStatus.WAITING._value_).count()
-    stat.validated = events.filter(status__exact=EventStatus.VALIDATED._value_).count()
+    stat.rejected = events.filter(
+        status__exact=EventStatus.REJECTED._value_).count()
+    stat.finished = events.filter(
+        status__exact=EventStatus.FINISHED._value_).count()
+    stat.pending = events.filter(
+        status__exact=EventStatus.PENDING._value_).count()
+    stat.waiting = events.filter(
+        status__exact=EventStatus.WAITING._value_).count()
+    stat.validated = events.filter(
+        status__exact=EventStatus.VALIDATED._value_).count()
 
     stat.calctotal()
     return stat
 
+
+##
+# @brief Compute event statistics for each association.
+# @return List of EventStat objects.
 def eventstats():
-    """
-    @brief Compute event statistics for each association.
-    @return List of EventStat objects.
-    """
     assos = Association.objects.all().order_by('name')
     return [assoevents(asso) for asso in assos]
 
+
+##
+# @brief Compute statistics of registration for an event.
+# @param event Event object.
+# @return RegistrationStat object.
 def eventregister(event):
-    """
-    @brief Compute statistics of registration for an event.
-    @param event Event object.
-    @return RegistrationStat object.
-    """
     register = Participant.objects.filter(event__exact=event)
     staffs = Staff.objects.filter(event__exact=event)
 
@@ -123,29 +135,31 @@ def eventregister(event):
     stat.calctotal()
     return stat
 
+
+##
+# @brief Compute registration statistics for each event.
+# @return List of RegisterStat.
 def registerstats():
-    """
-    @brief Compute registration statistics for each event.
-    @return List of RegisterStat.
-    """
     events = Event.objects.all().order_by('start')
     if Constants.end is not None:
-        events = events.filter(start__gt=Constants.begin, end__lt=Constants.end)
+        events = events.filter(
+            start__gt=Constants.begin, end__lt=Constants.end)
 
     return [eventregister(event) for event in events]
 
+
+##
+# @brief Return the number of intervals from the beginning to today.
+# @param method type of period.
+# @return int.
 def allintervals(method):
-    """
-    @brief Return the number of intervals from the beginning to today.
-    @param method type of period.
-    @return int.
-    """
     begin = Constants.begin
     i = 1
     while enddate(method, i) < dt.datetime.now():
         i += 1
 
     return i
+
 
 def getperiods(method, no, current):
     labels = Constants.labels[method]
@@ -164,17 +178,18 @@ def getperiods(method, no, current):
     Constants.period = periods[current - 1].name
     return periods
 
+
 pytz.timezone(timezone.get_default_timezone_name()).localize(Constants.begin)
 
+
+##
+# @brief Display all statistics.
+# @param request HTTP request.
+# @param method type of period.
+# @param no number of the period.
+# @return Rendered web page.
 @login_required
 def view(request, method='all', no=1):
-    """
-    @brief Display all statistics.
-    @param request HTTP request.
-    @param method type of period.
-    @param no number of the period.
-    @return Rendered web page.
-    """
     if method != 'all':
         intervals = allintervals(method)
     else:
@@ -195,7 +210,8 @@ def view(request, method='all', no=1):
     variables['event_stats'] = event_stats
     variables['register_stats'] = registerstats()
     variables['method'] = method
-    variables['periods'] = None if method == 'all' else getperiods(method, intervals, no)
+    variables['periods'] = None if method == 'all' else getperiods(
+        method, intervals, no)
     variables['current'] = Constants.period
 
     return render(request, 'stats.html', variables)

@@ -7,14 +7,14 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from core.forms.registration import registration_form
 from core.models import Participant, Event, User
 
+
+##
+# @brief Cancel a registration.
+# @param request HTTP request.
+# @param id id of the participant.
+# @return Redirection to index page.
 @login_required
 def cancel(request, id):
-    """
-    @brief Cancel a registration.
-    @param request HTTP request.
-    @param id id of the participant.
-    @return Redirection to index page.
-    """
     try:
         p = Participant.objects.get(id=id)
     except:
@@ -23,14 +23,13 @@ def cancel(request, id):
     return redirect(reverse('core:index'))
 
 
+##
+# @brief Display registration page.
+# @param request HTTP request.
+# @param id id of the event.
+# @return Rendered web page.
 @login_required
 def view(request, id):
-    """
-    @brief Display registration page.
-    @param request HTTP request.
-    @param id id of the event.
-    @return Rendered web page.
-    """
     event = Event.objects.all().get(pk=id)
     mail = None
     external = not request.user.email.endswith('@epita.fr')
@@ -45,7 +44,8 @@ def view(request, id):
         participants = participants.filter(user__in=internals)
         count = event.int_capacity
 
-    if participants.filter(user__exact=request.user) or participants.count() == count:
+    if participants.filter(
+            user__exact=request.user) or participants.count() == count:
         return redirect(reverse('core:my_events'))
 
     if request.user.is_authenticated:
@@ -70,9 +70,19 @@ def view(request, id):
                 participant.save()
                 return redirect(reverse('core:mail', args=[participant.id]))
 
-            return render(request, 'payment.html', {'form': form, 'id': id, 'event_price': event_price,
-                                                     'event': event, 'participant': participant})
+            return render(
+                request, 'payment.html', {
+                    'form': form,
+                    'id': id,
+                    'event_price': event_price,
+                    'event': event,
+                    'participant': participant
+                })
     else:
         form = registration_form(initial={'mail': request.user.email})
 
-    return render(request, 'register.html', {'form': form, 'id': id, 'event_price': event_price})
+    return render(request, 'register.html', {
+        'form': form,
+        'id': id,
+        'event_price': event_price
+    })
