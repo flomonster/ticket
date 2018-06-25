@@ -229,6 +229,13 @@ class Dashboard:
 
     @staticmethod
     def confirm_event(request, name, id):
+        """
+        @brief Confirm an event.
+        @param request HTTP request.
+        @param name name of the association that created the event.
+        @param id id of the event to confirm.
+        @return redirection to the confirmed event.
+        """
         asso = get_object_or_404(Association, name=name)
         event = Event.objects.all().get(pk=id)
 
@@ -246,6 +253,13 @@ class Dashboard:
 
     @staticmethod
     def reject_event(request, name, id):
+        """
+        @brief Reject an event.
+        @param request HTTP request.
+        @param name name of the association that created the event.
+        @param id id of the event to reject.
+        @return redirection to the list of events.
+        """
         asso = get_object_or_404(Association, name=name)
         event = Event.objects.all().get(pk=id)
         event.status = EventStatus.REJECTED._value_

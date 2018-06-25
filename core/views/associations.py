@@ -1,3 +1,7 @@
+"""@package views
+This module provides a view to get a list of all the associations that are
+related to the currently connected user.
+"""
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from core.models import Association, Membership
@@ -7,6 +11,11 @@ from rolepermissions.checkers import has_role, has_object_permission
 
 @login_required
 def view(request):
+    """
+    @brief List all the associations related to the currently connected user.
+    @param request HTTP request
+    @return Rendered web page.
+    """
     if request.user.has_perm('core.respo'):
         assos = Association.objects.all()
     else:
@@ -19,10 +28,21 @@ def view(request):
 
 @permission_required('core.respo')
 def remove(request, name):
+    """
+    @brief Remove an association from the database.
+    @param request HTTP request.
+    @param name name of the association to remove.
+    @return Redirection to the list of associations.
+    """
     Association.objects.get(name=name).delete()
     return redirect("core:associations")
 
 def get_associations(user):
+    """
+    @brief Fetch all associations related to a user.
+    @param user the currently connected user.
+    @return Queryset containing the related associations.
+    """
     assos = Membership.objects.filter(member__exact=user)\
                       .select_related('asso')
     assos = [p['asso'] for p in list(assos.values('asso').all())]

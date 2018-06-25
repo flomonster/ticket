@@ -1,3 +1,6 @@
+"""@package views
+This module provides a view to display statistics.
+"""
 from django import forms
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.models import User
@@ -10,6 +13,9 @@ import datetime as dt
 from dateutil.relativedelta import relativedelta
 
 class Constants:
+    """
+    Datas to compute and display statistics.
+    """
     methods = {'all': 0, 'trimester': 3, 'month': 1, 'semester': 6}
     begin = dt.datetime(2018, 1, 1)
     end = None
@@ -25,6 +31,9 @@ class Constants:
     period = ''
 
 class Period:
+    """
+    A period of time.
+    """
     def __init__(self, name, nb):
         self.name = name
         self.nb = nb
@@ -56,11 +65,21 @@ class RegisterStat(Stat):
         return ['ext_reg', 'ext', 'int', 'int_reg', 'staffs']
 
 def enddate(method, n):
+    """
+    @brief Compute the end date of a period.
+    @param method period type (semester, trimester...)
+    @param n number of the period.
+    """
     date = Constants.begin + relativedelta(months=(n * Constants.methods[method]))
     pytz.timezone(timezone.get_default_timezone_name()).localize(date)
     return date
 
 def assoevents(asso):
+    """
+    @brief Compute all the statistics of events for an association.
+    @param asso Association object.
+    @return EventStat object.
+    """
     events = Event.objects.filter(orga__exact=asso)
 
     if Constants.end is not None:
@@ -77,10 +96,19 @@ def assoevents(asso):
     return stat
 
 def eventstats():
+    """
+    @brief Compute event statistics for each association.
+    @return List of EventStat objects.
+    """
     assos = Association.objects.all().order_by('name')
     return [assoevents(asso) for asso in assos]
 
 def eventregister(event):
+    """
+    @brief Compute statistics of registration for an event.
+    @param event Event object.
+    @return RegistrationStat object.
+    """
     register = Participant.objects.filter(event__exact=event)
     staffs = Staff.objects.filter(event__exact=event)
 
@@ -96,6 +124,10 @@ def eventregister(event):
     return stat
 
 def registerstats():
+    """
+    @brief Compute registration statistics for each event.
+    @return List of RegisterStat.
+    """
     events = Event.objects.all().order_by('start')
     if Constants.end is not None:
         events = events.filter(start__gt=Constants.begin, end__lt=Constants.end)
@@ -103,6 +135,11 @@ def registerstats():
     return [eventregister(event) for event in events]
 
 def allintervals(method):
+    """
+    @brief Return the number of intervals from the beginning to today.
+    @param method type of period.
+    @return int.
+    """
     begin = Constants.begin
     i = 1
     while enddate(method, i) < dt.datetime.now():
@@ -131,6 +168,13 @@ pytz.timezone(timezone.get_default_timezone_name()).localize(Constants.begin)
 
 @login_required
 def view(request, method='all', no=1):
+    """
+    @brief Display all statistics.
+    @param request HTTP request.
+    @param method type of period.
+    @param no number of the period.
+    @return Rendered web page.
+    """
     if method != 'all':
         intervals = allintervals(method)
     else:
