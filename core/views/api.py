@@ -1,3 +1,6 @@
+"""@package views
+This module provides an API to communicate with the Android application.
+"""
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from core.serializers import *
@@ -7,14 +10,14 @@ from rest_framework import status
 
 class EventViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    Class to get the list of events from the application.
     """
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
 class TicketView(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    Class to validate the ticket of a user.
     """
     queryset = Participant.objects.all()
     serializer_class = TicketSerializer
@@ -37,7 +40,7 @@ class TicketView(viewsets.ModelViewSet):
 
 class TicketViewUser(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    Class to get info of a user.
     """
     queryset = Participant.objects.all()
     serializer_class = TicketSerializerUser
