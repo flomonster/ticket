@@ -63,6 +63,6 @@ def mail(request):
     participant.event = get_object_or_404(Event, id=event_id)
     participant.user = get_object_or_404(User, id=member_id)
     participant.paid = paid
-    participant.email = email
+    participant.mail = email
     participant.save()
     return redirect(reverse('core:mail', args=[participant.id]))
