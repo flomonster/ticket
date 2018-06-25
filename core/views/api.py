@@ -34,6 +34,7 @@ class TicketView(viewsets.ModelViewSet):
             return NotFound()
         tickets[0].used = used
         tickets[0].save()
+        return Response()
 
 class TicketViewUser(viewsets.ModelViewSet):
     """
