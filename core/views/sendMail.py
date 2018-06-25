@@ -12,12 +12,11 @@ from reportlab.pdfgen import canvas
 import qrcode
 
 
+##
+# @brief generate a pdf with the QR code.
+# @param request HTTP request.
+# @param participant_id id of the participant.
 def gen_pdf(request, participant_id):
-    """
-    @brief generate a pdf with the QR code.
-    @param request HTTP request.
-    @param participant_id id of the participant.
-    """
     participant = get_object_or_404(Participant, pk=participant_id)
 
     p = canvas.Canvas("ticket.pdf", pagesize=A4)
@@ -26,7 +25,9 @@ def gen_pdf(request, participant_id):
     p.drawString(170, 750, "ÉVÈNEMENT " + participant.event.title)
     p.setFont('Helvetica', 14)
     p.drawString(250, 700, "Login: " + request.user.username)
-    p.drawString(250, 650, "Date: " + str(participant.event.start.strftime("%b %d %Y %H:%M:%S")))
+    p.drawString(
+        250, 650,
+        "Date: " + str(participant.event.start.strftime("%b %d %Y %H:%M:%S")))
 
     qr = qrcode.QRCode(
         version=1,
@@ -45,20 +46,20 @@ def gen_pdf(request, participant_id):
     p.save()
 
 
+##
+# @brief Send a mail to confirm registration.
+# @param request HTTP request.
+# @param participant_id id of the participant.
+# @return Redirection to the event page.
 @login_required
 def send_mail(request, participant_id):
-    """
-    @brief Send a mail to confirm registration.
-    @param request HTTP request.
-    @param participant_id id of the participant.
-    @return Redirection to the event page.
-    """
     participant = get_object_or_404(Participant, pk=participant_id)
     email = EmailMessage(
         'Billet pour l\'évènement ' + participant.event.title,
-        'Bonjour, nous vous confirmons votre inscription pour l\'évènement '
-        + participant.event.title + '. Vous trouverez ci-joint votre billet. Il sera a présenter'
-                        'à l\'entrée de l\'évènement',
+        'Bonjour, nous vous confirmons votre inscription pour l\'évènement ' +
+        participant.event.title +
+        '. Vous trouverez ci-joint votre billet. Il sera a présenter'
+        'à l\'entrée de l\'évènement',
         'ticket.choisir.epita@gmail.com',
         [participant.mail],
     )
@@ -67,13 +68,13 @@ def send_mail(request, participant_id):
     email.send(fail_silently=False)
     return redirect(reverse("core:event", args=[participant.event.id]))
 
+
+##
+# @brief Confirm registration after payment.
+# @param request HTTP request.
+# @return Redirection to mail sending.
 @login_required
 def mail(request):
-    """
-    @brief Confirm registration after payment.
-    @param request HTTP request.
-    @return Redirection to mail sending.
-    """
     event_id = request.GET.get('event_id', None)
     member_id = request.GET.get('member_id', None)
     paid = request.GET.get('paid', None)

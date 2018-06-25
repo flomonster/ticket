@@ -14,37 +14,37 @@ from core.roles import Respo
 
 from core.models import Association, Event, Staff, EventStatus, Membership, MemberRole, Participant, AssociationStaff
 
+
+##
+# @brief Determine if a user is part of the office of an association.
+# @param asso Association object.
+# @param user User object to check.
+# @return True if the user is part of the office, False otherwise.
 def from_office(asso, user):
-    """
-    @brief Determine if a user is part of the office of an association.
-    @param asso Association object.
-    @param user User object to check.
-    @return True if the user is part of the office, False otherwise.
-    """
     office = Membership.objects.filter(asso=asso, role__exact=MemberRole.PRESIDENT._value_) |\
             Membership.objects.filter(asso=asso, role__exact=MemberRole.OFFICE._value_)
     return office.filter(member=user).count() != 0
 
+
+##
+# @brief Fetch all staff association that a user can edit.
+# @param event Event object.
+# @param user User object to check.
+# @return List of AssociationStaff objects.
 def from_asso_staff(event, user):
-    """
-    @brief Fetch all staff association that a user can edit.
-    @param event Event object.
-    @param user User object to check.
-    @return List of AssociationStaff objects.
-    """
     l = []
     for a in AssociationStaff.objects.filter(event=event):
         if from_office(a.asso, user):
             l.append(a)
     return l
 
+
+##
+# @brief Check if a user can manage an event.
+# @param event Event object.
+# @param user User to check.
+# @return True if the user is authorized, False otherwise.
 def manager_check(event, user):
-    """
-    @brief Check if a user can manage an event.
-    @param event Event object.
-    @param user User to check.
-    @return True if the user is authorized, False otherwise.
-    """
     staff = get_staff(event)
     if staff.filter(member=user).count() != 0:
         return True
@@ -63,14 +63,14 @@ def manager_check(event, user):
 
     return False
 
+
+##
+# @brief Provides a view to display an event.
+# @param request HTTP request.
+# @param id id of the event to display.
+# @return Rendered web page.
 @login_required
 def view(request, id):
-    """
-    @brief Provides a view to display an event.
-    @param request HTTP request.
-    @param id id of the event to display.
-    @return Rendered web page.
-    """
     event = get_object_or_404(Event, id=id)
 
     manage = manager_check(event, request.user)
@@ -118,7 +118,6 @@ def view(request, id):
     class AddStaff(StaffForm):
         staff = forms.ModelChoiceField(queryset=members, required=True)
 
-
     if request.method == 'POST':
         form = AddStaff(request.POST)
         add_staff(event, form)
@@ -137,7 +136,8 @@ def view(request, id):
     variables['remaining_int'] = remaining_int
     variables['remaining_ext'] = remaining_ext
     variables['respo'] = request.user.has_perm('core.respo')
-    variables['can_register'], variables['status'] = can_register(event, request.user)
+    variables['can_register'], variables['status'] = can_register(
+        event, request.user)
     pres = len(Membership.objects.select_related('asso') \
                         .filter(asso__exact=event.orga) \
                         .filter(member__exact=user) \
@@ -147,34 +147,34 @@ def view(request, id):
 
     return render(request, 'event.html', variables)
 
+
+##
+# @brief Remove an event.
+# @param request HTTP request.
+# @param name Name of the event to remove
 @login_required
 def remove(request, name):
-    """
-    @brief Remove an event.
-    @param request HTTP request.
-    @param name Name of the event to remove
-    """
     Event.objects.get(name=name).delete()
     return redirect("core:event")
 
+
+##
+# @brief Fetch staff members of an event.
+# @param event Event object.
+# @return Queryset of Staff objects.
 def get_staff(event):
-    """
-    @brief Fetch staff members of an event.
-    @param event Event object.
-    @return Queryset of Staff objects.
-    """
     o = Staff.objects.select_related('event') \
         .filter(event__exact=event)
 
     return o
 
+
+##
+# @brief Fetch members of an association that are not staff.
+# @param event Event object.
+# @param asso Association object.
+# @return Queryset of Membership.
 def get_members(event, asso):
-    """
-    @brief Fetch members of an association that are not staff.
-    @param event Event object.
-    @param asso Association object.
-    @return Queryset of Membership.
-    """
     o = Membership.objects.select_related('asso') \
         .filter(asso__exact=asso) \
         .exclude(member__in=(Staff.objects.select_related('member') \
@@ -183,12 +183,12 @@ def get_members(event, asso):
 
     return o
 
+
+##
+# @brief Count externals and internals participating to an event.
+# @param event Event object.
+# @return tuple containing external and internal count.
 def count_participants(event):
-    """
-    @brief Count externals and internals participating to an event.
-    @param event Event object.
-    @return tuple containing external and internal count.
-    """
     participants = Participant.objects.filter(event=event)
     ext_count = 0
     int_count = 0
@@ -199,12 +199,12 @@ def count_participants(event):
             int_count += 1
     return (ext_count, int_count)
 
+
+##
+# @brief Determine if a user can register to an event.
+# @param event Event object.
+# @param user User object.
 def can_register(event, user):
-    """
-    @brief Determine if a user can register to an event.
-    @param event Event object.
-    @param user User object.
-    """
     if event.status == EventStatus.FINISHED._value_:
         return (False, 'Cet évènement est fini')
 
@@ -218,7 +218,8 @@ def can_register(event, user):
     office = Membership.objects.filter(asso=event.orga, role__exact=MemberRole.OFFICE._value_) |\
              Membership.objects.filter(asso=event.orga, role__exact=MemberRole.PRESIDENT._value_)
     if office.filter(member=user).count() == 1:
-        return (False, 'Vous êtes membre du bureau de l\'association organisatrice')
+        return (False,
+                'Vous êtes membre du bureau de l\'association organisatrice')
 
     if Participant.objects.filter(event=event, user=user).count() == 1:
         return (False, 'Vous êtes déjà inscrit à cet évènement')

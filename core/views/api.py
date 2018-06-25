@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from core.models import Event, Participant
 from rest_framework import status
 
+
 class EventViewSet(viewsets.ModelViewSet):
     """
     Class to get the list of events from the application.
@@ -15,13 +16,14 @@ class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
+
 class TicketView(viewsets.ModelViewSet):
     """
     Class to validate the ticket of a user.
     """
     queryset = Participant.objects.all()
     serializer_class = TicketSerializer
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, )
     filter_fields = ('event', 'user', 'id')
 
     def put(self, request, *args, **kwargs):
@@ -32,11 +34,12 @@ class TicketView(viewsets.ModelViewSet):
             used = request.data["used"] == "true"
         event = int(request.data["event"])
         user = int(request.data["user"])
-        tickets = Participant.objects.filter(event = event, user = user)
+        tickets = Participant.objects.filter(event=event, user=user)
         if not tickets:
             return NotFound()
         tickets[0].used = used
         tickets[0].save()
+
 
 class TicketViewUser(viewsets.ModelViewSet):
     """
@@ -44,5 +47,5 @@ class TicketViewUser(viewsets.ModelViewSet):
     """
     queryset = Participant.objects.all()
     serializer_class = TicketSerializerUser
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, )
     filter_fields = ('event', 'user', 'id')

@@ -11,28 +11,31 @@ import pytz
 from core.models import Event, EventStatus
 from ticket.settings import STATIC_URL
 
+
+##
+# @brief Fetch all events sorted according to premium and price.
+# @return Sorted queryset of Event.
 def get_events():
-    """
-    @brief Fetch all events sorted according to premium and price.
-    @return Sorted queryset of Event.
-    """
     return Event.objects.all().exclude(cover='')\
                         .filter(status__exact=EventStatus.VALIDATED._value_)\
                         .order_by('-premium', '-int_price', '-ext_price')
 
+
 class Entry:
     """ A calendar entry """
+
     def __init__(self):
         pass
 
+
+##
+# @brief Create the calendar containing the events.
+# @return Entry list list that represent the calendar.
 def initcalendar():
-    """
-    @brief Create the calendar containing the events.
-    @return Entry list list that represent the calendar.
-    """
     L = []
     actual = timezone.now()
-    allevents = Event.objects.filter(status__exact=EventStatus.VALIDATED._value_)
+    allevents = Event.objects.filter(
+        status__exact=EventStatus.VALIDATED._value_)
     d = 0
 
     for i in range(10):
@@ -55,12 +58,12 @@ def initcalendar():
         L.append(tmp)
     return L
 
+
+##
+# @brief Display the index page.
+# @param request HTTP request.
+# @return Rendered web page.
 def view(request):
-    """
-    @brief Display the index page.
-    @param request HTTP request.
-    @return Rendered web page.
-    """
     events = get_events()
     calendar = initcalendar()
 
@@ -71,11 +74,11 @@ def view(request):
     variables['calendar'] = calendar
     return render(request, 'index.html', variables)
 
+
+##
+# @brief Logout the user and redirect to index page.
+# @param request HTTP request.
+# @return Redirection to index page.
 def logout(request):
-    """
-    @brief Logout the user and redirect to index page.
-    @param request HTTP request.
-    @return Redirection to index page.
-    """
     auth.logout(request)
     return redirect(reverse('core:index'))
