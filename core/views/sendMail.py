@@ -1,3 +1,6 @@
+"""@package views
+This module manages the post-registration work.
+"""
 from django.core.mail import EmailMessage
 from django.shortcuts import get_object_or_404, redirect, reverse
 from reportlab.lib.pagesizes import A4
@@ -10,6 +13,11 @@ import qrcode
 
 
 def gen_pdf(request, participant_id):
+    """
+    @brief generate a pdf with the QR code.
+    @param request HTTP request.
+    @param participant_id id of the participant.
+    """
     participant = get_object_or_404(Participant, pk=participant_id)
 
     p = canvas.Canvas("ticket.pdf", pagesize=A4)
@@ -39,6 +47,12 @@ def gen_pdf(request, participant_id):
 
 @login_required
 def send_mail(request, participant_id):
+    """
+    @brief Send a mail to confirm registration.
+    @param request HTTP request.
+    @param participant_id id of the participant.
+    @return Redirection to the event page.
+    """
     participant = get_object_or_404(Participant, pk=participant_id)
     email = EmailMessage(
         'Billet pour l\'évènement ' + participant.event.title,
@@ -55,6 +69,11 @@ def send_mail(request, participant_id):
 
 @login_required
 def mail(request):
+    """
+    @brief Confirm registration after payment.
+    @param request HTTP request.
+    @return Redirection to mail sending.
+    """
     event_id = request.GET.get('event_id', None)
     member_id = request.GET.get('member_id', None)
     paid = request.GET.get('paid', None)

@@ -1,3 +1,6 @@
+"""@package views
+This module provides a view to register to an event.
+"""
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 
@@ -6,6 +9,12 @@ from core.models import Participant, Event, User
 
 @login_required
 def cancel(request, id):
+    """
+    @brief Cancel a registration.
+    @param request HTTP request.
+    @param id id of the participant.
+    @return Redirection to index page.
+    """
     try:
         p = Participant.objects.get(id=id)
     except:
@@ -16,6 +25,12 @@ def cancel(request, id):
 
 @login_required
 def view(request, id):
+    """
+    @brief Display registration page.
+    @param request HTTP request.
+    @param id id of the event.
+    @return Rendered web page.
+    """
     event = Event.objects.all().get(pk=id)
     mail = None
     external = not request.user.email.endswith('@epita.fr')

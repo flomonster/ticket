@@ -15,6 +15,11 @@ from core.forms.event_create import event_form
 
 @login_required
 def add_other_staff(request):
+    """
+    @brief Add an association member to the staff list.
+    @param request HTTP request.
+    @return JSON object to indicate the success of the request.
+    """
     event_id = request.GET.get('event', None)
     member_id = request.GET.get('member_id', None)
     email = request.GET.get('email', None)
@@ -33,6 +38,12 @@ def add_other_staff(request):
     return JsonResponse({'success': True})
 
 def can_manage_staff(event, user):
+    """
+    @brief Determine if a user can manage the staff of an event.
+    @param event Event object representing the event.
+    @param user User object to check.
+    @return True if the user can manage staff, False otherwise.
+    """
     if timezone.now() > event.start:
         return False
 
@@ -50,9 +61,20 @@ def can_manage_staff(event, user):
     return False
 
 def can_edit(event, user):
+    """
+    @brief Determine if a user can edit an event.
+    @param event Event we want to edit.
+    @param user User object to check.
+    @return True if the user can edit an event, False otherwise.
+    """
     return event.creator == user and timezone.now() < event.closing
 
 def prefilled_form(event):
+    """
+    @brief Fill a form with the info of an event.
+    @param event Event that contains all the info
+    @return Prefilled form.
+    """
     form = event_form(initial={
         'title': event.title,
         'orga': event.orga,
@@ -76,6 +98,10 @@ def prefilled_form(event):
     return form
 
 def notify_total(event):
+    """
+    @brief Send a mail to notify major updates on the event.
+    @param event Event object that was updated.
+    """
     pres = Membership.objects.get(asso=event.orga, role__exact=MemberRole.PRESIDENT._value_)
     dests = [pres.member.email]
     for resp in User.objects.all():
@@ -92,6 +118,10 @@ def notify_total(event):
     email.send(fail_silently=False)
 
 def notify_partial(event):
+    """
+    @brief Send a mail to notify minor updates on the event.
+    @param event Event object that was updated.
+    """
     pres = Membership.objects.get(asso=event.orga, role__exact=MemberRole.PRESIDENT._value_)
     email = EmailMessage(
         'Modification de l\'évènement ' + event.title,
@@ -104,6 +134,10 @@ def notify_partial(event):
     email.send(fail_silently=False)
 
 def notify_participants(event):
+    """
+    @brief Send a mail to participants to notify an update of an event.
+    @param event Updated event.
+    """
     participants = Participant.objects.filter(event=event)
     dests = []
     for par in participants:
@@ -119,6 +153,11 @@ def notify_participants(event):
     email.send(fail_silently=False)
 
 def edit(event, form):
+    """
+    @brief Edit an event with the info contained in a form.
+    @param event Event to edit.
+    @param form Form with the new info.
+    """
     total = False
     partial = False
     def update(field, total=False):
@@ -172,6 +211,12 @@ def edit(event, form):
     event.save()
 
 def get_members(event, asso):
+    """
+    @brief Fetch members of an association that are not part of the staff.
+    @param event Event object.
+    @param asso Association object.
+    @return Queryset of Membership.
+    """
     o = Membership.objects.select_related('asso') \
         .filter(asso__exact=asso) \
         .exclude(member__in=(Staff.objects.select_related('member') \
@@ -180,6 +225,12 @@ def get_members(event, asso):
     return o
 
 def get_assos(event):
+    """
+    @brief Fetch associations that are not part of the staff, or the creating
+            association of the event.
+    @param event Event object.
+    @return Queryset of Association.
+    """
     o = Association.objects\
     .exclude(id=event.orga.id)\
     .exclude(id__in=(AssociationStaff.objects.select_related('asso')\
@@ -188,15 +239,32 @@ def get_assos(event):
     return o
 
 def add_staff(event, staff):
+    """
+    @brief Add a new staff as member of the creating association.
+    @param event Event object.
+    @param staff Membership object of the staff to add.
+    """
     s = Staff(event=event, member=staff.member, asso=event.orga)
     s.save()
 
 def add_asso_staff(event, asso, capacity):
+    """
+    @brief Add an association to the list of staff.
+    @param event Event object.
+    @param asso Association object to add.
+    @param capacity number of members that can be staff in this association.
+    """
     s = AssociationStaff(event=event, asso=asso, capacity=capacity)
     s.save()
 
 @login_required
 def view(request, id):
+    """
+    @brief View that provides a web page to manage an event.
+    @param request HTTP request.
+    @param id id of the event to manage.
+    @return Rendered web page.
+    """
     event = get_object_or_404(Event, id=id)
     if not manager_check(event, request.user):
         return redirect(reverse('core:event', args=[event.id]))
@@ -266,6 +334,12 @@ def view(request, id):
     return render(request, 'event_manage.html', variables)
 
 def is_staff(event, user):
+    """
+    @brief Determine if a user is part of the staff of an event.
+    @param event Event object.
+    @param user User to check.
+    @return True if the user is staff or if he is a superuser.
+    """
     staff = Staff.objects.filter(event=event, member=user)
 
     return staff.count() == 1 or has_role(user, 'respo')\
@@ -274,6 +348,11 @@ def is_staff(event, user):
 
 @login_required
 def rm_staff(request):
+    """
+    @brief Remove a staff from the list.
+    @param request HTTP request.
+    @return JSON response.
+    """
     event_id = request.GET.get('event', None)
     staff_id = request.GET.get('staff', None)
     if event_id is None or staff_id is None:
@@ -292,4 +371,9 @@ def rm_staff(request):
     return JsonResponse({'success': True, 'id': staff_id})
 
 def get_staff(event):
+    """
+    @brief Fetch staff from an event.
+    @param event Event object.
+    @return Queryset of Staff.
+    """
     return Staff.objects.filter(event=event)

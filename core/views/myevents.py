@@ -1,3 +1,6 @@
+"""@package views
+This module provides a view to list events.
+"""
 from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 
@@ -9,6 +12,9 @@ from rolepermissions.checkers import has_role, has_object_permission, has_permis
 
 class MyEvents:
     class Stat:
+        """
+        Class to represent the different statistics of an event.
+        """
         def __init__(self, event):
             self.registered = {}
             self.used = {}
@@ -33,6 +39,9 @@ class MyEvents:
 
 
     class BaseForm(forms.Form):
+        """
+        Form to validate a ticket.
+        """
         member = forms.ModelChoiceField(None)
         event = forms.ModelChoiceField(None, initial=0)
 
@@ -44,6 +53,11 @@ class MyEvents:
     @staticmethod
     @login_required
     def view(request):
+        """
+        @brief Display all the events related to the currently connected user.
+        @param request HTTP request.
+        @return Rendered web page.
+        """
         memberships = Membership.objects.filter(member=request.user)
 
         if has_role(request.user, 'respo'):
@@ -91,6 +105,12 @@ class MyEvents:
 
     @staticmethod
     def is_allowed(event, user):
+        """
+        @brief Determine if a user can validate a ticket.
+        @param event Event object.
+        @param user User to check.
+        @return True if the user can validate a ticket, False otherwise.
+        """
         staff = Staff.objects.filter(event__exact=event)\
                              .filter(member__exact=user)
         others = Membership.objects.filter(asso=event.orga)\
@@ -99,6 +119,12 @@ class MyEvents:
 
     @staticmethod
     def premium(request, id):
+        """
+        @brief Make an event premium.
+        @param request HTTP request.
+        @param id id of the event.
+        @return Redirection to myevents.
+        """
         if has_permission(request.user, 'make_premium'):
             ev = Event.objects.get(id=id)
             ev.premium = not ev.premium
@@ -108,6 +134,11 @@ class MyEvents:
 
     @staticmethod
     def validate_ticket(member, event):
+        """
+        @brief Validate a ticket.
+        @param member Member to validate.
+        @param event Event object.
+        """
         participant = Participant.objects.get(user=member, event=event)
         participant.used = True
         participant.save()

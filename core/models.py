@@ -1,3 +1,6 @@
+"""
+This module defines models that will populate the database.
+"""
 import inspect
 from enum import Enum
 from django.db import models
@@ -113,6 +116,9 @@ class Participant(models.Model):
 
 
 class AssociationStaff(models.Model):
+    """
+    An association is part of the staff of an event
+    """
     asso = models.ForeignKey(Association, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     capacity = models.IntegerField()

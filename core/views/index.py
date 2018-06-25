@@ -1,3 +1,6 @@
+"""@package views
+This module provides a view for the index page.
+"""
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.contrib import auth
@@ -9,15 +12,24 @@ from core.models import Event, EventStatus
 from ticket.settings import STATIC_URL
 
 def get_events():
+    """
+    @brief Fetch all events sorted according to premium and price.
+    @return Sorted queryset of Event.
+    """
     return Event.objects.all().exclude(cover='')\
                         .filter(status__exact=EventStatus.VALIDATED._value_)\
                         .order_by('-premium', '-int_price', '-ext_price')
 
 class Entry:
+    """ A calendar entry """
     def __init__(self):
         pass
 
 def initcalendar():
+    """
+    @brief Create the calendar containing the events.
+    @return Entry list list that represent the calendar.
+    """
     L = []
     actual = timezone.now()
     allevents = Event.objects.filter(status__exact=EventStatus.VALIDATED._value_)
@@ -44,6 +56,11 @@ def initcalendar():
     return L
 
 def view(request):
+    """
+    @brief Display the index page.
+    @param request HTTP request.
+    @return Rendered web page.
+    """
     events = get_events()
     calendar = initcalendar()
 
@@ -55,5 +72,10 @@ def view(request):
     return render(request, 'index.html', variables)
 
 def logout(request):
+    """
+    @brief Logout the user and redirect to index page.
+    @param request HTTP request.
+    @return Redirection to index page.
+    """
     auth.logout(request)
     return redirect(reverse('core:index'))

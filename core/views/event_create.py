@@ -1,3 +1,6 @@
+"""@package views
+This module manages the creation of an event through a view.
+"""
 from core.models import Event, EventStatus
 from django.core.mail import EmailMessage
 from datetime import datetime
@@ -13,9 +16,18 @@ from core.forms.event_create import event_form
 from core.models import Association, MemberRole
 
 def generate_token(id):
+    """
+    @brief Generate the unique token of an event.
+    @param id id of the event.
+    @return int composed of 6 digits.
+    """
     return str(id * 54321 % 1000000).zfill(6)
 
 def notify(event):
+    """
+    @brief Send a mail to notify of the creation of an event.
+    @param event Event object of the created event.
+    """
     event = event[0]
     dests = []
     for r in User.objects.all():
@@ -35,10 +47,15 @@ def notify(event):
         dests,
     )
     email.send(fail_silently=False)
-    print(email)
 
 @login_required
 def view(request, asso_id):
+    """
+    @brief Render and process a form to create an event.
+    @param request HTTP request.
+    @param asso_id id of the association that creates the event.
+    @return Rendered web page.
+    """
     asso = Association.objects.get(pk=asso_id)
     if request.method == 'POST':
         form = event_form(request.POST, request.FILES)
