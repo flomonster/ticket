@@ -32,7 +32,6 @@ def view(request):
 # @param request HTTP request.
 # @param name name of the association to remove.
 # @return Redirection to the list of associations.
-@permission_required('core.respo')
 def remove(request, name):
     Association.objects.get(name=name).delete()
     return redirect("core:associations")

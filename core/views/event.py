@@ -135,7 +135,7 @@ def view(request, id):
     variables['add_form'] = add_form
     variables['remaining_int'] = remaining_int
     variables['remaining_ext'] = remaining_ext
-    variables['respo'] = request.user.has_perm('core.respo')
+    variables['respo'] = has_role(request.user, 'respo')
     variables['can_register'], variables['status'] = can_register(
         event, request.user)
     pres = len(Membership.objects.select_related('asso') \
