@@ -27,7 +27,8 @@ class Dashboard:
     @login_required
     def view(request, name):
         asso = get_object_or_404(Association, name=name)
-        if not request.user.is_superuser:
+        flag = not request.user.is_superuser and not has_role(request.user, 'respo')
+        if flag:
             member = get_object_or_404(
                 Membership, member=request.user, asso=asso)
         else:
@@ -102,10 +103,9 @@ class Dashboard:
         variables['asso'] = asso
         variables['info'] = Dashboard.msg
         variables['fail'] = Dashboard.error
-        variables['respo'] = True if request.user.is_superuser else has_role(
-            request.user, 'respo')
+        variables['respo'] = has_role(request.user, 'respo')
         variables[
-            'pres'] = True if request.user.is_superuser else member.role == MemberRole.PRESIDENT._value_
+            'pres'] = True if member is None else member.role == MemberRole.PRESIDENT._value_
 
         variables['office_form'] = office_form
         variables['add_form'] = add_form
