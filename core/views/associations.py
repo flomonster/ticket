@@ -16,7 +16,7 @@ from rolepermissions.checkers import has_role, has_object_permission
 # @return Rendered web page.
 @login_required
 def view(request):
-    if request.user.has_perm('core.respo'):
+    if has_role(request.user, 'respo'):
         assos = Association.objects.all()
     else:
         assos = get_associations(request.user)
