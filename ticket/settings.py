@@ -26,7 +26,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["10.41.172.38", "127.0.0.1"]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -193,6 +192,8 @@ LOGIN_REDIRECT_URL = '/'
 # Paypal sandbox
 
 PAYPAL_TEST = True
+PAYPAL_SANDBOX = 'AWHZkl6OtQjGQV40Nook8VMpsvVNMkECpnooObtnCtEc7Aq5OX2pKxyvLlhF_4dowoSt4IoS59-rOTwr'
+PAYPAL_PRODUCTION = '<insert your production cliend id>'
 
 # Email sending
 

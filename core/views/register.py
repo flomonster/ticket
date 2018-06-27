@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 
 from core.forms.registration import registration_form
 from core.models import Participant, Event, User
+from ticket.settings import PAYPAL_PRODUCTION, PAYPAL_SANDBOX
 
 
 ##
@@ -76,7 +77,9 @@ def view(request, id):
                     'id': id,
                     'event_price': event_price,
                     'event': event,
-                    'participant': participant
+                    'participant': participant,
+                    'PAYPAL_SANDBOX': PAYPAL_SANDBOX,
+                    'PAYPAL_PRODUCTION': PAYPAL_PRODUCTION
                 })
     else:
         form = registration_form(initial={'mail': request.user.email})
